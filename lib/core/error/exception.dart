@@ -3,6 +3,13 @@ import 'dart:convert';
 
 class Forbidden implements Exception{}
 
+class NoData implements Exception {
+  final String message;
+  NoData({
+    required this.message,
+  });
+}
+
 class BAD_REQUEST implements Exception {
   final String message;
   final String status;

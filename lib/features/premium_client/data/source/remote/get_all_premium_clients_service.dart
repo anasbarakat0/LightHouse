@@ -12,7 +12,12 @@ class GetAllPremiumClientsService extends Service {
         "$baseUrl/api/v1/dashboard/users/all-users?page=$page&size=$size",
         options: options(true),
       );
-      return response;
+      if (response.data['message'] == "There is no users") {
+        throw NoData(message: response.data['message']);
+      } else {
+
+        return response;
+      }
     } on DioException catch (e) {
       if (e.response!.data["status"] == "BAD_REQUEST") {
         print("54137");

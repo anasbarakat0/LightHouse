@@ -31,6 +31,10 @@ class GetPremiumClientsBloc
           print("45118");
             emit(ExceptionFetchingClients(message: failures.message));
             break;
+          case NoDataFailure():
+          print("45128");
+            emit(NoClientsToShow(message: failures.message));
+            break;
           default:
           print("45137");
             emit(LoadingFetchingClients());

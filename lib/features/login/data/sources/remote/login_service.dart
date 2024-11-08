@@ -20,6 +20,7 @@ class LoginService extends Service {
       print(response.data);
       return response;
     } on DioException catch (e) {
+      print(e);
     print("loginServer.DioException");
       if (e.response!.data["status"] == "BAD_REQUEST") {
     print("loginServer.if");

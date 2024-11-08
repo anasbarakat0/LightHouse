@@ -47,6 +47,7 @@ class GetAllPremiumclientResponseModel extends GetPremiumResponse {
 
   factory GetAllPremiumclientResponseModel.fromMap(Map<String, dynamic> map) {
     print("68715");
+    print(map);
     return GetAllPremiumclientResponseModel(
       message: map['message'] as String,
       status: map['status'] as String,

@@ -36,8 +36,8 @@ class MainApp extends StatelessWidget {
         // brightness: Brightness.dark,
         colorScheme: ColorScheme.fromSwatch().copyWith(
           brightness: Brightness.dark,
-          primary: primaryColor, // Set your desired primary color here
-          secondary: primaryColor, // Optional: set secondary color
+          primary: primaryColor,
+          secondary: primaryColor, 
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(

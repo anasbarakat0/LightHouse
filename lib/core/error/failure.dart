@@ -21,6 +21,13 @@ class ServerFailure extends Failures {
   });
 }
 
+class NoDataFailure implements Failures {
+  final String message;
+  NoDataFailure({
+    required this.message,
+  });
+}
+
 class LoginFailure implements Failures {
   final String message;
   LoginFailure({

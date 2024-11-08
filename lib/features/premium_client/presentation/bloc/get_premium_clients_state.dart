@@ -28,3 +28,10 @@ class ExceptionFetchingClients extends GetPremiumClientsState {
 }
 
 class LoadingFetchingClients extends GetPremiumClientsState{}
+
+class NoClientsToShow extends GetPremiumClientsState {
+  final String message;
+  NoClientsToShow({
+    required this.message,
+  });
+}

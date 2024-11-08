@@ -147,6 +147,14 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                         style: const TextStyle(color: Colors.white),
                       ),
                     );
+                  } else if (state is NoClientsToShow) {
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    );
+
                   } else if (state is SuccessFetchingClients) {
                     return Expanded(
                       child: ListView.builder(

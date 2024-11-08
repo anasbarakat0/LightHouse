@@ -36,6 +36,9 @@ class LoginRepo {
         return Left(LoginFailure(message: e.message));
       } on DioException catch (e) {
         print("loginRepo.DioException");
+        print(e.response!.data);
+
+        
         return Left(ServerFailure(message: e.response!.data.toString()));
       }
     } else {

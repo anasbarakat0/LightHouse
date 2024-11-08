@@ -19,23 +19,28 @@ class GetAllPremiumClientsRepo {
   Future<Either<Failures, GetAllPremiumclientResponseModel>> getAllPremiumClientsRepo(
       int page, int size) async {
     if (await networkConnection.isConnected) {
-      print('if network');
       try {
-        print("87542");
+        print("getAllPremiumClientsService(page, size)");
         var data = await getAllPremiumClientsService
             .getAllPremiumClientsService(page, size);
             GetAllPremiumclientResponseModel responseModel = GetAllPremiumclientResponseModel.fromMap(data.data);
-        print("87543");
+        print("Right(responseModel)");
         return Right(responseModel);
       } on Forbidden {
+        print("ForbiddenFailure");
         return Left(ForbiddenFailure(message: forbiddenMessage));
       } on BAD_REQUEST catch (e) {
+        print("BAD_REQUEST ServerFailure");
         return Left(ServerFailure(message: e.message));
+      }on NoData catch (e) {
+        print("NoData Failure");
+        return Left(NoDataFailure(message: e.message));
       } on DioException catch (e) {
+        print("DioException ServerFailure");
         return Left(ServerFailure(message: e.response!.data.toString()));
       }
     } else {
-      print('else network');
+      print('OfflineFailure');
       return Left(OfflineFailure());
     }
   }
