@@ -20,7 +20,7 @@ void AddPremiumClientDialog(BuildContext context, Function(PremiumClient) add) {
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (context, setState) {
-          Future<void> _selectDate(BuildContext context) async {
+          Future<void> selectDate(BuildContext context) async {
             final DateTime? pickedDate = await showDatePicker(
               context: context,
               initialDate: selectedDate, // Current date as initial date
@@ -99,7 +99,7 @@ void AddPremiumClientDialog(BuildContext context, Function(PremiumClient) add) {
                     isPassword: false,
                     readOnly: true,
                     onTap: () async {
-                      await _selectDate(context);
+                      await selectDate(context);
                     },
                   ),
                   ElevatedButton(

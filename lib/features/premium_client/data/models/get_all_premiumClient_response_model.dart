@@ -3,14 +3,14 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
-class GetPremiumResponse{}
+class GetPremiumResponse {}
 
 class GetAllPremiumclientResponseModel extends GetPremiumResponse {
-    final String message;
-    final String status;
-    final String localDateTime;
-    final List<Body> body;
-    final Pageable pageable;
+  final String message;
+  final String status;
+  final String localDateTime;
+  final List<Body> body;
+  final Pageable pageable;
   GetAllPremiumclientResponseModel({
     required this.message,
     required this.status,
@@ -52,14 +52,20 @@ class GetAllPremiumclientResponseModel extends GetPremiumResponse {
       message: map['message'] as String,
       status: map['status'] as String,
       localDateTime: map['localDateTime'] as String,
-      body: List<Body>.from((map['body'] as List<dynamic>).map<Body>((x) => Body.fromMap(x as Map<String,dynamic>),),),
-      pageable: Pageable.fromMap(map['pageable'] as Map<String,dynamic>),
+      body: List<Body>.from(
+        (map['body'] as List<dynamic>).map<Body>(
+          (x) => Body.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
+      pageable: Pageable.fromMap(map['pageable'] as Map<String, dynamic>),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory GetAllPremiumclientResponseModel.fromJson(String source) => GetAllPremiumclientResponseModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory GetAllPremiumclientResponseModel.fromJson(String source) =>
+      GetAllPremiumclientResponseModel.fromMap(
+          json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -69,37 +75,36 @@ class GetAllPremiumclientResponseModel extends GetPremiumResponse {
   @override
   bool operator ==(covariant GetAllPremiumclientResponseModel other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.message == message &&
-      other.status == status &&
-      other.localDateTime == localDateTime &&
-      listEquals(other.body, body) &&
-      other.pageable == pageable;
+
+    return other.message == message &&
+        other.status == status &&
+        other.localDateTime == localDateTime &&
+        listEquals(other.body, body) &&
+        other.pageable == pageable;
   }
 
   @override
   int get hashCode {
     return message.hashCode ^
-      status.hashCode ^
-      localDateTime.hashCode ^
-      body.hashCode ^
-      pageable.hashCode;
+        status.hashCode ^
+        localDateTime.hashCode ^
+        body.hashCode ^
+        pageable.hashCode;
   }
 }
 
 class Body {
-    final String uuid;
-    final String firstName;
-    final String lastName;
-    final String email;
-    final String phoneNumber;
-    final String gender;
-    final String study;
-    final dynamic birthDate;
-    final String addingDateTime;
-    final String addedBy;
-    final QrCode qrCode;
+  final String uuid;
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String phoneNumber;
+  final String gender;
+  final String study;
+  final dynamic birthDate;
+  final String addingDateTime;
+  final String addedBy;
+  final QrCode qrCode;
   Body({
     required this.uuid,
     required this.firstName,
@@ -122,7 +127,7 @@ class Body {
     String? phoneNumber,
     String? gender,
     String? study,
-    dynamic? birthDate,
+    dynamic birthDate,
     String? addingDateTime,
     String? addedBy,
     QrCode? qrCode,
@@ -171,13 +176,14 @@ class Body {
       birthDate: map['birthDate'] as dynamic,
       addingDateTime: map['addingDateTime'] as String,
       addedBy: map['addedBy'] as String,
-      qrCode: QrCode.fromMap(map['qrCode'] as Map<String,dynamic>),
+      qrCode: QrCode.fromMap(map['qrCode'] as Map<String, dynamic>),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Body.fromJson(String source) => Body.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Body.fromJson(String source) =>
+      Body.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -187,45 +193,44 @@ class Body {
   @override
   bool operator ==(covariant Body other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.uuid == uuid &&
-      other.firstName == firstName &&
-      other.lastName == lastName &&
-      other.email == email &&
-      other.phoneNumber == phoneNumber &&
-      other.gender == gender &&
-      other.study == study &&
-      other.birthDate == birthDate &&
-      other.addingDateTime == addingDateTime &&
-      other.addedBy == addedBy &&
-      other.qrCode == qrCode;
+
+    return other.uuid == uuid &&
+        other.firstName == firstName &&
+        other.lastName == lastName &&
+        other.email == email &&
+        other.phoneNumber == phoneNumber &&
+        other.gender == gender &&
+        other.study == study &&
+        other.birthDate == birthDate &&
+        other.addingDateTime == addingDateTime &&
+        other.addedBy == addedBy &&
+        other.qrCode == qrCode;
   }
 
   @override
   int get hashCode {
     return uuid.hashCode ^
-      firstName.hashCode ^
-      lastName.hashCode ^
-      email.hashCode ^
-      phoneNumber.hashCode ^
-      gender.hashCode ^
-      study.hashCode ^
-      birthDate.hashCode ^
-      addingDateTime.hashCode ^
-      addedBy.hashCode ^
-      qrCode.hashCode;
+        firstName.hashCode ^
+        lastName.hashCode ^
+        email.hashCode ^
+        phoneNumber.hashCode ^
+        gender.hashCode ^
+        study.hashCode ^
+        birthDate.hashCode ^
+        addingDateTime.hashCode ^
+        addedBy.hashCode ^
+        qrCode.hashCode;
   }
 }
 
 class QrCode {
-    final String createdAt;
-    final String updatedAt;
-    final String createdBy;
-    final dynamic lastModifiedBy;
-    final String id;
-    final String qrCodeType;
-    final String qrCode;
+  final String createdAt;
+  final String updatedAt;
+  final String createdBy;
+  final dynamic lastModifiedBy;
+  final String id;
+  final String qrCodeType;
+  final String qrCode;
   QrCode({
     required this.createdAt,
     required this.updatedAt,
@@ -240,7 +245,7 @@ class QrCode {
     String? createdAt,
     String? updatedAt,
     String? createdBy,
-    dynamic? lastModifiedBy,
+    dynamic lastModifiedBy,
     String? id,
     String? qrCodeType,
     String? qrCode,
@@ -283,7 +288,8 @@ class QrCode {
 
   String toJson() => json.encode(toMap());
 
-  factory QrCode.fromJson(String source) => QrCode.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory QrCode.fromJson(String source) =>
+      QrCode.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -293,37 +299,35 @@ class QrCode {
   @override
   bool operator ==(covariant QrCode other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.createdAt == createdAt &&
-      other.updatedAt == updatedAt &&
-      other.createdBy == createdBy &&
-      other.lastModifiedBy == lastModifiedBy &&
-      other.id == id &&
-      other.qrCodeType == qrCodeType &&
-      other.qrCode == qrCode;
+
+    return other.createdAt == createdAt &&
+        other.updatedAt == updatedAt &&
+        other.createdBy == createdBy &&
+        other.lastModifiedBy == lastModifiedBy &&
+        other.id == id &&
+        other.qrCodeType == qrCodeType &&
+        other.qrCode == qrCode;
   }
 
   @override
   int get hashCode {
     return createdAt.hashCode ^
-      updatedAt.hashCode ^
-      createdBy.hashCode ^
-      lastModifiedBy.hashCode ^
-      id.hashCode ^
-      qrCodeType.hashCode ^
-      qrCode.hashCode;
+        updatedAt.hashCode ^
+        createdBy.hashCode ^
+        lastModifiedBy.hashCode ^
+        id.hashCode ^
+        qrCodeType.hashCode ^
+        qrCode.hashCode;
   }
 }
 
 class Pageable {
-    final int page;
-    final int perPage;
+  final int page;
+  final int perPage;
   Pageable({
     required this.page,
     required this.perPage,
   });
-
 
   Pageable copyWith({
     int? page,
@@ -353,7 +357,8 @@ class Pageable {
 
   String toJson() => json.encode(toMap());
 
-  factory Pageable.fromJson(String source) => Pageable.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Pageable.fromJson(String source) =>
+      Pageable.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() => 'Pageable(page: $page, perPage: $perPage)';
@@ -361,10 +366,8 @@ class Pageable {
   @override
   bool operator ==(covariant Pageable other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.page == page &&
-      other.perPage == perPage;
+
+    return other.page == page && other.perPage == perPage;
   }
 
   @override

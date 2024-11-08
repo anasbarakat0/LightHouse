@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:lighthouse_/common/widget/main_button.dart';
-import 'package:lighthouse_/common/widget/text_field_widget.dart';
 import 'package:lighthouse_/core/network/network_connection.dart';
 import 'package:lighthouse_/core/resources/colors.dart';
-import 'package:lighthouse_/features/admin_managment/presentation/view/admin_managment.dart';
 import 'package:lighthouse_/common/widget/header.dart';
 import 'package:lighthouse_/features/premium_client/data/models/premium_client_model.dart';
 import 'package:lighthouse_/features/premium_client/data/repository/add_premium_client_repo.dart';
@@ -21,7 +19,6 @@ import 'package:lighthouse_/features/premium_client/presentation/bloc/get_premiu
 import 'package:lighthouse_/features/premium_client/presentation/view/client_profile.dart';
 import 'package:lighthouse_/features/premium_client/presentation/widget/premium_client_dialog.dart';
 import 'package:lighthouse_/features/login/presentation/view/login.dart';
-import 'package:lighthouse_/features/premium_client/presentation/widget/qr_dialog.dart';
 import 'package:lighthouse_/features/premium_client/presentation/widget/search_field.dart';
 
 class PremiumClientsPage extends StatefulWidget {
@@ -33,7 +30,6 @@ class PremiumClientsPage extends StatefulWidget {
 
 class _PremiumClientsPageState extends State<PremiumClientsPage> {
   TextEditingController search = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +150,6 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                         style: const TextStyle(color: Colors.white),
                       ),
                     );
-
                   } else if (state is SuccessFetchingClients) {
                     return Expanded(
                       child: ListView.builder(
@@ -166,14 +161,19 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                                 InkWell(
                                   onTap: () async {
                                     // premiumClientInfo(context, client);
-                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>ClientProfile(client: client)));
-
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ClientProfile(client: client)));
                                   },
                                   child: ListTile(
                                     minTileHeight: 56,
                                     leading: CircleAvatar(
                                       radius: 25,
-                                      backgroundColor: client.gender == "MALE"? primaryColor:Colors.pink[400],
+                                      backgroundColor: client.gender == "MALE"
+                                          ? primaryColor
+                                          : Colors.pink[400],
                                       child: Text(
                                         client.firstName[0].toUpperCase(),
                                         textAlign: TextAlign.center,

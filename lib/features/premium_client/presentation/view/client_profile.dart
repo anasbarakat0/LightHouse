@@ -36,7 +36,7 @@ class _ClientProfileState extends State<ClientProfile> {
     if (widget.client.gender == 'MALE') {
       color = primaryColor;
     } else {
-      color = Color.fromRGBO(236, 64, 122, 1);
+      color = const Color.fromRGBO(236, 64, 122, 1);
     }
     super.initState();
   }
@@ -53,7 +53,9 @@ class _ClientProfileState extends State<ClientProfile> {
             ),
           ),
         ),
-      )..add(GetAdminById(id: widget.client.addedBy))..add(GetAdminById(id: widget.client.addedBy)),
+      )
+        ..add(GetAdminById(id: widget.client.addedBy))
+        ..add(GetAdminById(id: widget.client.addedBy)),
       child: Builder(builder: (context) {
         return Scaffold(
           body: Padding(
@@ -218,7 +220,7 @@ class _ClientProfileState extends State<ClientProfile> {
                                 ),
                               );
                             } else {
-                              return Text("Waiting...");
+                              return const Text("Waiting...");
                             }
                           },
                         ),
@@ -243,19 +245,22 @@ class _ClientProfileState extends State<ClientProfile> {
                                 ),
                               )
                             : Container(),
-                             const SizedBox(height: 20),
-                        Text(DateFormat('yyyy/MM/dd').format(
-                              DateTime.parse(widget.client.qrCode.updatedAt))==DateFormat('yyyy/MM/dd').format(
-                              DateTime.parse(widget.client.addingDateTime))?"Null":
-                          DateFormat('yyyy/MM/dd').format(
-                              DateTime.parse(widget.client.qrCode.updatedAt)),
+                        const SizedBox(height: 20),
+                        Text(
+                          DateFormat('yyyy/MM/dd').format(DateTime.parse(
+                                      widget.client.qrCode.updatedAt)) ==
+                                  DateFormat('yyyy/MM/dd').format(
+                                      DateTime.parse(
+                                          widget.client.addingDateTime))
+                              ? "Null"
+                              : DateFormat('yyyy/MM/dd').format(DateTime.parse(
+                                  widget.client.qrCode.updatedAt)),
                           style: const TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.w500,
                             color: Colors.grey,
                           ),
                         ),
-                          
                       ],
                     ),
                   ],

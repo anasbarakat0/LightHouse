@@ -15,7 +15,7 @@ void main() async {
     EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('ar')],
       path: "assets/translations",
-      fallbackLocale: Locale('ar'),
+      fallbackLocale: const Locale('ar'),
       child: const MainApp(),
     ),
   );
@@ -37,7 +37,7 @@ class MainApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch().copyWith(
           brightness: Brightness.dark,
           primary: primaryColor,
-          secondary: primaryColor, 
+          secondary: primaryColor,
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(

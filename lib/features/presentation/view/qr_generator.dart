@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lighthouse_/features/premium_client/presentation/widget/qr_dialog.dart';
 
 class QrGenerator extends StatelessWidget {
   final String data;

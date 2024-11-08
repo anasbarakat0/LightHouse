@@ -27,7 +27,7 @@ class AdminByIdRepo {
         AdminByIdResponseModel admin =
             AdminByIdResponseModel.fromMap(data.data);
         return Right(admin);
-      } on Forbidden catch (e) {
+      } on Forbidden {
         return Left(ForbiddenFailure(message: forbiddenMessage));
       } on BAD_REQUEST catch (e) {
         return Left(ServerFailure(message: e.message));
