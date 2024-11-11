@@ -1,14 +1,18 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+
 import 'package:lighthouse_/core/resources/colors.dart';
 
 // ignore: must_be_immutable
 class MainButton extends StatelessWidget {
   final String title;
   void Function() onTap;
+   final Widget icon;
   MainButton({
     super.key,
-    required this.onTap, required this.title,
+    required this.title,
+    required this.onTap,
+    required this.icon,
   });
 
   @override
@@ -26,7 +30,7 @@ class MainButton extends StatelessWidget {
           child: FittedBox(
             child: Row(
               children: [
-                const Icon(Icons.person_add_sharp),
+                icon,
                 const SizedBox(width: 15),
                 Text(
                   title,

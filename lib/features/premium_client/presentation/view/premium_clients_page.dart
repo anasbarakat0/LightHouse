@@ -116,19 +116,19 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                 },
                 builder: (context, state) {
                   return MainButton(
-                    onTap: () {
-                      void client(PremiumClient client) {
-                        print('client');
-                        print(client.toMap());
-                        context
-                            .read<AddPremiumClientBloc>()
-                            .add(AddPremiumClient(client: client));
-                      }
+                      onTap: () {
+                        void client(PremiumClient client) {
+                          print('client');
+                          print(client.toMap());
+                          context
+                              .read<AddPremiumClientBloc>()
+                              .add(AddPremiumClient(client: client));
+                        }
 
-                      AddPremiumClientDialog(context, client);
-                    },
-                    title: "add_client".tr(),
-                  );
+                        AddPremiumClientDialog(context, client);
+                      },
+                      title: "add_client".tr(),
+                      icon: const Icon(Icons.person_add_sharp));
                 },
               ),
               const SizedBox(height: 20),
@@ -223,7 +223,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                     return const CircularProgressIndicator();
                   }
                 },
-              )
+              ),
             ],
           ),
         );

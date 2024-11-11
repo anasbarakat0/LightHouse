@@ -20,6 +20,9 @@ dependencies:
   shared_preferences: ^2.3.2
   easy_localization: 3.0.7
   flutter_svg: ^2.0.10+1
+  lite_rolling_switch: ^1.0.1
+  esc_pos_utils: ^1.1.0
+  win32: ^5.8.0
 
 dependency_overrides:
   intl: ^0.17.0

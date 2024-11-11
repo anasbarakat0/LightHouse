@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lighthouse_/core/utils/responsive.dart';
 import 'package:lighthouse_/core/utils/shared_prefrences.dart';
+import 'package:lighthouse_/features/packages/presentation/view/packages_page.dart';
 import 'package:lighthouse_/features/premium_client/presentation/view/premium_clients_page.dart';
 import 'package:lighthouse_/features/admin_managment/presentation/view/admin_managment.dart';
 import 'package:lighthouse_/features/login/presentation/view/login.dart';
@@ -27,7 +28,7 @@ class _MainScreenState extends State<MainScreen> {
         data:
             "193e0a0b-720a-4e3d-a280-4bcdc2846462-fCataTup3CG9cC04-0987654321-Premium_User-8bb0ba33-e53c-44f3-9f18-2c7e26796ce5"),
     const PremiumClientsPage(),
-    const EmptyWidget(),
+    const PackagesPage(),
     const EmptyWidget(),
     const EmptyWidget(),
     const EmptyWidget(),
@@ -63,8 +64,8 @@ class _MainScreenState extends State<MainScreen> {
           : FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {},
-        icon: const Icon(Icons.person_add_alt_1),
-        label:  Text('add_client'.tr()),
+        icon: const Icon(Icons.login),
+        label:  Text('add_session'.tr()),
       ),
       drawer: !isDesktop
           ? SizedBox(

@@ -10,12 +10,13 @@ class AdminByIdService extends Service {
     try {
       print(6);
       response = await dio.get(
-          "$baseUrl/api/v1/dashboard/admins/admin-by-id/$id",
-          options: options(true));
-          print("7 response");
+        "$baseUrl/api/v1/dashboard/admins/admin-by-id/$id",
+        options: options(true),
+      );
+      print("7 response");
       return response;
     } on DioException catch (e) {
-          print("7 error");
+      print("7 error");
       if (e.response!.data["status"] == "BAD_REQUEST") {
         print("54137");
         throw BAD_REQUEST.fromMap(e.response!.data);

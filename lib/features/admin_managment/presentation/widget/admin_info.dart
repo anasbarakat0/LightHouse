@@ -76,7 +76,11 @@ void showAdminInfo(BuildContext context, AdminInfoModel admin) {
                       ),
                     ),
                     Text(
-                      admin.role,
+                      admin.role == "SuperAdmin"
+                              ? "supper_admin".tr()
+                              : admin.role == "MANAGER"
+                                  ? "manager".tr()
+                                  : "admin".tr(),
                       style: const TextStyle(
                         color: backgroundColor,
                         fontWeight: FontWeight.bold,

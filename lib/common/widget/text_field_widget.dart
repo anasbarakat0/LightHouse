@@ -1,25 +1,30 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:lighthouse_/core/resources/colors.dart';
 
 // ignore: must_be_immutable
 class MyTextField extends StatelessWidget {
-  final TextEditingController controller;
+  TextEditingController? controller;
   final String labelText;
   final bool isPassword;
   final bool? readOnly;
+  List<TextInputFormatter>? inputFormatters;
   void Function()? onTap;
   void Function(String)? onChanged;
+  void Function(String)? onSubmitted;
   MyTextField({
-    super.key,
-    required this.controller,
+    Key? key,
+    this.controller,
     required this.labelText,
     required this.isPassword,
     this.readOnly,
+    this.inputFormatters,
     this.onTap,
     this.onChanged,
-  });
+    this.onSubmitted,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +33,11 @@ class MyTextField extends StatelessWidget {
           const EdgeInsets.only(bottom: 16.0), // Add spacing between fields
       child: TextField(
         controller: controller,
+        inputFormatters: inputFormatters,
         obscureText: isPassword, // Toggle for password field
         readOnly: readOnly ?? false,
         onTap: onTap,
+        onSubmitted: onSubmitted,
         onChanged: onChanged,
         style: const TextStyle(
             color: backgroundColor), // Set text color to backgroundColor

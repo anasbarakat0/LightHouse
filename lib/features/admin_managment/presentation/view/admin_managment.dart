@@ -230,6 +230,7 @@ class AdminManagment extends StatelessWidget {
                                         .allAdminInfoResponse.body[index]
                                         .toMap()),
                                     onPressedDelete: () {
+                                      print("objectsdfjhgsdhjkfgdhjksfgjsdfkg000000000000000000000000000000000");
                                       deleteMessage(
                                         context,
                                         () {

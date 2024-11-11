@@ -54,5 +54,17 @@
     "adding_time": "تاريخ الإضافة",
     "lastModifiedBy": "آخر تعديل بواسطة",
     "updatedAt": "تاريخ التعديل",
+    "add_session": "بدأ جلسة",
+    "S.P": "ل.س",
+    "hrs": "ساعة",
+    "Hours": "الساعات",
+    "Duration": "المدة",
+    "Price": "السعر",
+    "days": "يوم",
+    "add_package": "إضافة باقة",
+    "description": "التفاصيل",
+    "packageDurationInDays": "مدة الباقة",
+    "num_of_hours": "عدد الساعات",
+    "package_management": "إدارة الباقات",
     "": ""
 }

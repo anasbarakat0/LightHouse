@@ -40,7 +40,7 @@ class AdminCardDesktop extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        adminInfoModel.firstName,
+                        "  ${adminInfoModel.firstName.replaceFirst(adminInfoModel.firstName[0], adminInfoModel.firstName[0].toUpperCase())} ${adminInfoModel.lastName.replaceFirst(adminInfoModel.lastName[0], adminInfoModel.lastName[0].toUpperCase())}",
                         style: Theme.of(context).textTheme.labelMedium,
                       ),
                       const SizedBox(width: 15),
@@ -72,33 +72,33 @@ class AdminCardDesktop extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          InkWell(
-            onTap: onPressedEdit,
-            child: Container(
-              height: 69,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                    width: 1, color: const Color.fromRGBO(255, 111, 0, 1)),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 17),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Icon(Icons.edit),
-                    const SizedBox(width: 10),
-                    Text(
-                      "edit".tr(),
-                      style: Theme.of(context).textTheme.labelMedium,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
+          // InkWell(
+          //   onTap: onPressedEdit,
+          //   child: Container(
+          //     height: 69,
+          //     alignment: Alignment.center,
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(10),
+          //       border: Border.all(
+          //           width: 1, color: const Color.fromRGBO(255, 111, 0, 1)),
+          //     ),
+          //     child: Padding(
+          //       padding: const EdgeInsets.symmetric(horizontal: 17),
+          //       child: Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: [
+          //           const Icon(Icons.edit),
+          //           const SizedBox(width: 10),
+          //           Text(
+          //             "edit".tr(),
+          //             style: Theme.of(context).textTheme.labelMedium,
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // const SizedBox(width: 10),
           InkWell(
             onTap: onPressedDelete,
             child: Container(
@@ -108,7 +108,9 @@ class AdminCardDesktop extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   width: 1,
-                  color: const Color.fromRGBO(183, 28, 28, 1),
+                  color: adminInfoModel.role == "ADMIN"
+                      ? const Color.fromRGBO(183, 28, 28, 1)
+                      : const Color.fromARGB(255, 99, 99, 99),
                 ),
               ),
               child: Padding(

@@ -54,5 +54,17 @@
     "adding_time":"Adding Date",
     "lastModifiedBy":"Last modified by",
     "updatedAt":"Update Date",
+    "add_session":"Start Session",
+    "S.P":"S.P",
+    "hrs":"hrs",
+    "Hours":"Hours",
+    "Duration":"Duration",
+    "Price":"Price",
+    "days":"days",
+    "add_package":"Add Package",
+    "description":"Description",
+    "packageDurationInDays":"Package Duration",
+    "num_of_hours":"Number of Hours",
+    "package_management":"Package Management",
     "":""
 }

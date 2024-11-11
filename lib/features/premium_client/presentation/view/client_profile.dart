@@ -16,6 +16,7 @@ import 'package:lighthouse_/features/premium_client/data/source/remote/admin_by_
 import 'package:lighthouse_/features/premium_client/domain/usecase/admin_by_id_usecase.dart';
 import 'package:lighthouse_/features/premium_client/presentation/bloc/admin_by_id_bloc.dart';
 import 'package:lighthouse_/features/premium_client/presentation/widget/icon_text_widget.dart';
+import 'package:lighthouse_/features/premium_client/presentation/widget/printing_commands.dart';
 
 class ClientProfile extends StatefulWidget {
   final Body client;
@@ -264,6 +265,42 @@ class _ClientProfileState extends State<ClientProfile> {
                       ],
                     ),
                   ],
+                ),
+                const Expanded(child: SizedBox()),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>WindowsPrintScreen()));
+                  },
+                  child: SizedBox(
+                    height: 69,
+                    width: MediaQuery.of(context).size.width / 4,
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: color,
+                      ),
+                      child: const FittedBox(
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.receipt_long,
+                              color: backgroundColor,
+                            ),
+                            SizedBox(width: 15),
+                            Text(
+                              "Print QR Code",
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.w600,
+                                color: backgroundColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
