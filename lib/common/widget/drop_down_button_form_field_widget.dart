@@ -26,10 +26,10 @@ class MyDropdownButtonFormField extends StatelessWidget {
         value: selectedValue,
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: const TextStyle(color: backgroundColor), // Label color
+          labelStyle: const TextStyle(color: darkNavy), // Label color
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
-                color: backgroundColor, width: 2.0), // Border when focused
+                color: darkNavy, width: 2.0), // Border when focused
             borderRadius: BorderRadius.circular(12.0), // Rounded corners
           ),
           enabledBorder: OutlineInputBorder(

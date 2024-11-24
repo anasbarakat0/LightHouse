@@ -16,7 +16,12 @@ class _SummaryWidgetState extends State<SummaryWidget> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: cardBackgroundColor,
+        // color: navy,
+        gradient: LinearGradient(
+          colors: [navy, darkNavy],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -27,12 +32,13 @@ class _SummaryWidgetState extends State<SummaryWidget> {
             Text(
               'summary'.tr(),
               style: const TextStyle(
+                color: lightGrey,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 ),
             ),
             const SizedBox(height: 16),
-            SummaryDetails(visits: "visits".tr(), onGround: "on_ground".tr()),
+            SummaryDetails(visits: "80", onGround: "41"),
           ],
         ),
       ),

@@ -9,7 +9,7 @@ void errorMessage(BuildContext context, String titel, List<String> messages) {
       return AlertDialog(
         title: Text(
           titel,
-          style: const TextStyle(color: backgroundColor),
+          style: const TextStyle(color: darkNavy),
         ),
         backgroundColor: Colors.white,
         content: SizedBox(
@@ -29,7 +29,7 @@ void errorMessage(BuildContext context, String titel, List<String> messages) {
                         title: Text(
                           messages[index],
                           style: const TextStyle(
-                            color: backgroundColor,
+                            color: darkNavy,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),

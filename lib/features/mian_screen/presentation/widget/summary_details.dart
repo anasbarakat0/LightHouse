@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:lighthouse_/core/resources/colors.dart';
 import 'package:lighthouse_/features/mian_screen/presentation/widget/custom_cart.dart';
 
 class SummaryDetails extends StatefulWidget {
@@ -16,7 +17,7 @@ class _SummaryDetailsState extends State<SummaryDetails> {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-      color: const Color(0xFF2F353E),
+      color: lightGrey,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -32,12 +33,12 @@ class _SummaryDetailsState extends State<SummaryDetails> {
       children: [
         Text(
           key,
-          style: const TextStyle(fontSize: 11, color: Colors.grey),
+          style: const TextStyle(fontSize: 14, color: orange,fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 2),
         Text(
           value,
-          style: const TextStyle(fontSize: 14),
+          style: const TextStyle(fontSize: 20,fontWeight: FontWeight.w700),
         ),
       ],
     );

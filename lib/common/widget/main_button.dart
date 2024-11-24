@@ -25,7 +25,7 @@ class MainButton extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: primaryColor,
+            color: yellow,
           ),
           child: FittedBox(
             child: Row(

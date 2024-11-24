@@ -19,25 +19,25 @@ class SearchField extends StatelessWidget {
        
         suffixIcon: const Icon(
           Icons.search,
-          color: backgroundColor,
+          color: darkNavy,
         ),
         filled: true,
-        fillColor: cardBackgroundColor,
+        fillColor: navy,
         labelText: "Search",
         labelStyle: const TextStyle(color: Colors.grey),
         contentPadding:
             const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: primaryColor, width: 1.0),
+          borderSide: const BorderSide(color: orange, width: 1.0),
           borderRadius: BorderRadius.circular(12.0),
         ),
-        focusColor: backgroundColor,
+        focusColor: darkNavy,
         disabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.circular(12.0),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: backgroundColor),
+          borderSide: const BorderSide(color: darkNavy),
           borderRadius: BorderRadius.circular(12.0),
         ),
         floatingLabelBehavior: FloatingLabelBehavior.never,

@@ -12,7 +12,7 @@ void showAdminInfo(BuildContext context, AdminInfoModel admin) {
         return AlertDialog(
           title:  Text(
             "admin_info".tr(),
-            style: const TextStyle(color: backgroundColor),
+            style: const TextStyle(color: darkNavy),
           ),
           backgroundColor: Colors.white,
           content: FittedBox(
@@ -50,28 +50,28 @@ void showAdminInfo(BuildContext context, AdminInfoModel admin) {
                     Text(
                       admin.id,
                       style: const TextStyle(
-                        color: backgroundColor,
+                        color: darkNavy,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
                       admin.firstName,
                       style: const TextStyle(
-                        color: backgroundColor,
+                        color: darkNavy,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
                       admin.lastName,
                       style: const TextStyle(
-                        color: backgroundColor,
+                        color: darkNavy,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
                       admin.email,
                       style: const TextStyle(
-                        color: backgroundColor,
+                        color: darkNavy,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -82,7 +82,7 @@ void showAdminInfo(BuildContext context, AdminInfoModel admin) {
                                   ? "manager".tr()
                                   : "admin".tr(),
                       style: const TextStyle(
-                        color: backgroundColor,
+                        color: darkNavy,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

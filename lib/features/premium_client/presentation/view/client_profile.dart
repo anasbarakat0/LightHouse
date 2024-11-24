@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:lighthouse_/common/widget/gradient_scaffold.dart';
 import 'package:lighthouse_/core/network/network_connection.dart';
 import 'package:lighthouse_/core/resources/colors.dart';
 import 'package:lighthouse_/features/premium_client/data/models/get_all_premiumClient_response_model.dart';
@@ -34,11 +35,8 @@ class _ClientProfileState extends State<ClientProfile> {
 
   @override
   void initState() {
-    if (widget.client.gender == 'MALE') {
-      color = primaryColor;
-    } else {
-      color = const Color.fromRGBO(236, 64, 122, 1);
-    }
+    color = orange;
+
     super.initState();
   }
 
@@ -58,7 +56,7 @@ class _ClientProfileState extends State<ClientProfile> {
         ..add(GetAdminById(id: widget.client.addedBy))
         ..add(GetAdminById(id: widget.client.addedBy)),
       child: Builder(builder: (context) {
-        return Scaffold(
+        return GradientScaffold(
           body: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
@@ -74,90 +72,111 @@ class _ClientProfileState extends State<ClientProfile> {
                 ),
                 const SizedBox(height: 25),
                 Text(
-                  "client_profile".tr(),
+                  "${widget.client.firstName.replaceFirst(widget.client.firstName[0], widget.client.firstName[0].toUpperCase())} ${widget.client.lastName.replaceFirst(widget.client.lastName[0], widget.client.lastName[0].toUpperCase())}",
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
-                const SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                const SizedBox(height: 80),
+                Container(
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 10
+                          ,
+                          offset: Offset(7  ,7),
+                          color: const Color.fromARGB(139, 0, 0, 0)
+                        ),
+                      ],
+                      gradient: const LinearGradient(
+                        colors: [lightGrey, grey],
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                      ),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 50, horizontal: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "${widget.client.firstName.replaceFirst(widget.client.firstName[0], widget.client.firstName[0].toUpperCase())} ${widget.client.lastName.replaceFirst(widget.client.lastName[0], widget.client.lastName[0].toUpperCase())}",
-                          style: TextStyle(
-                            fontSize: 32.0,
-                            fontWeight: FontWeight.bold,
-                            color: color,
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(start: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Text(
+                              //   "${widget.client.firstName.replaceFirst(widget.client.firstName[0], widget.client.firstName[0].toUpperCase())} ${widget.client.lastName.replaceFirst(widget.client.lastName[0], widget.client.lastName[0].toUpperCase())}",
+                              //   style: TextStyle(
+                              //     fontSize: 32.0,
+                              //     fontWeight: FontWeight.bold,
+                              //     color: color,
+                              //   ),
+                              // ),
+                              // const SizedBox(height: 20),
+                              IconTextWidget(
+                                icon: "ID",
+                                text: widget.client.uuid,
+                                color: color,
+                              ),
+                              const SizedBox(height: 5),
+                              IconTextWidget(
+                                icon: "email",
+                                text: widget.client.email,
+                                color: color,
+                              ),
+                              const SizedBox(height: 5),
+                              IconTextWidget(
+                                icon: "mobile",
+                                text: widget.client.phoneNumber,
+                                color: color,
+                              ),
+                              const SizedBox(height: 5),
+                              IconTextWidget(
+                                icon: "study",
+                                text: widget.client.study,
+                                color: color,
+                              ),
+                              const SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  SvgPicture.asset("assets/svg/gender.svg",
+                                      width: 23, height: 23, color: color),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    widget.client.gender.toLowerCase().tr(),
+                                    style: const TextStyle(
+                                      fontSize: 18.0,
+                                      color: navy,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 5),
+                              IconTextWidget(
+                                icon: "birth_date",
+                                text: DateFormat('yyyy/MM/dd').format(
+                                    DateTime.parse(widget.client.birthDate ??
+                                        "2024-10-30T18:16:35.808397918")),
+                                color: color,
+                              ),
+                              const SizedBox(height: 5),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        IconTextWidget(
-                          icon: "ID",
-                          text: widget.client.uuid,
-                          color: color,
-                        ),
-                        const SizedBox(height: 5),
-                        IconTextWidget(
-                          icon: "email",
-                          text: widget.client.email,
-                          color: color,
-                        ),
-                        const SizedBox(height: 5),
-                        IconTextWidget(
-                          icon: "mobile",
-                          text: widget.client.phoneNumber,
-                          color: color,
-                        ),
-                        const SizedBox(height: 5),
-                        IconTextWidget(
-                          icon: "study",
-                          text: widget.client.study,
-                          color: color,
-                        ),
-                        const SizedBox(height: 5),
-                        Row(
-                          children: [
-                            SvgPicture.asset(
-                              "assets/svg/gender.svg",
-                              width: 23,
-                              height: 23,
-                              color: widget.client.gender == "MALE"
-                                  ? primaryColor
-                                  : Colors.pink[400],
+                        CustomPaint(
+                          painter: QrPainter(
+                            data: widget.client.qrCode.qrCode,
+                            options: const QrOptions(
+                              colors: QrColors(
+                                  dark: QrColorSolid(navy),
+                                  background: QrColorSolid(Colors.transparent)),
                             ),
-                            const SizedBox(width: 10),
-                            Text(
-                              widget.client.gender.toLowerCase().tr(),
-                              style: const TextStyle(
-                                fontSize: 18.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
+                          ),
+                          size: const Size(200, 200),
                         ),
-                        const SizedBox(height: 5),
-                        IconTextWidget(
-                          icon: "birth_date",
-                          text: DateFormat('yyyy/MM/dd').format(DateTime.parse(
-                              widget.client.birthDate ??
-                                  "2024-10-30T18:16:35.808397918")),
-                          color: color,
-                        ),
-                        const SizedBox(height: 5),
                       ],
                     ),
-                    CustomPaint(
-                      painter: QrPainter(
-                        data: widget.client.qrCode.qrCode,
-                        options: const QrOptions(
-                          colors: QrColors(dark: QrColorSolid(backgroundColor)),
-                        ),
-                      ),
-                      size: const Size(200, 200),
-                    ),
-                  ],
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 25),
@@ -269,7 +288,10 @@ class _ClientProfileState extends State<ClientProfile> {
                 const Expanded(child: SizedBox()),
                 InkWell(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>WindowsPrintScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WindowsPrintScreen()));
                   },
                   child: SizedBox(
                     height: 69,
@@ -285,7 +307,7 @@ class _ClientProfileState extends State<ClientProfile> {
                           children: [
                             Icon(
                               Icons.receipt_long,
-                              color: backgroundColor,
+                              color: darkNavy,
                             ),
                             SizedBox(width: 15),
                             Text(
@@ -293,7 +315,7 @@ class _ClientProfileState extends State<ClientProfile> {
                               style: TextStyle(
                                 fontSize: 20.0,
                                 fontWeight: FontWeight.w600,
-                                color: backgroundColor,
+                                color: darkNavy,
                               ),
                             ),
                           ],

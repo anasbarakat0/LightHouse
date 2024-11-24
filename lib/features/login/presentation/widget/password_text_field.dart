@@ -5,11 +5,13 @@ class MyPasswordTextField extends StatefulWidget {
   final TextEditingController controller;
   final String? label;
   final String? hint;
+  final bool? dark;
 
-  const MyPasswordTextField({
+   MyPasswordTextField({
     required this.controller,
     this.label,
     this.hint,
+    this.dark,
     super.key,
   });
 
@@ -33,7 +35,7 @@ class _MyPasswordTextFieldState extends State<MyPasswordTextField> {
           fontSize: 14,
         ),
         labelStyle: const TextStyle(
-          color: primaryColor,
+          color: orange,
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
@@ -57,7 +59,7 @@ class _MyPasswordTextFieldState extends State<MyPasswordTextField> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(
-            color: primaryColor,
+            color: orange,
             width: 1,
           ),
         ),
@@ -75,8 +77,8 @@ class _MyPasswordTextFieldState extends State<MyPasswordTextField> {
           },
         ),
       ),
-      style: const TextStyle(
-        color: Colors.white,
+      style:  TextStyle(
+        color:widget.dark??false? navy: Colors.white,
         fontSize: 16,
       ),
       keyboardType: TextInputType.visiblePassword,

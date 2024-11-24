@@ -20,7 +20,7 @@ void createPackageDialog(BuildContext context, Function(PackageModel) add) {
         ),
         title: Text(
           "add".tr(),
-          style: TextStyle(color: backgroundColor),
+          style: const TextStyle(color: darkNavy),
         ),
         content: SingleChildScrollView(
           child: Column(
@@ -63,7 +63,7 @@ void createPackageDialog(BuildContext context, Function(PackageModel) add) {
         actions: [
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              minimumSize: Size(double.infinity, 50),
+              minimumSize: const Size(double.infinity, 50),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10), // Rounded corners
               ),

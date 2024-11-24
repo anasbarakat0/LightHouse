@@ -15,7 +15,7 @@ void premiumClientInfo(BuildContext context, Body client) {
           style: const TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.w600,
-            color: backgroundColor,
+            color: darkNavy,
           ),
         ),
         backgroundColor: Colors.white,
@@ -32,49 +32,49 @@ void premiumClientInfo(BuildContext context, Body client) {
                       "first_name".tr(),
                       style: const TextStyle(
                         fontSize: 18,
-                        color: backgroundColor,
+                        color: darkNavy,
                       ),
                     ),
                     Text(
                       "last_name".tr(),
                       style: const TextStyle(
                         fontSize: 18,
-                        color: backgroundColor,
+                        color: darkNavy,
                       ),
                     ),
                     Text(
                       "email".tr(),
                       style: const TextStyle(
                         fontSize: 18,
-                        color: backgroundColor,
+                        color: darkNavy,
                       ),
                     ),
                     Text(
                       "phone_number".tr(),
                       style: const TextStyle(
                         fontSize: 18,
-                        color: backgroundColor,
+                        color: darkNavy,
                       ),
                     ),
                     Text(
                       "study".tr(),
                       style: const TextStyle(
                         fontSize: 18,
-                        color: backgroundColor,
+                        color: darkNavy,
                       ),
                     ),
                     Text(
                       "gender".tr(),
                       style: const TextStyle(
                         fontSize: 18,
-                        color: backgroundColor,
+                        color: darkNavy,
                       ),
                     ),
                     Text(
                       "birth_date".tr(),
                       style: const TextStyle(
                         fontSize: 18,
-                        color: backgroundColor,
+                        color: darkNavy,
                       ),
                     ),
                   ],
@@ -87,7 +87,7 @@ void premiumClientInfo(BuildContext context, Body client) {
                       client.firstName,
                       style: const TextStyle(
                         fontSize: 18,
-                        color: backgroundColor,
+                        color: darkNavy,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -95,7 +95,7 @@ void premiumClientInfo(BuildContext context, Body client) {
                       client.lastName,
                       style: const TextStyle(
                         fontSize: 18,
-                        color: backgroundColor,
+                        color: darkNavy,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -103,7 +103,7 @@ void premiumClientInfo(BuildContext context, Body client) {
                       client.email,
                       style: const TextStyle(
                         fontSize: 18,
-                        color: backgroundColor,
+                        color: darkNavy,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -111,7 +111,7 @@ void premiumClientInfo(BuildContext context, Body client) {
                       client.phoneNumber,
                       style: const TextStyle(
                         fontSize: 18,
-                        color: backgroundColor,
+                        color: darkNavy,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -119,7 +119,7 @@ void premiumClientInfo(BuildContext context, Body client) {
                       client.study,
                       style: const TextStyle(
                         fontSize: 18,
-                        color: backgroundColor,
+                        color: darkNavy,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -127,7 +127,7 @@ void premiumClientInfo(BuildContext context, Body client) {
                       client.gender,
                       style: const TextStyle(
                         fontSize: 18,
-                        color: backgroundColor,
+                        color: darkNavy,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -135,7 +135,7 @@ void premiumClientInfo(BuildContext context, Body client) {
                       client.birthDate.toString(),
                       style: const TextStyle(
                         fontSize: 18,
-                        color: backgroundColor,
+                        color: darkNavy,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -148,7 +148,7 @@ void premiumClientInfo(BuildContext context, Body client) {
               painter: QrPainter(
                 data: client.qrCode.qrCode,
                 options: const QrOptions(
-                  colors: QrColors(dark: QrColorSolid(backgroundColor)),
+                  colors: QrColors(dark: QrColorSolid(darkNavy)),
                 ),
               ),
               size: const Size(200, 200),
@@ -223,7 +223,7 @@ void premiumClientInfo(BuildContext context, Body client) {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: primaryColor),
+                      color: orange),
                   child:  Text(
                     "done".tr(),
                     style: const TextStyle(

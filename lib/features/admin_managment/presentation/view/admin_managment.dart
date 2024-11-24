@@ -153,12 +153,12 @@ class AdminManagment extends StatelessWidget {
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: primaryColor,
+                          color: yellow,
                         ),
                         child: FittedBox(
                           child: Row(
                             children: [
-                              const Icon(Icons.person_add_sharp),
+                              const Icon(Icons.person_add_sharp,color:orange),
                               const SizedBox(width: 15),
                               Text(
                                 "create_admin".tr(),

@@ -37,7 +37,7 @@ void AddPremiumClientDialog(BuildContext context, Function(PremiumClient) add) {
           }
 
           return AlertDialog(
-            title: Text("add".tr(),style: TextStyle(color: backgroundColor),),
+            title: Text("add".tr(),style: const TextStyle(color: darkNavy),),
             backgroundColor: Colors.white,
             content: SizedBox(
               width: 300,

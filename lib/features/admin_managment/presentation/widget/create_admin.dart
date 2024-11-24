@@ -19,7 +19,7 @@ void createAdmin(BuildContext context, Function(NewAdminModel) admin) {
         return AlertDialog(
           title: Text(
             "create_admin".tr(),
-            style: const TextStyle(color: backgroundColor),
+            style: const TextStyle(color: darkNavy),
           ),
           backgroundColor: Colors.white,
           content: Column(

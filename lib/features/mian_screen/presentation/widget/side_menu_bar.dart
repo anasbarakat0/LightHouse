@@ -1,4 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lighthouse_/core/resources/colors.dart';
 import 'package:lighthouse_/features/mian_screen/data/sources/menu_data.dart';
 
@@ -18,10 +20,32 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 20),
-      color: const Color(0xFF171821),
-      child: ListView.builder(
-        itemCount: data.menu.length,
-        itemBuilder: (context, index) => buildMenuEntry(data, index),
+      // color: navy,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [navy, darkNavy],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: Column(
+        children: [
+          SvgPicture.asset(
+            width: MediaQuery.of(context).size.width / 8,
+            context.locale.languageCode == "en"
+                ? "assets/svg/en-logo.svg"
+                : "assets/svg/ar-logo.svg",
+          ),
+          SizedBox(
+            height: 50,
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: data.menu.length,
+              itemBuilder: (context, index) => buildMenuEntry(data, index),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -35,7 +59,7 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
         borderRadius: const BorderRadius.all(
           Radius.circular(6.0),
         ),
-        color: isSelected ? primaryColor : Colors.transparent,
+        color: isSelected ? lightGrey : Colors.transparent,
       ),
       child: InkWell(
         onTap: () => setState(() {
@@ -48,15 +72,15 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
               padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
               child: Icon(
                 data.menu[index].icon,
-                color: isSelected ? Colors.black : Colors.grey,
+                color: isSelected ? orange : lightGrey,
               ),
             ),
             Text(
               data.menu[index].title,
               style: TextStyle(
                 fontSize: 16,
-                color: isSelected ? Colors.black : Colors.grey,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                color: isSelected ? navy : lightGrey,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
               ),
             ),
           ],

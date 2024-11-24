@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:lighthouse_/common/widget/main_button.dart';
 import 'package:lighthouse_/core/network/network_connection.dart';
@@ -128,7 +129,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                         AddPremiumClientDialog(context, client);
                       },
                       title: "add_client".tr(),
-                      icon: const Icon(Icons.person_add_sharp));
+                      icon: const Icon(Icons.person_add_sharp,color: orange,));
                 },
               ),
               const SizedBox(height: 20),
@@ -171,15 +172,8 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                                     minTileHeight: 56,
                                     leading: CircleAvatar(
                                       radius: 25,
-                                      backgroundColor: client.gender == "MALE"
-                                          ? primaryColor
-                                          : Colors.pink[400],
-                                      child: Text(
-                                        client.firstName[0].toUpperCase(),
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 25),
-                                      ),
+                                      backgroundColor: navy,
+                                      child: client.gender == "MALE"?Icon( Icons.person,color: lightGrey ,size: 35,):SvgPicture.asset("assets/svg/woman.svg",width: 25  ,color: lightGrey,),
                                     ),
                                     title: Text(
                                       "${client.firstName.replaceFirst(client.firstName[0], client.firstName[0].toUpperCase())} ${client.lastName.replaceFirst(client.lastName[0], client.lastName[0].toUpperCase())}",
@@ -196,7 +190,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                                     ),
                                     trailing: const Icon(
                                         Icons.arrow_forward_ios,
-                                        color: cardBackgroundColor),
+                                        color: navy),
                                     contentPadding: const EdgeInsets.symmetric(
                                         horizontal: 16, vertical: 8),
                                     shape: RoundedRectangleBorder(
@@ -204,10 +198,10 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                                     ),
                                   ),
                                 ),
-                                const Padding(
+                                if(index!= state.responseModel.body.length-1) const Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 10),
                                   child: Divider(thickness: 0.1),
-                                )
+                                ),
                               ],
                             );
                           }),

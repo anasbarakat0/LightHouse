@@ -14,7 +14,7 @@ class LanguageDropdownSwitcher extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(width: 1, color: primaryColor),
+        border: Border.all(width: 1, color: orange),
       ),
       padding: const EdgeInsets.all(8),
       child: DropdownButtonFormField<Locale>(
@@ -24,11 +24,11 @@ class LanguageDropdownSwitcher extends StatelessWidget {
           padding: EdgeInsetsDirectional.only(end: 8),
           child: Icon(
             Icons.translate,
-            color: primaryColor,
+            color: orange,
           ),
         ),
         focusColor: const Color.fromRGBO(0, 0, 0, 0),
-        dropdownColor: primaryColor,
+        dropdownColor: orange,
         onChanged: (Locale? newLocale) {
           if (newLocale != null) {
             context.setLocale(newLocale);

@@ -119,7 +119,7 @@ class _PackagesPageState extends State<PackagesPage> {
             listener: (BuildContext context, state) {
           if (state is PackageAdded) {
             context.read<GetAllActivePackagesBloc>()
-              ..add(GetAllActivePackages(page: currentPage, size: perPage));
+              .add(GetAllActivePackages(page: currentPage, size: perPage));
 
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -223,13 +223,13 @@ class _PackagesPageState extends State<PackagesPage> {
                           alignment: Alignment.topCenter,
                           child: Container(
                             height: 20, 
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
                                 colors: [
-                                  backgroundColor,
-                                  Color.fromARGB(0, 21, 19, 28),
+                                  darkNavy,
+                                  Color.fromARGB(0, 16, 55, 92),
                                 ],
                               ),
                             ),
@@ -241,13 +241,13 @@ class _PackagesPageState extends State<PackagesPage> {
                           alignment: Alignment.bottomCenter,
                           child: Container(
                             height: 20, 
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
                                 colors: [
-                                  Color.fromARGB(0, 21, 19, 28),
-                                  backgroundColor,
+                                   Color.fromARGB(0, 16, 55, 92),
+                                  darkNavy,
                                 ],
                               ),
                             ),

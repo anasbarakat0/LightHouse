@@ -11,10 +11,10 @@ class PackageCard extends StatefulWidget {
   final PackageModel package;
   dynamic Function(bool) onChanged;
   PackageCard({
-    Key? key,
+    super.key,
     required this.onChanged,
     required this.package,
-  }) : super(key: key);
+  });
 
   @override
   State<PackageCard> createState() => _PackageCardState();
@@ -31,7 +31,7 @@ class _PackageCardState extends State<PackageCard> {
             vertical: 8.0,
           ),
           decoration: BoxDecoration(
-            color: cardBackgroundColor,
+            color: navy,
             borderRadius: BorderRadius.circular(12),
             boxShadow: const [
               BoxShadow(
@@ -50,8 +50,8 @@ class _PackageCardState extends State<PackageCard> {
                     "Premium Package",
                     style: TextStyle(
                         fontSize: 18,
-                        color: primaryColor,
-                        fontWeight: FontWeight.bold),
+                        color: lightGrey,
+                        fontWeight: FontWeight.w900),
                   ),
                   const Spacer(),
                   // Switch(
@@ -81,7 +81,7 @@ class _PackageCardState extends State<PackageCard> {
               const SizedBox(height: 8),
               Text(
                 widget.package.description,
-                style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
+                style: TextStyle(fontSize: 14, color: grey),
               ),
               const SizedBox(height: 16),
               Row(
@@ -93,7 +93,7 @@ class _PackageCardState extends State<PackageCard> {
                       Text(
                         "Hours".tr(),
                         style: TextStyle(
-                            fontSize: 12, color: Colors.grey.shade600),
+                            fontSize: 12, color: orange),
                       ),
                       Text(
                         "${widget.package.numOfHours} ${"hrs".tr()}",
@@ -110,7 +110,7 @@ class _PackageCardState extends State<PackageCard> {
                       Text(
                         "Price".tr(),
                         style: TextStyle(
-                            fontSize: 12, color: Colors.grey.shade600),
+                            fontSize: 12, color: orange),
                       ),
                       Text(
                         "${widget.package.price} ${"S.P".tr()}",
@@ -127,7 +127,7 @@ class _PackageCardState extends State<PackageCard> {
                       Text(
                         "Duration".tr(),
                         style: TextStyle(
-                            fontSize: 12, color: Colors.grey.shade600),
+                            fontSize: 12, color: orange),
                       ),
                       Text(
                         "${widget.package.packageDurationInDays} ${"days".tr()}",

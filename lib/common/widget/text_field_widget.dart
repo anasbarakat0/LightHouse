@@ -15,7 +15,7 @@ class MyTextField extends StatelessWidget {
   void Function(String)? onChanged;
   void Function(String)? onSubmitted;
   MyTextField({
-    Key? key,
+    super.key,
     this.controller,
     required this.labelText,
     required this.isPassword,
@@ -24,7 +24,7 @@ class MyTextField extends StatelessWidget {
     this.onTap,
     this.onChanged,
     this.onSubmitted,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +40,13 @@ class MyTextField extends StatelessWidget {
         onSubmitted: onSubmitted,
         onChanged: onChanged,
         style: const TextStyle(
-            color: backgroundColor), // Set text color to backgroundColor
+            color: darkNavy), // Set text color to darkNavy
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: const TextStyle(color: backgroundColor), // Label color
+          labelStyle: const TextStyle(color: darkNavy), // Label color
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
-                color: backgroundColor, width: 2.0), // Border when focused
+                color: darkNavy, width: 2.0), // Border when focused
             borderRadius: BorderRadius.circular(12.0), // Rounded corners
           ),
           enabledBorder: OutlineInputBorder(
@@ -70,13 +70,13 @@ class MyTextField extends StatelessWidget {
 //       controller: controller,
 //       obscureText: isPassword, // Toggle for password field
 //       style: const TextStyle(
-//           color: backgroundColor), // Set text color to backgroundColor
+//           color: darkNavy), // Set text color to darkNavy
 //       decoration: InputDecoration(
 //         labelText: labelText,
-//         labelStyle: const TextStyle(color: backgroundColor), // Label color
+//         labelStyle: const TextStyle(color: darkNavy), // Label color
 //         focusedBorder: OutlineInputBorder(
 //           borderSide: const BorderSide(
-//               color: backgroundColor, width: 2.0), // Border when focused
+//               color: darkNavy, width: 2.0), // Border when focused
 //           borderRadius: BorderRadius.circular(12.0), // Rounded corners
 //         ),
 //         enabledBorder: OutlineInputBorder(

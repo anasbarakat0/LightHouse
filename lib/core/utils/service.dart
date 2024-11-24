@@ -13,6 +13,7 @@ class Service {
   options(bool auth) {
     Options options;
     if (auth) {
+      print(storage.get<SharedPreferences>().getString("token"));
       options = Options(
         headers: {
           'Accept': '*/*',

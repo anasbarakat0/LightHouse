@@ -9,7 +9,7 @@ void submitEditingDialog(BuildContext context, void Function() edit,void Functio
       return AlertDialog(
         title:  Text(
           "edit".tr(),
-          style: const TextStyle(color: backgroundColor),
+          style: const TextStyle(color: darkNavy),
         ),
         backgroundColor: Colors.white,
         content: SizedBox(
@@ -20,7 +20,7 @@ void submitEditingDialog(BuildContext context, void Function() edit,void Functio
                Text(
                 "edit_price_submitting".tr(),
                 style: const TextStyle(
-                  color: backgroundColor,
+                  color: darkNavy,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -36,12 +36,12 @@ void submitEditingDialog(BuildContext context, void Function() edit,void Functio
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: primaryColor, width: 1),
+                            border: Border.all(color: orange, width: 1),
                           ),
                           child:  Text(
                             "back".tr(),
                             style: const TextStyle(
-                              color: primaryColor,
+                              color: orange,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
@@ -63,7 +63,7 @@ void submitEditingDialog(BuildContext context, void Function() edit,void Functio
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: primaryColor,
+                            color: orange,
                           ),
                           child:  Text(
                             "submit".tr(),

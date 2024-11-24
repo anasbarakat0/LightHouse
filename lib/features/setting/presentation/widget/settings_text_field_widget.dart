@@ -26,7 +26,7 @@ class SettingsTextFieldWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           width: 1,
-          color: primaryColor,
+          color: orange,
         ),
       ),
       padding: const EdgeInsets.all(8),
@@ -41,7 +41,7 @@ class SettingsTextFieldWidget extends StatelessWidget {
         decoration: InputDecoration(
           label: Text(
             "Hourly_Price".tr(),
-            style: const TextStyle(color: primaryColor),
+            style: const TextStyle(color: orange),
           ),
           suffix: Padding(
             padding: const EdgeInsetsDirectional.only(end: 5,bottom: 2),
@@ -49,7 +49,7 @@ class SettingsTextFieldWidget extends StatelessWidget {
               "assets/svg/hourly_price.svg",
               width: 28,
               height: 28,
-              color: primaryColor,
+              color: orange,
             ),
           ),
         ),

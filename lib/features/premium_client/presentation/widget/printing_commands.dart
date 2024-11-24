@@ -1,5 +1,4 @@
 import 'dart:ffi' as ffi;
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:esc_pos_utils/esc_pos_utils.dart';
@@ -8,6 +7,8 @@ import 'package:win32/win32.dart';
 import 'package:ffi/ffi.dart';
 
 class WindowsPrintScreen extends StatefulWidget {
+  const WindowsPrintScreen({super.key});
+
   @override
   _WindowsPrintScreenState createState() => _WindowsPrintScreenState();
 }
@@ -212,7 +213,7 @@ class _WindowsPrintScreenState extends State<WindowsPrintScreen> {
     for (var i = 0; i < count; i++) {
       final printer = printerInfo.elementAt(i).ref;
       final name = printer.pPrinterName.toDartString();
-      print('Printer ${i+1}: $name');
+      print('Printer ${i + 1}: $name');
     }
 
     malloc.free(printerInfoPtr);
@@ -223,20 +224,27 @@ class _WindowsPrintScreenState extends State<WindowsPrintScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('Windows USB Print')),
-        body: Center(
-          child: ElevatedButton(
-            onPressed: printReceipt,
-            child: const Text('Print Receipt'),
-          ),
+        appBar: AppBar(
+          title: const Text('Windows USB Print'),
+        ),
+        body: Column(
+          children: [
+            Center(
+              child: ElevatedButton(
+                onPressed: printReceipt,
+                child: const Text('Print Receipt'),
+              ),
+            ),
+            const Text("play", style: TextStyle())
+          ],
         ));
   }
 }
 
 extension Uint8ListPointer on Uint8List {
   ffi.Pointer<ffi.Uint8> allocatePointer() {
-    final ptr = malloc<ffi.Uint8>(this.length);
-    final byteList = ptr.asTypedList(this.length);
+    final ptr = malloc<ffi.Uint8>(length);
+    final byteList = ptr.asTypedList(length);
     byteList.setAll(0, this);
     return ptr;
   }

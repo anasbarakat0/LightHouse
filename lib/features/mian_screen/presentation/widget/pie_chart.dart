@@ -23,13 +23,13 @@ class Chart extends StatelessWidget {
               startDegreeOffset: -90,
               sections: [
                 PieChartSectionData(
-                  color: primaryColor,
+                  color: yellow,
                   value: percentage,
                   showTitle: false,
                   radius: 13,
                 ),
                 PieChartSectionData(
-                  color: primaryColor.withOpacity(0.1),
+                  color: orange.withOpacity(0.1),
                   value: 100 - percentage,
                   showTitle: false,
                   radius: 13,
@@ -45,13 +45,13 @@ class Chart extends StatelessWidget {
                 Text(
                   "${percentage.toInt()}%",
                   style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                        color: primaryColor,
+                        color: orange,
                         fontWeight: FontWeight.w600,
                         height: 0.5,
                       ),
                 ),
                 const SizedBox(height: 8),
-                Text("$num ${"client".tr()}")
+                Text("$num ${"client".tr()}",style: TextStyle(color: lightGrey),)
               ],
             ),
           ),

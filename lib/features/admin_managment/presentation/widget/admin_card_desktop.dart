@@ -32,7 +32,7 @@ class AdminCardDesktop extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(width: 1, color: primaryColor),
+                  border: Border.all(width: 1, color: yellow),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(right: 15, left: 30),
@@ -51,10 +51,10 @@ class AdminCardDesktop extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           color: adminInfoModel.role == "SuperAdmin"
-                              ? Colors.red[800]
+                              ? orange
                               : adminInfoModel.role == "MANAGER"
-                                  ? Colors.green
-                                  : Colors.amber[900],
+                                  ? yellow
+                                  : navy,
                         ),
                         child: Text(
                           adminInfoModel.role == "SuperAdmin"

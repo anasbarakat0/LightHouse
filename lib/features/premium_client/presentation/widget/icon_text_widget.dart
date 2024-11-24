@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lighthouse_/core/resources/colors.dart';
 
 class IconTextWidget extends StatelessWidget {
   final String icon;
@@ -23,7 +24,7 @@ class IconTextWidget extends StatelessWidget {
           text,
           style: const TextStyle(
             fontSize: 18.0,
-            color: Colors.white,
+            color: navy,
           ),
         ),
       ],

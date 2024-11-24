@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lighthouse_/core/resources/colors.dart';
@@ -7,7 +8,7 @@ class PaginationWidget extends StatelessWidget {
   final int totalPages;
   final ValueChanged<int> onPageChanged;
 
-  PaginationWidget({
+  const PaginationWidget({super.key, 
     required this.currentPage,
     required this.totalPages,
     required this.onPageChanged,
@@ -21,7 +22,7 @@ class PaginationWidget extends StatelessWidget {
         alignment: Alignment.center,
         // width: double.maxFinite,
         decoration: BoxDecoration(
-          color: cardBackgroundColor,
+          color: navy,
           borderRadius: BorderRadius.circular(12),
           boxShadow: const [
             BoxShadow(
@@ -37,7 +38,7 @@ class PaginationWidget extends StatelessWidget {
           children: [
             const SizedBox(width: 10),
             IconButton(
-              icon: Icon(Icons.arrow_back,color:currentPage > 1 ? primaryColor : backgroundColor,),
+              icon: Icon(Icons.arrow_back,color:currentPage > 1 ? orange : darkNavy,),
               onPressed:
                   currentPage > 1 ? () => onPageChanged(currentPage - 1) : null,
             ),
@@ -57,14 +58,14 @@ class PaginationWidget extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           backgroundColor: page == currentPage
-                              ? primaryColor
-                              : backgroundColor,
+                              ? yellow
+                              : darkNavy,
                         ),
                         child: Text(
                           '$page',
                           style: TextStyle(
                             color: page == currentPage
-                                ? backgroundColor
+                                ? orange
                                 : Colors.white,
                           ),
                         ),
@@ -86,26 +87,26 @@ class PaginationWidget extends StatelessWidget {
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(
-                      label: Align(
+                      label:  Align(
                         alignment: Alignment.center, // Center-align the label
-                        child: Text('Page No.'),
+                        child: Text("Page No.".tr()),
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.never,
-                      contentPadding: EdgeInsets.only(bottom: 16),
+                      contentPadding: const EdgeInsets.only(bottom: 16),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: cardBackgroundColor),
+                        borderSide: const BorderSide(color: navy),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: cardBackgroundColor),
+                        borderSide: const BorderSide(color: navy),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: primaryColor),
+                        borderSide: const BorderSide(color: orange),
                       ),
                       filled: true,
-                      fillColor: backgroundColor,
+                      fillColor: darkNavy,
                     ),
                     onSubmitted: (value) {
                       int page = int.tryParse(value) ?? 1;
@@ -117,11 +118,11 @@ class PaginationWidget extends StatelessWidget {
                   ),
                 ),
               ),
-            ]).toList(),
+            ]),
             IconButton(
               icon: Icon(
                 Icons.arrow_forward,
-                color: currentPage < totalPages ? primaryColor : backgroundColor,
+                color: currentPage < totalPages ? orange : darkNavy,
               ),
               onPressed: currentPage < totalPages
                   ? () => onPageChanged(currentPage + 1)

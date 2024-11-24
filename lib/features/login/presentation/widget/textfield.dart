@@ -5,11 +5,13 @@ class MyTextField extends StatelessWidget {
   final TextEditingController controller;
   final String? label;
   final String? hint;
+  bool? dark;
 
-  const MyTextField({
+   MyTextField({
     required this.controller,
     this.label,
     this.hint,
+    this.dark,
     super.key,
   });
 
@@ -25,7 +27,7 @@ class MyTextField extends StatelessWidget {
           fontSize: 14,
         ),
         labelStyle: const TextStyle(
-          color: primaryColor,
+          color: orange,
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
@@ -49,13 +51,13 @@ class MyTextField extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(
-            color: primaryColor,
+            color: orange,
             width: 1,
           ),
         ),
       ),
-      style: const TextStyle(
-        color: Colors.white,
+      style:  TextStyle(
+        color: dark??false ? navy: Colors.white,
         fontSize: 16,
       ),
       keyboardType: TextInputType.emailAddress,

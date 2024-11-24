@@ -36,12 +36,12 @@ class MainApp extends StatelessWidget {
         // brightness: Brightness.dark,
         colorScheme: ColorScheme.fromSwatch().copyWith(
           brightness: Brightness.dark,
-          primary: primaryColor,
-          secondary: primaryColor,
+          primary: orange,
+          secondary: orange,
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
-            foregroundColor: primaryColor,
+            foregroundColor: orange,
           ),
         ),
         textTheme: const TextTheme(
@@ -68,7 +68,7 @@ class MainApp extends StatelessWidget {
           bodyMedium: TextStyle(
             fontSize: 14.0,
             fontWeight: FontWeight.normal,
-            color: backgroundColor,
+            color: darkNavy,
           ),
           labelLarge: TextStyle(
             fontSize: 20.0,
@@ -88,11 +88,11 @@ class MainApp extends StatelessWidget {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: primaryColor,
-            foregroundColor: backgroundColor,
+            backgroundColor: orange,
+            foregroundColor: darkNavy,
           ),
         ),
-        scaffoldBackgroundColor: backgroundColor,
+        scaffoldBackgroundColor: darkNavy,
         useMaterial3: true,
       ),
       home: storage.get<SharedPreferences>().getBool("auth") ?? false
