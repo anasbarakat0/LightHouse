@@ -5,8 +5,8 @@ import 'package:lighthouse_/core/constants/messages.dart';
 import 'package:lighthouse_/core/error/exception.dart';
 import 'package:lighthouse_/core/error/failure.dart';
 import 'package:lighthouse_/core/network/network_connection.dart';
-import 'package:lighthouse_/features/mian_screen/data/models/express_session_response_model.dart';
-import 'package:lighthouse_/features/mian_screen/data/sources/start_express_session_service.dart';
+import 'package:lighthouse_/features/mian_window/data/models/express_session_response_model.dart';
+import 'package:lighthouse_/features/mian_window/data/sources/start_express_session_service.dart';
 
 class StartExpressSessionRepo {
   final StartExpressSessionService startExpressSessionService;

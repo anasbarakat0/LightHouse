@@ -8,6 +8,10 @@ import 'package:lighthouse_/common/widget/main_button.dart';
 import 'package:lighthouse_/core/network/network_connection.dart';
 import 'package:lighthouse_/core/resources/colors.dart';
 import 'package:lighthouse_/common/widget/header.dart';
+import 'package:lighthouse_/features/mian_window/data/repository/start_express_session_repo.dart';
+import 'package:lighthouse_/features/mian_window/data/sources/start_express_session_service.dart';
+import 'package:lighthouse_/features/mian_window/domain/usecase/start_express_session_usecase.dart';
+import 'package:lighthouse_/features/mian_window/presentation/bloc/start_express_session_bloc.dart';
 import 'package:lighthouse_/features/premium_client/data/models/premium_client_model.dart';
 import 'package:lighthouse_/features/premium_client/data/repository/add_premium_client_repo.dart';
 import 'package:lighthouse_/features/premium_client/data/repository/get_all_premium_clients_repo.dart';
@@ -64,6 +68,49 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
             ),
           )..add(GetPremiumClients(page: 1, size: 20)),
         ),
+         BlocProvider(
+          create: (context) => StartExpressSessionBloc(
+              StartExpressSessionUsecase(
+                  startExpressSessionRepo: StartExpressSessionRepo(
+                      startExpressSessionService:
+                          StartExpressSessionService(dio: Dio()),
+                      networkConnection: NetworkConnection(
+                          internetConnectionChecker:
+                              InternetConnectionChecker())))),
+        ),
+        BlocListener<StartExpressSessionBloc, StartExpressSessionState>(
+          listener: (context, state) {
+            if (state is SessionStarted) {
+               ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.green,
+                  content: Text(state.response.message),
+                ),
+              );
+            } else if(state is ExceptionSessionStarted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: Colors.red[800],
+                content: Text(state.message),
+              ),
+            );
+            } else if(state is ForbiddenSessionStarted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: Colors.red[800],
+                content: Text(state.message),
+              ),
+            );
+             Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginWindows(),
+              ),
+            );
+              
+            }
+          },
+        )
       ],
       child: Builder(builder: (context) {
         return Padding(
@@ -129,7 +176,10 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                         AddPremiumClientDialog(context, client);
                       },
                       title: "add_client".tr(),
-                      icon: const Icon(Icons.person_add_sharp,color: orange,));
+                      icon: const Icon(
+                        Icons.person_add_sharp,
+                        color: orange,
+                      ));
                 },
               ),
               const SizedBox(height: 20),
@@ -159,49 +209,72 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                             final client = state.responseModel.body[index];
                             return Column(
                               children: [
-                                InkWell(
-                                  onTap: () async {
-                                    // premiumClientInfo(context, client);
+                                ListTile(
+                                  onTap: () {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 ClientProfile(client: client)));
                                   },
-                                  child: ListTile(
-                                    minTileHeight: 56,
-                                    leading: CircleAvatar(
-                                      radius: 25,
-                                      backgroundColor: navy,
-                                      child: client.gender == "MALE"?Icon( Icons.person,color: lightGrey ,size: 35,):SvgPicture.asset("assets/svg/woman.svg",width: 25  ,color: lightGrey,),
-                                    ),
-                                    title: Text(
-                                      "${client.firstName.replaceFirst(client.firstName[0], client.firstName[0].toUpperCase())} ${client.lastName.replaceFirst(client.lastName[0], client.lastName[0].toUpperCase())}",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelMedium,
-                                    ),
-                                    subtitle: Text(
-                                      client.phoneNumber,
-                                      style: const TextStyle(
-                                        fontSize: 12.0,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    trailing: const Icon(
-                                        Icons.arrow_forward_ios,
-                                        color: navy),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 8),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50),
+                                  minTileHeight: 56,
+                                  leading: CircleAvatar(
+                                    radius: 25,
+                                    backgroundColor: navy,
+                                    child: client.gender == "MALE"
+                                        ? const Icon(
+                                            Icons.person,
+                                            color: lightGrey,
+                                            size: 35,
+                                          )
+                                        : SvgPicture.asset(
+                                            "assets/svg/woman.svg",
+                                            width: 25,
+                                            color: lightGrey,
+                                          ),
+                                  ),
+                                  title: Text(
+                                    "${client.firstName.replaceFirst(client.firstName[0], client.firstName[0].toUpperCase())} ${client.lastName.replaceFirst(client.lastName[0], client.lastName[0].toUpperCase())}",
+                                    style:
+                                        Theme.of(context).textTheme.labelMedium,
+                                  ),
+                                  subtitle: Text(
+                                    client.phoneNumber,
+                                    style: const TextStyle(
+                                      fontSize: 12.0,
+                                      color: Colors.grey,
                                     ),
                                   ),
+                                  trailing: FloatingActionButton.extended(
+                                    backgroundColor:
+                                        lightGrey, 
+                                    icon: const Icon(
+                                      Icons.login,
+                                      color: orange,
+                                    ),
+                                    onPressed: () {
+                                     context.read<StartExpressSessionBloc>().add(StartExpressSession(fullName: "full"));
+                                    },
+                                    label: Text(
+                                      "add_session"
+                                          .tr(), 
+                                      style: const TextStyle(
+                                          color: navy), 
+                                    ),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 8),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
                                 ),
-                                if(index!= state.responseModel.body.length-1) const Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  child: Divider(thickness: 0.1),
-                                ),
+                                if (index !=
+                                    state.responseModel.body.length - 1)
+                                  const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 10),
+                                    child: Divider(thickness: 0.1),
+                                  ),
                               ],
                             );
                           }),

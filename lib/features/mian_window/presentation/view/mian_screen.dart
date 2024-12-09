@@ -7,17 +7,19 @@ import 'package:lighthouse_/core/network/network_connection.dart';
 import 'package:lighthouse_/core/resources/colors.dart';
 import 'package:lighthouse_/core/utils/responsive.dart';
 import 'package:lighthouse_/core/utils/shared_prefrences.dart';
-import 'package:lighthouse_/features/mian_screen/data/repository/start_express_session_repo.dart';
-import 'package:lighthouse_/features/mian_screen/data/sources/start_express_session_service.dart';
-import 'package:lighthouse_/features/mian_screen/domain/usecase/start_express_session_usecase.dart';
-import 'package:lighthouse_/features/mian_screen/presentation/bloc/start_express_session_bloc.dart';
+import 'package:lighthouse_/features/home/presentation/view/home_screen.dart';
+import 'package:lighthouse_/features/mian_window/data/repository/start_express_session_repo.dart';
+import 'package:lighthouse_/features/mian_window/data/sources/start_express_session_service.dart';
+import 'package:lighthouse_/features/mian_window/domain/usecase/start_express_session_usecase.dart';
+import 'package:lighthouse_/features/mian_window/presentation/bloc/start_express_session_bloc.dart';
+import 'package:lighthouse_/features/mian_window/presentation/widget/express_sessions_dialog.dart';
 import 'package:lighthouse_/features/packages/presentation/view/packages_page.dart';
 import 'package:lighthouse_/features/premium_client/presentation/view/premium_clients_page.dart';
 import 'package:lighthouse_/features/admin_managment/presentation/view/admin_managment.dart';
 import 'package:lighthouse_/features/login/presentation/view/login.dart';
-import 'package:lighthouse_/features/mian_screen/presentation/view/empty_screen.dart';
-import 'package:lighthouse_/features/mian_screen/presentation/widget/side_menu_bar.dart';
-import 'package:lighthouse_/features/mian_screen/presentation/widget/summary.dart';
+import 'package:lighthouse_/features/mian_window/presentation/view/empty_screen.dart';
+import 'package:lighthouse_/features/mian_window/presentation/widget/side_menu_bar.dart';
+import 'package:lighthouse_/features/mian_window/presentation/widget/summary.dart';
 import 'package:lighthouse_/features/presentation/view/qr_generator.dart';
 import 'package:lighthouse_/features/setting/presentation/view/settings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +34,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   static List<Widget> selectedContent = [
     const EmptyWidget(),
-    const EmptyWidget(),
+    const HomeScreen(),
     const QrGenerator(
         data:
             "193e0a0b-720a-4e3d-a280-4bcdc2846462-fCataTup3CG9cC04-0987654321-Premium_User-8bb0ba33-e53c-44f3-9f18-2c7e26796ce5"),
@@ -120,10 +122,13 @@ class _MainScreenState extends State<MainScreen> {
               : FloatingActionButtonLocation.endFloat,
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () {
-              context.read<StartExpressSessionBloc>().add(StartExpressSession(fullName: "full"));
+              startExpressSession(context, (fullName){
+
+              context.read<StartExpressSessionBloc>().add(StartExpressSession(fullName: fullName));
+              });
             },
             icon: const Icon(
-              Icons.login,
+              Icons.rocket_launch,
               color: orange,
             ),
             label: Text(

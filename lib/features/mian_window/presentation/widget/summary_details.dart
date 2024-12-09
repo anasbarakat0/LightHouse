@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lighthouse_/core/resources/colors.dart';
-import 'package:lighthouse_/features/mian_screen/presentation/widget/custom_cart.dart';
+import 'package:lighthouse_/features/mian_window/presentation/widget/custom_cart.dart';
 
 class SummaryDetails extends StatefulWidget {
   final String visits;

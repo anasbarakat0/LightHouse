@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lighthouse_/core/resources/colors.dart';
-import 'package:lighthouse_/features/mian_screen/data/sources/menu_data.dart';
+import 'package:lighthouse_/features/mian_window/data/sources/menu_data.dart';
 
 class SideMenuWidget extends StatefulWidget {
   final Function(int) changeindex;

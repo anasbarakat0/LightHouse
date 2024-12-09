@@ -32,6 +32,7 @@ class MyTextField extends StatelessWidget {
       padding:
           const EdgeInsets.only(bottom: 16.0), // Add spacing between fields
       child: TextField(
+        
         controller: controller,
         inputFormatters: inputFormatters,
         obscureText: isPassword, // Toggle for password field
@@ -42,6 +43,7 @@ class MyTextField extends StatelessWidget {
         style: const TextStyle(
             color: darkNavy), // Set text color to darkNavy
         decoration: InputDecoration(
+          
           labelText: labelText,
           labelStyle: const TextStyle(color: darkNavy), // Label color
           focusedBorder: OutlineInputBorder(
@@ -56,37 +58,10 @@ class MyTextField extends StatelessWidget {
           ),
           fillColor: Colors.grey[200], // Background color of the text field
           filled: true, // Enable the background fill
+          
         ),
+        autofocus: true,
       ),
     );
   }
 }
-
-// widget MyTextField(TextEditingController controller, String labelText,
-//     {bool isPassword = false}) {
-//   return Padding(
-//     padding: const EdgeInsets.only(bottom: 16.0), // Add spacing between fields
-//     child: TextField(
-//       controller: controller,
-//       obscureText: isPassword, // Toggle for password field
-//       style: const TextStyle(
-//           color: darkNavy), // Set text color to darkNavy
-//       decoration: InputDecoration(
-//         labelText: labelText,
-//         labelStyle: const TextStyle(color: darkNavy), // Label color
-//         focusedBorder: OutlineInputBorder(
-//           borderSide: const BorderSide(
-//               color: darkNavy, width: 2.0), // Border when focused
-//           borderRadius: BorderRadius.circular(12.0), // Rounded corners
-//         ),
-//         enabledBorder: OutlineInputBorder(
-//           borderSide: const BorderSide(
-//               color: Colors.grey, width: 1.0), // Border when not focused
-//           borderRadius: BorderRadius.circular(12.0), // Rounded corners
-//         ),
-//         fillColor: Colors.grey[200], // Background color of the text field
-//         filled: true, // Enable the background fill
-//       ),
-//     ),
-//   );
-// }

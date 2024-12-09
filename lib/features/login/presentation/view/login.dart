@@ -14,7 +14,7 @@ import 'package:lighthouse_/features/login/domain/usecase/login_usecase.dart';
 import 'package:lighthouse_/features/login/presentation/bloc/login_bloc.dart';
 import 'package:lighthouse_/features/login/presentation/widget/password_text_field.dart';
 import 'package:lighthouse_/features/login/presentation/widget/textfield.dart';
-import 'package:lighthouse_/features/mian_screen/presentation/view/mian_screen.dart';
+import 'package:lighthouse_/features/mian_window/presentation/view/mian_screen.dart';
 
 class LoginWindows extends StatefulWidget {
   const LoginWindows({super.key});

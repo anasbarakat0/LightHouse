@@ -1,12 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:bloc/bloc.dart';
 import 'package:lighthouse_/core/constants/messages.dart';
-import 'package:lighthouse_/core/error/exception.dart';
 import 'package:lighthouse_/core/error/failure.dart';
 import 'package:meta/meta.dart';
 
-import 'package:lighthouse_/features/mian_screen/data/models/express_session_response_model.dart';
-import 'package:lighthouse_/features/mian_screen/domain/usecase/start_express_session_usecase.dart';
+import 'package:lighthouse_/features/mian_window/data/models/express_session_response_model.dart';
+import 'package:lighthouse_/features/mian_window/domain/usecase/start_express_session_usecase.dart';
 
 part 'start_express_session_event.dart';
 part 'start_express_session_state.dart';

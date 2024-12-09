@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lighthouse_/core/resources/colors.dart';
-import 'package:lighthouse_/features/mian_screen/presentation/widget/pie_chart.dart';
-import 'package:lighthouse_/features/mian_screen/presentation/widget/summary_details.dart';
+import 'package:lighthouse_/features/mian_window/presentation/widget/pie_chart.dart';
+import 'package:lighthouse_/features/mian_window/presentation/widget/summary_details.dart';
 
 class SummaryWidget extends StatefulWidget {
   const SummaryWidget({super.key});

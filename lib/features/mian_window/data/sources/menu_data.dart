@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:lighthouse_/features/mian_screen/data/models/menu_model.dart';
+import 'package:lighthouse_/features/mian_window/data/models/menu_model.dart';
 
 class SideMenuData {
   final menu = <MenuModel>[

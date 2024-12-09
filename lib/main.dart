@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lighthouse_/core/resources/colors.dart';
 import 'package:lighthouse_/core/utils/shared_prefrences.dart';
 import 'package:lighthouse_/features/login/presentation/view/login.dart';
-import 'package:lighthouse_/features/mian_screen/presentation/view/mian_screen.dart';
+import 'package:lighthouse_/features/mian_window/presentation/view/mian_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
