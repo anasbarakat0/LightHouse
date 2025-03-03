@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
-import 'package:lighthouse_/core/resources/colors.dart';
+import 'package:lighthouse/core/resources/colors.dart';
 
 class SettingsTextFieldWidget extends StatelessWidget {
   final TextEditingController controller;
@@ -26,7 +26,7 @@ class SettingsTextFieldWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           width: 1,
-          color: orange,
+          color: Colors.white,
         ),
       ),
       padding: const EdgeInsets.all(8),

@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:lighthouse_/features/premium_client/domain/entity/NewPremiumClientResponseEntity.dart';
+import 'package:lighthouse/features/premium_client/domain/entity/NewPremiumClientResponseEntity.dart';
 
 class NewPremiumClientResponseModel extends Newpremiumclientresponseentity {
   NewPremiumClientResponseModel({

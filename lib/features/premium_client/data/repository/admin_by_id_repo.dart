@@ -1,13 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:lighthouse_/core/constants/messages.dart';
-import 'package:lighthouse_/core/error/exception.dart';
+import 'package:lighthouse/core/constants/messages.dart';
+import 'package:lighthouse/core/error/exception.dart';
 
-import 'package:lighthouse_/core/error/failure.dart';
-import 'package:lighthouse_/core/network/network_connection.dart';
-import 'package:lighthouse_/features/premium_client/data/models/admin_by_id_response_model.dart';
-import 'package:lighthouse_/features/premium_client/data/source/remote/admin_by_id_service.dart';
+import 'package:lighthouse/core/error/failure.dart';
+import 'package:lighthouse/core/network/network_connection.dart';
+import 'package:lighthouse/features/premium_client/data/models/admin_by_id_response_model.dart';
+import 'package:lighthouse/features/premium_client/data/source/remote/admin_by_id_service.dart';
 
 class AdminByIdRepo {
   final AdminByIdService adminByIdService;

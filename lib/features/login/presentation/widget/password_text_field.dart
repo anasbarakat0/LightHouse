@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lighthouse_/core/resources/colors.dart';
+import 'package:lighthouse/core/resources/colors.dart';
 
 class MyPasswordTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -7,7 +7,7 @@ class MyPasswordTextField extends StatefulWidget {
   final String? hint;
   final bool? dark;
 
-   MyPasswordTextField({
+   const MyPasswordTextField({
     required this.controller,
     this.label,
     this.hint,

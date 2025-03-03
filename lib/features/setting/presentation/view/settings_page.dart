@@ -3,20 +3,21 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:lighthouse_/common/widget/header.dart';
-import 'package:lighthouse_/core/network/network_connection.dart';
-import 'package:lighthouse_/features/login/presentation/view/login.dart';
-import 'package:lighthouse_/features/setting/data/repository/edit_hourly_price_repo.dart';
-import 'package:lighthouse_/features/setting/data/repository/get_hourly_price_repo.dart';
-import 'package:lighthouse_/features/setting/data/source/edit_hourly_price_service.dart';
-import 'package:lighthouse_/features/setting/data/source/get_hourly_price_service.dart';
-import 'package:lighthouse_/features/setting/domain/usecase/edit_hourly_price_usecase.dart';
-import 'package:lighthouse_/features/setting/domain/usecase/get_hourly_price_usecase.dart';
-import 'package:lighthouse_/features/setting/presentation/bloc/edit_hourly_price_bloc.dart';
-import 'package:lighthouse_/features/setting/presentation/bloc/get_hourly_price_bloc.dart';
-import 'package:lighthouse_/features/setting/presentation/widget/language_drop_down_switcher.dart';
-import 'package:lighthouse_/features/setting/presentation/widget/settings_text_field_widget.dart';
-import 'package:lighthouse_/features/setting/presentation/widget/submit_editing_dialog.dart';
+import 'package:lighthouse/common/widget/header.dart';
+import 'package:lighthouse/core/network/network_connection.dart';
+import 'package:lighthouse/core/utils/responsive.dart';
+import 'package:lighthouse/features/login/presentation/view/login.dart';
+import 'package:lighthouse/features/setting/data/repository/edit_hourly_price_repo.dart';
+import 'package:lighthouse/features/setting/data/repository/get_hourly_price_repo.dart';
+import 'package:lighthouse/features/setting/data/source/edit_hourly_price_service.dart';
+import 'package:lighthouse/features/setting/data/source/get_hourly_price_service.dart';
+import 'package:lighthouse/features/setting/domain/usecase/edit_hourly_price_usecase.dart';
+import 'package:lighthouse/features/setting/domain/usecase/get_hourly_price_usecase.dart';
+import 'package:lighthouse/features/setting/presentation/bloc/edit_hourly_price_bloc.dart';
+import 'package:lighthouse/features/setting/presentation/bloc/get_hourly_price_bloc.dart';
+import 'package:lighthouse/features/setting/presentation/widget/language_drop_down_switcher.dart';
+import 'package:lighthouse/features/setting/presentation/widget/settings_text_field_widget.dart';
+import 'package:lighthouse/features/setting/presentation/widget/submit_editing_dialog.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -40,7 +41,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   dio: Dio(),
                 ),
                 networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker(),
+                  internetConnectionChecker: InternetConnectionChecker.instance,
                 ),
               ),
             ),
@@ -54,7 +55,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   dio: Dio(),
                 ),
                 networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker(),
+                  internetConnectionChecker: InternetConnectionChecker.instance,
                 ),
               ),
             ),
@@ -139,14 +140,13 @@ class _SettingsPageState extends State<SettingsPage> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              const SizedBox(height: 18),
-              const HeaderWidget(),
+              HeaderWidget(title:"settings".tr()),
               const SizedBox(height: 25),
-              Text(
+              if(Responsive.isDesktop(context)) Text(
                 "settings".tr(),
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
-              const SizedBox(height: 40),
+              if(Responsive.isDesktop(context)) const SizedBox(height: 40),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

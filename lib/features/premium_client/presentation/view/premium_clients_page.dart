@@ -4,27 +4,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:lighthouse_/common/widget/main_button.dart';
-import 'package:lighthouse_/core/network/network_connection.dart';
-import 'package:lighthouse_/core/resources/colors.dart';
-import 'package:lighthouse_/common/widget/header.dart';
-import 'package:lighthouse_/features/mian_window/data/repository/start_express_session_repo.dart';
-import 'package:lighthouse_/features/mian_window/data/sources/start_express_session_service.dart';
-import 'package:lighthouse_/features/mian_window/domain/usecase/start_express_session_usecase.dart';
-import 'package:lighthouse_/features/mian_window/presentation/bloc/start_express_session_bloc.dart';
-import 'package:lighthouse_/features/premium_client/data/models/premium_client_model.dart';
-import 'package:lighthouse_/features/premium_client/data/repository/add_premium_client_repo.dart';
-import 'package:lighthouse_/features/premium_client/data/repository/get_all_premium_clients_repo.dart';
-import 'package:lighthouse_/features/premium_client/data/source/remote/add_premium_client_service.dart';
-import 'package:lighthouse_/features/premium_client/data/source/remote/get_all_premium_clients_service.dart';
-import 'package:lighthouse_/features/premium_client/domain/usecase/add_premium_client_usecase.dart';
-import 'package:lighthouse_/features/premium_client/domain/usecase/get_premium_clients_usecase.dart';
-import 'package:lighthouse_/features/premium_client/presentation/bloc/add_premium_client_bloc.dart';
-import 'package:lighthouse_/features/premium_client/presentation/bloc/get_premium_clients_bloc.dart';
-import 'package:lighthouse_/features/premium_client/presentation/view/client_profile.dart';
-import 'package:lighthouse_/features/premium_client/presentation/widget/premium_client_dialog.dart';
-import 'package:lighthouse_/features/login/presentation/view/login.dart';
-import 'package:lighthouse_/features/premium_client/presentation/widget/search_field.dart';
+import 'package:lighthouse/common/widget/main_button.dart';
+import 'package:lighthouse/core/network/network_connection.dart';
+import 'package:lighthouse/core/resources/colors.dart';
+import 'package:lighthouse/common/widget/header.dart';
+import 'package:lighthouse/core/utils/responsive.dart';
+import 'package:lighthouse/features/main_window/data/repository/start_express_session_repo.dart';
+import 'package:lighthouse/features/main_window/data/sources/start_express_session_service.dart';
+import 'package:lighthouse/features/main_window/domain/usecase/start_express_session_usecase.dart';
+import 'package:lighthouse/features/main_window/presentation/bloc/start_express_session_bloc.dart';
+import 'package:lighthouse/features/main_window/presentation/view/main_screen.dart';
+import 'package:lighthouse/features/premium_client/data/models/get_all_premiumClient_response_model.dart';
+import 'package:lighthouse/features/premium_client/data/models/premium_client_model.dart';
+import 'package:lighthouse/features/premium_client/data/repository/add_premium_client_repo.dart';
+import 'package:lighthouse/features/premium_client/data/repository/get_all_premium_clients_repo.dart';
+import 'package:lighthouse/features/premium_client/data/repository/get_premium_user_by_name_repo.dart';
+import 'package:lighthouse/features/premium_client/data/repository/start_premium_session_repo.dart';
+import 'package:lighthouse/features/premium_client/data/source/remote/add_premium_client_service.dart';
+import 'package:lighthouse/features/premium_client/data/source/remote/get_all_premium_clients_service.dart';
+import 'package:lighthouse/features/premium_client/data/source/remote/get_premium_user_by_name_service.dart';
+import 'package:lighthouse/features/premium_client/data/source/remote/start_premium_session_service.dart';
+import 'package:lighthouse/features/premium_client/domain/usecase/add_premium_client_usecase.dart';
+import 'package:lighthouse/features/premium_client/domain/usecase/get_premium_clients_usecase.dart';
+import 'package:lighthouse/features/premium_client/domain/usecase/start_premium_session_usecase.dart';
+import 'package:lighthouse/features/premium_client/presentation/bloc/add_premium_client_bloc.dart';
+import 'package:lighthouse/features/premium_client/presentation/bloc/get_premium_clients_bloc.dart';
+import 'package:lighthouse/features/premium_client/presentation/bloc/get_premium_user_by_name_bloc.dart';
+import 'package:lighthouse/features/premium_client/presentation/bloc/start_premium_session_bloc.dart';
+import 'package:lighthouse/features/premium_client/presentation/view/client_profile.dart';
+import 'package:lighthouse/features/premium_client/presentation/widget/premium_client_dialog.dart';
+import 'package:lighthouse/features/login/presentation/view/login.dart';
+import 'package:lighthouse/features/premium_client/presentation/widget/search_field.dart';
 
 class PremiumClientsPage extends StatefulWidget {
   const PremiumClientsPage({super.key});
@@ -35,6 +45,7 @@ class PremiumClientsPage extends StatefulWidget {
 
 class _PremiumClientsPageState extends State<PremiumClientsPage> {
   TextEditingController search = TextEditingController();
+  bool searchTest = true;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +59,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                   dio: Dio(),
                 ),
                 NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker(),
+                  internetConnectionChecker: InternetConnectionChecker.instance,
                 ),
               ),
             ),
@@ -62,13 +73,13 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                   dio: Dio(),
                 ),
                 networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker(),
+                  internetConnectionChecker: InternetConnectionChecker.instance,
                 ),
               ),
             ),
           )..add(GetPremiumClients(page: 1, size: 20)),
         ),
-         BlocProvider(
+        BlocProvider(
           create: (context) => StartExpressSessionBloc(
               StartExpressSessionUsecase(
                   startExpressSessionRepo: StartExpressSessionRepo(
@@ -76,55 +87,114 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                           StartExpressSessionService(dio: Dio()),
                       networkConnection: NetworkConnection(
                           internetConnectionChecker:
-                              InternetConnectionChecker())))),
+                              InternetConnectionChecker.instance)))),
         ),
         BlocListener<StartExpressSessionBloc, StartExpressSessionState>(
+          listener: (context, state) {},
+        ),
+        BlocProvider(
+          create: (context) => StartPremiumSessionBloc(
+            StartPremiumSessionUsecase(
+              startPremiumSessionRepo: StartPremiumSessionRepo(
+                startPremiumSessionService:
+                    StartPremiumSessionService(dio: Dio()),
+                networkConnection: NetworkConnection(
+                  internetConnectionChecker: InternetConnectionChecker.instance,
+                ),
+              ),
+            ),
+          ),
+        ),
+        BlocListener<StartPremiumSessionBloc, StartPremiumSessionState>(
           listener: (context, state) {
-            if (state is SessionStarted) {
-               ScaffoldMessenger.of(context).showSnackBar(
+            if (state is SuccessStartSession) {
+              ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.green,
-                  content: Text(state.response.message),
+                  content: Text(state.response),
                 ),
               );
-            } else if(state is ExceptionSessionStarted) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MainScreen(),
+                ),
+              );
+            } else if (state is ExceptionStartSession) {
               ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: Colors.red[800],
-                content: Text(state.message),
-              ),
-            );
-            } else if(state is ForbiddenSessionStarted) {
+                SnackBar(
+                  backgroundColor: Colors.red[800],
+                  content: Text(state.message),
+                ),
+              );
+            } else if (state is ForbiddenStartSession) {
               ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: Colors.red[800],
-                content: Text(state.message),
-              ),
-            );
-             Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const LoginWindows(),
-              ),
-            );
-              
+                SnackBar(
+                  backgroundColor: Colors.red[800],
+                  content: Text(state.message),
+                ),
+              );
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginWindows(),
+                ),
+              );
             }
           },
-        )
+        ),
+        BlocProvider(
+          create: (context) => GetPremiumUserByNameBloc(
+            GetPremiumUserByNameRepo(
+              getPremiumUserByNameService:
+                  GetPremiumUserByNameService(dio: Dio()),
+              networkConnection: NetworkConnection(
+                internetConnectionChecker: InternetConnectionChecker.instance,
+              ),
+            ),
+          ),
+        ),
+        BlocListener<GetPremiumUserByNameBloc, GetPremiumUserByNameState>(
+          listener: (context, state) {
+            if (state is SuccessGettingPremiumUserByName) {
+              print("نجح البحث، البيانات: ${state.response.body}");
+            } else if (state is ExceptionGettingPremiumUserByName) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.red[800],
+                  content: Text(state.message),
+                ),
+              );
+            } else if (state is ForbiddenGettingPremiumUserByName) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.red[800],
+                  content: Text(state.message),
+                ),
+              );
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginWindows(),
+                ),
+              );
+            }
+          },
+        ),
       ],
       child: Builder(builder: (context) {
         return Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              const SizedBox(height: 18),
-              const HeaderWidget(),
+              HeaderWidget(title: "admin_management".tr()),
               const SizedBox(height: 25),
-              Text(
-                "admin_management".tr(),
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-              const SizedBox(height: 40),
+              if (Responsive.isDesktop(context))
+                Text(
+                  "admin_management".tr(),
+                  style: Theme.of(context).textTheme.headlineLarge,
+                ),
+              if (Responsive.isDesktop(context)) const SizedBox(height: 40),
               BlocConsumer<AddPremiumClientBloc, AddPremiumClientState>(
                 listener: (context, state) {
                   if (state is ExceptionAddedClient) {
@@ -183,9 +253,22 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                 },
               ),
               const SizedBox(height: 20),
-              SearchField(controller: search),
+              SearchField(controller: search,onChanged:(name){
+                setState(() {
+                  
+                if (search.text.isEmpty) {
+                  searchTest= true;
+                } else {
+                  searchTest= false;
+                  
+                }
+                });
+              },onSubmitted: (name){
+                context.read<GetPremiumUserByNameBloc>().add(GetPremiumUserByName(name: name));
+
+              }),
               const SizedBox(height: 20),
-              BlocBuilder<GetPremiumClientsBloc, GetPremiumClientsState>(
+              if(searchTest) BlocBuilder<GetPremiumClientsBloc, GetPremiumClientsState>(
                 builder: (context, state) {
                   if (state is ExceptionFetchingClients) {
                     return Center(
@@ -246,20 +329,20 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                                     ),
                                   ),
                                   trailing: FloatingActionButton.extended(
-                                    backgroundColor:
-                                        lightGrey, 
+                                    backgroundColor: lightGrey,
                                     icon: const Icon(
                                       Icons.login,
                                       color: orange,
                                     ),
                                     onPressed: () {
-                                     context.read<StartExpressSessionBloc>().add(StartExpressSession(fullName: "full"));
+                                      context
+                                          .read<StartPremiumSessionBloc>()
+                                          .add(
+                                              StartPreSession(id: client.uuid));
                                     },
                                     label: Text(
-                                      "add_session"
-                                          .tr(), 
-                                      style: const TextStyle(
-                                          color: navy), 
+                                      "add_session".tr(),
+                                      style: const TextStyle(color: navy),
                                     ),
                                   ),
                                   contentPadding: const EdgeInsets.symmetric(
@@ -291,6 +374,107 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                   }
                 },
               ),
+              if(!searchTest)
+              BlocBuilder<GetPremiumUserByNameBloc, GetPremiumUserByNameState>(
+                builder: (context, state) {
+                  if (state is ExceptionGettingPremiumUserByName) {
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    );
+                  
+                  } else if (state is SuccessGettingPremiumUserByName) {
+                    return Expanded(
+                      child: ListView.builder(
+                          itemCount: state.response.body.length,
+                          itemBuilder: (context, index) {
+                            final client = state.response.body[index];
+                            return Column(
+                              children: [
+                                ListTile(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ClientProfile(client: Body.fromMap(client.toMap()))));
+                                  },
+                                  minTileHeight: 56,
+                                  leading: CircleAvatar(
+                                    radius: 25,
+                                    backgroundColor: navy,
+                                    child: client.gender == "MALE"
+                                        ? const Icon(
+                                            Icons.person,
+                                            color: lightGrey,
+                                            size: 35,
+                                          )
+                                        : SvgPicture.asset(
+                                            "assets/svg/woman.svg",
+                                            width: 25,
+                                            color: lightGrey,
+                                          ),
+                                  ),
+                                  title: Text(
+                                    "${client.firstName.replaceFirst(client.firstName[0], client.firstName[0].toUpperCase())} ${client.lastName.replaceFirst(client.lastName[0], client.lastName[0].toUpperCase())}",
+                                    style:
+                                        Theme.of(context).textTheme.labelMedium,
+                                  ),
+                                  subtitle: Text(
+                                    client.phoneNumber,
+                                    style: const TextStyle(
+                                      fontSize: 12.0,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  trailing: FloatingActionButton.extended(
+                                    backgroundColor: lightGrey,
+                                    icon: const Icon(
+                                      Icons.login,
+                                      color: orange,
+                                    ),
+                                    onPressed: () {
+                                      context
+                                          .read<StartPremiumSessionBloc>()
+                                          .add(
+                                              StartPreSession(id: client.uuid));
+                                    },
+                                    label: Text(
+                                      "add_session".tr(),
+                                      style: const TextStyle(color: navy),
+                                    ),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 8),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                ),
+                                if (index !=
+                                    state.response.body.length - 1)
+                                  const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 10),
+                                    child: Divider(thickness: 0.1),
+                                  ),
+                              ],
+                            );
+                          }),
+                    );
+                  } else if (state is OfflineFailureState) {
+                    return Center(
+                      child: Text(
+                        "There is no internet",
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                    );
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
+                },
+              ),
             ],
           ),
         );
@@ -298,3 +482,5 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
     );
   }
 }
+
+

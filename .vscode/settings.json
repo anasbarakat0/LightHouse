@@ -18,5 +18,9 @@
         "titleBar.inactiveBackground": "#10375c99",
         "titleBar.inactiveForeground": "#e7e7e799"
     },
-    "peacock.color": "10375C"
+    "peacock.color": "10375C",
+    "cSpell.words": [
+        "pageable",
+        "Usecase"
+    ]
 }

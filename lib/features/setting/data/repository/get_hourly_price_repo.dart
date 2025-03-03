@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:lighthouse_/core/constants/messages.dart';
-import 'package:lighthouse_/core/error/exception.dart';
-import 'package:lighthouse_/core/error/failure.dart';
-import 'package:lighthouse_/core/network/network_connection.dart';
-import 'package:lighthouse_/features/setting/data/models/get_hourly_price_response_model.dart';
-import 'package:lighthouse_/features/setting/data/source/get_hourly_price_service.dart';
+import 'package:lighthouse/core/constants/messages.dart';
+import 'package:lighthouse/core/error/exception.dart';
+import 'package:lighthouse/core/error/failure.dart';
+import 'package:lighthouse/core/network/network_connection.dart';
+import 'package:lighthouse/features/setting/data/models/get_hourly_price_response_model.dart';
+import 'package:lighthouse/features/setting/data/source/get_hourly_price_service.dart';
 
 class GetHourlyPriceRepo {
   final GetHourlyPriceService getHourlyPriceService;

@@ -1,4 +1,4 @@
-name: lighthouse_
+name: lighthouse
 description: "A new Flutter project."
 publish_to: "none"
 version: 0.1.0
@@ -10,19 +10,38 @@ dependencies:
   custom_qr_generator: ^0.1.2
   dartz: ^0.10.1
   dio: ^5.7.0
-  fl_chart: ^0.69.0
+  fl_chart: ^0.70.2
   flutter:
     sdk: flutter
-  flutter_bloc: ^8.1.6
-  flutter_slidable: ^3.1.1
+  flutter_bloc: ^9.0.0
+  flutter_slidable: ^4.0.0
   get_it: ^8.0.1
-  internet_connection_checker: ^1.0.0+1
   shared_preferences: ^2.3.2
-  easy_localization: 3.0.7
+  easy_localization: ^3.0.7+1
   flutter_svg: ^2.0.10+1
   lite_rolling_switch: ^1.0.1
-  esc_pos_utils: ^1.1.0
   win32: ^5.8.0
+  barcode_widget: ^2.0.4
+  internet_connection_checker: ^3.0.1
+  flutter_launcher_icons: ^0.14.3
+  esc_pos_utils_plus: ^2.0.4
+  image: ^4.5.2
+  
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  remove_alpha_ios: true
+  image_path_android: "assets/icons/light-710x599.png"
+  image_path_ios: "assets/icons/light-1024x1024.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/icons/light-1024x1024.png"
+  windows:
+    generate: true
+    image_path: "assets/icons/logo-1024x1024.png"
+    icon_size: 48 # min:48, max:256, default: 48
+
+
 
 dependency_overrides:
   intl: ^0.17.0
@@ -30,7 +49,7 @@ dependency_overrides:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
 
 flutter:
   uses-material-design: true
@@ -39,3 +58,5 @@ flutter:
     - assets/
     - assets/translations/
     - assets/svg/
+    - assets/icons/
+    - assets/images/

@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:lighthouse_/core/constants/app_url.dart';
-import 'package:lighthouse_/core/error/exception.dart';
-import 'package:lighthouse_/core/utils/service.dart';
-import 'package:lighthouse_/features/packages/data/models/edit_package_model.dart';
+import 'package:lighthouse/core/constants/app_url.dart';
+import 'package:lighthouse/core/error/exception.dart';
+import 'package:lighthouse/core/utils/service.dart';
+import 'package:lighthouse/features/packages/data/models/edit_package_model.dart';
 
 class AddNewPackageService extends Service {
   AddNewPackageService({required super.dio});

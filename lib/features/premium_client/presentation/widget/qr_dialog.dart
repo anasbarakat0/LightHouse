@@ -1,8 +1,8 @@
 import 'package:custom_qr_generator/custom_qr_generator.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:lighthouse_/core/resources/colors.dart';
-import 'package:lighthouse_/features/premium_client/data/models/get_all_premiumClient_response_model.dart';
+import 'package:lighthouse/core/resources/colors.dart';
+import 'package:lighthouse/features/premium_client/data/models/get_all_premiumClient_response_model.dart';
 
 void premiumClientInfo(BuildContext context, Body client) {
   showDialog(

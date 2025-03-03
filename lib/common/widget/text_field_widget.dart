@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:lighthouse_/core/resources/colors.dart';
+import 'package:lighthouse/core/resources/colors.dart';
 
 // ignore: must_be_immutable
-class MyTextField extends StatelessWidget {
+class MyTextFieldDialog extends StatelessWidget {
   TextEditingController? controller;
   final String labelText;
   final bool isPassword;
@@ -14,7 +14,7 @@ class MyTextField extends StatelessWidget {
   void Function()? onTap;
   void Function(String)? onChanged;
   void Function(String)? onSubmitted;
-  MyTextField({
+  MyTextFieldDialog({
     super.key,
     this.controller,
     required this.labelText,
@@ -32,7 +32,6 @@ class MyTextField extends StatelessWidget {
       padding:
           const EdgeInsets.only(bottom: 16.0), // Add spacing between fields
       child: TextField(
-        
         controller: controller,
         inputFormatters: inputFormatters,
         obscureText: isPassword, // Toggle for password field
@@ -43,22 +42,20 @@ class MyTextField extends StatelessWidget {
         style: const TextStyle(
             color: darkNavy), // Set text color to darkNavy
         decoration: InputDecoration(
-          
           labelText: labelText,
-          labelStyle: const TextStyle(color: darkNavy), // Label color
+          labelStyle: const TextStyle(color: darkNavy),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
-                color: darkNavy, width: 2.0), // Border when focused
-            borderRadius: BorderRadius.circular(12.0), // Rounded corners
+                color: darkNavy, width: 2.0),
+            borderRadius: BorderRadius.circular(12.0),
           ),
           enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(
-                color: Colors.grey, width: 1.0), // Border when not focused
-            borderRadius: BorderRadius.circular(12.0), // Rounded corners
+                color: Colors.grey, width: 1.0,),
+            borderRadius: BorderRadius.circular(12.0),
           ),
-          fillColor: Colors.grey[200], // Background color of the text field
-          filled: true, // Enable the background fill
-          
+          fillColor: Colors.grey[200],
+          filled: true,
         ),
         autofocus: true,
       ),

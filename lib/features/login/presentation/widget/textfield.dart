@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lighthouse_/core/resources/colors.dart';
+import 'package:lighthouse/core/resources/colors.dart';
 
 // ignore: must_be_immutable
 class MyTextField extends StatelessWidget {

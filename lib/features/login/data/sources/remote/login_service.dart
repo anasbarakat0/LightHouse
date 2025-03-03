@@ -1,9 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dio/dio.dart';
-import 'package:lighthouse_/core/constants/app_url.dart';
-import 'package:lighthouse_/core/error/exception.dart';
-import 'package:lighthouse_/core/utils/service.dart';
-import 'package:lighthouse_/features/login/data/models/login_model.dart';
+import 'package:lighthouse/core/constants/app_url.dart';
+import 'package:lighthouse/core/error/exception.dart';
+import 'package:lighthouse/core/utils/service.dart';
+import 'package:lighthouse/features/login/data/models/login_model.dart';
 
 class LoginService extends Service {
   LoginService({required super.dio});

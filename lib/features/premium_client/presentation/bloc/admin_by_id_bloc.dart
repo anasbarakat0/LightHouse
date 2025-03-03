@@ -1,9 +1,9 @@
 
 import 'package:bloc/bloc.dart';
-import 'package:lighthouse_/core/constants/messages.dart';
-import 'package:lighthouse_/core/error/failure.dart';
-import 'package:lighthouse_/features/premium_client/data/models/admin_by_id_response_model.dart';
-import 'package:lighthouse_/features/premium_client/domain/usecase/admin_by_id_usecase.dart';
+import 'package:lighthouse/core/constants/messages.dart';
+import 'package:lighthouse/core/error/failure.dart';
+import 'package:lighthouse/features/premium_client/data/models/admin_by_id_response_model.dart';
+import 'package:lighthouse/features/premium_client/domain/usecase/admin_by_id_usecase.dart';
 import 'package:meta/meta.dart';
 
 part 'admin_by_id_event.dart';

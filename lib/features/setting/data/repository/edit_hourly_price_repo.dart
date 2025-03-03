@@ -1,12 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:lighthouse_/core/constants/messages.dart';
-import 'package:lighthouse_/core/error/exception.dart';
-import 'package:lighthouse_/core/error/failure.dart';
-import 'package:lighthouse_/core/network/network_connection.dart';
-import 'package:lighthouse_/features/setting/data/models/get_hourly_price_response_model.dart';
-import 'package:lighthouse_/features/setting/data/source/edit_hourly_price_service.dart';
+import 'package:lighthouse/core/constants/messages.dart';
+import 'package:lighthouse/core/error/exception.dart';
+import 'package:lighthouse/core/error/failure.dart';
+import 'package:lighthouse/core/network/network_connection.dart';
+import 'package:lighthouse/features/setting/data/models/get_hourly_price_response_model.dart';
+import 'package:lighthouse/features/setting/data/source/edit_hourly_price_service.dart';
 
 class EditHourlyPriceRepo {
   final EditHourlyPriceService editHourlyPriceService;

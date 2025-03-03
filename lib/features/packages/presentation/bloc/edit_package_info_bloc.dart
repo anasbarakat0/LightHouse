@@ -1,11 +1,11 @@
 import 'package:bloc/bloc.dart';
-import 'package:lighthouse_/core/constants/messages.dart';
-import 'package:lighthouse_/core/error/failure.dart';
+import 'package:lighthouse/core/constants/messages.dart';
+import 'package:lighthouse/core/error/failure.dart';
 import 'package:meta/meta.dart';
 
-import 'package:lighthouse_/features/packages/data/models/edit_package_model.dart';
-import 'package:lighthouse_/features/packages/data/models/edit_packate_info_response_model.dart';
-import 'package:lighthouse_/features/packages/domain/usecase/edit_package_info_usecase.dart';
+import 'package:lighthouse/features/packages/data/models/edit_package_model.dart';
+import 'package:lighthouse/features/packages/data/models/edit_packate_info_response_model.dart';
+import 'package:lighthouse/features/packages/domain/usecase/edit_package_info_usecase.dart';
 
 part 'edit_package_info_event.dart';
 part 'edit_package_info_state.dart';

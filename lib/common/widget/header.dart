@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lighthouse_/core/utils/responsive.dart';
+import 'package:lighthouse/core/utils/responsive.dart';
 
 class HeaderWidget extends StatefulWidget {
-  const HeaderWidget({super.key});
+  final String title;
+  const HeaderWidget({super.key, required this.title});
 
   @override
   State<HeaderWidget> createState() => _HeaderWidgetState();
@@ -17,7 +18,7 @@ class _HeaderWidgetState extends State<HeaderWidget> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        if (Responsive.isMobile(context))
+        if (!Responsive.isDesktop(context))
           IconButton(
             icon: const Icon(
               Icons.menu,
@@ -26,7 +27,16 @@ class _HeaderWidgetState extends State<HeaderWidget> {
             ),
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
-        if (Responsive.isMobile(context))
+        if (!Responsive.isDesktop(context))
+          Text(
+            widget.title,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+              fontSize: 20
+            ),
+          ),
+        if (!Responsive.isDesktop(context))
           Row(
             children: [
               IconButton(

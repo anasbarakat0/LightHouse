@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:lighthouse_/core/constants/messages.dart';
-import 'package:lighthouse_/core/error/failure.dart';
-import 'package:lighthouse_/features/packages/data/models/all_active_packages_response_model.dart';
-import 'package:lighthouse_/features/packages/domain/usecase/get_all_active_packages_usecase.dart';
+import 'package:lighthouse/core/constants/messages.dart';
+import 'package:lighthouse/core/error/failure.dart';
+import 'package:lighthouse/features/packages/data/models/all_active_packages_response_model.dart';
+import 'package:lighthouse/features/packages/domain/usecase/get_all_active_packages_usecase.dart';
 import 'package:meta/meta.dart';
 
 part 'get_all_active_packages_event.dart';

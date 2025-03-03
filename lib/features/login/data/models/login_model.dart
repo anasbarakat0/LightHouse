@@ -1,4 +1,4 @@
-import 'package:lighthouse_/features/login/domain/entity/login_entity.dart';
+import 'package:lighthouse/features/login/domain/entity/login_entity.dart';
 
 class LoginModel extends LoginEntity {
   LoginModel({

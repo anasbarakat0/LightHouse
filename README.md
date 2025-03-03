@@ -1,3 +1,3 @@
-# lighthouse_
+# lighthouse
 
 A new Flutter project.

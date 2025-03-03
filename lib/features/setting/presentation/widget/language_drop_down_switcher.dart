@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:lighthouse_/core/resources/colors.dart';
+import 'package:lighthouse/core/resources/colors.dart';
 
 class LanguageDropdownSwitcher extends StatelessWidget {
   const LanguageDropdownSwitcher({super.key});
@@ -14,7 +14,7 @@ class LanguageDropdownSwitcher extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(width: 1, color: orange),
+        border: Border.all(width: 1, color: Colors.white),
       ),
       padding: const EdgeInsets.all(8),
       child: DropdownButtonFormField<Locale>(
@@ -34,6 +34,7 @@ class LanguageDropdownSwitcher extends StatelessWidget {
             context.setLocale(newLocale);
           }
         },
+        
         items: [
           DropdownMenuItem(
             value: const Locale('en'),

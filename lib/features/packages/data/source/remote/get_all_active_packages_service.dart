@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:lighthouse_/core/constants/app_url.dart';
-import 'package:lighthouse_/core/error/exception.dart';
-import 'package:lighthouse_/core/utils/service.dart';
+import 'package:lighthouse/core/constants/app_url.dart';
+import 'package:lighthouse/core/error/exception.dart';
+import 'package:lighthouse/core/utils/service.dart';
 
 class GetAllActivePackagesService extends Service {
   GetAllActivePackagesService({required super.dio});

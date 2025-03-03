@@ -56,7 +56,7 @@ class AddNewAdminFailure implements Failures {
   }
 
   factory AddNewAdminFailure.fromMap(Map<String, dynamic> map) {
-    print("shit fromMap");
+    
     return AddNewAdminFailure(
       messages: List<String>.from(
         (map['messages'] as List<String>),

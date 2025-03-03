@@ -1,6 +1,6 @@
 {
-    "name": "lighthouse_",
-    "short_name": "lighthouse_",
+    "name": "lighthouse",
+    "short_name": "lighthouse",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -1,8 +1,8 @@
 // // ignore_for_file: public_member_api_docs, sort_constructors_first
 // import 'package:dartz/dartz.dart';
-// import 'package:lighthouse_/core/error/failure.dart';
-// import 'package:lighthouse_/core/network/network_connection.dart';
-// import 'package:lighthouse_/features/dashboard/data/sources/remote/get_todays_sessions_service.dart';
+// import 'package:lighthouse/core/error/failure.dart';
+// import 'package:lighthouse/core/network/network_connection.dart';
+// import 'package:lighthouse/features/dashboard/data/sources/remote/get_todays_sessions_service.dart';
 
 // class GetTodaysSessionsRepo {
 //   final GetTodaysSessionsService getTodaysSessionsService;

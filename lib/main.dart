@@ -1,12 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:lighthouse_/core/resources/colors.dart';
-import 'package:lighthouse_/core/utils/shared_prefrences.dart';
-import 'package:lighthouse_/features/login/presentation/view/login.dart';
-import 'package:lighthouse_/features/mian_window/presentation/view/mian_screen.dart';
+import 'package:lighthouse/core/resources/colors.dart';
+import 'package:lighthouse/core/utils/shared_preferences.dart';
+import 'package:lighthouse/features/login/presentation/view/login.dart';
+import 'package:lighthouse/features/main_window/presentation/view/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
+  
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
@@ -33,7 +34,6 @@ class MainApp extends StatelessWidget {
       locale: context.locale,
       title: "LightHouse".tr(),
       theme: ThemeData(
-        // brightness: Brightness.dark,
         colorScheme: ColorScheme.fromSwatch().copyWith(
           brightness: Brightness.dark,
           primary: orange,

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:lighthouse_/core/constants/app_url.dart';
-import 'package:lighthouse_/core/error/exception.dart';
-import 'package:lighthouse_/core/utils/service.dart';
+import 'package:lighthouse/core/constants/app_url.dart';
+import 'package:lighthouse/core/error/exception.dart';
+import 'package:lighthouse/core/utils/service.dart';
 
 class GetAllActiveSessionsService extends Service {
   GetAllActiveSessionsService({required super.dio});
@@ -14,15 +14,15 @@ class GetAllActiveSessionsService extends Service {
       );
       return response;
    } on DioException catch (e) {
-      print("GetAllActiveSessionsService  DioException");
+   
       if (e.response!.data["status"] == "BAD_REQUEST") {
-        print("GetAllActiveSessionsService  BAD_REQUEST");
+     
         throw BAD_REQUEST.fromMap(e.response!.data);
       } else if (e.response!.data['status'] == 403) {
-        print("GetAllActiveSessionsService  Forbidden");
+      
         throw Forbidden();
       } else {
-        print("GetAllActiveSessionsService  else");
+       
         rethrow;
       }
     }

@@ -324,18 +324,23 @@ class QrCode {
 class Pageable {
   final int page;
   final int perPage;
-  Pageable({
+  final int total;
+
+  Pageable( {
     required this.page,
     required this.perPage,
+    required this.total,
   });
 
   Pageable copyWith({
     int? page,
     int? perPage,
+    int? total,
   }) {
     return Pageable(
       page: page ?? this.page,
       perPage: perPage ?? this.perPage,
+      total: total ?? this.total,
     );
   }
 
@@ -343,6 +348,7 @@ class Pageable {
     return <String, dynamic>{
       'page': page,
       'perPage': perPage,
+      'total': total,
     };
   }
 
@@ -352,6 +358,7 @@ class Pageable {
     return Pageable(
       page: map['page'] as int,
       perPage: map['perPage'] as int,
+      total: map['total'] as int,
     );
   }
 
@@ -361,15 +368,15 @@ class Pageable {
       Pageable.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'Pageable(page: $page, perPage: $perPage)';
+  String toString() => 'Pageable(page: $page, perPage: $perPage, total: $total)';
 
   @override
   bool operator ==(covariant Pageable other) {
     if (identical(this, other)) return true;
 
-    return other.page == page && other.perPage == perPage;
+    return other.page == page && other.perPage == perPage && other.total == total;
   }
 
   @override
-  int get hashCode => page.hashCode ^ perPage.hashCode;
+  int get hashCode => page.hashCode ^ perPage.hashCode ^ total.hashCode;
 }

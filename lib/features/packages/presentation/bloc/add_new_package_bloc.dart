@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:lighthouse_/core/constants/messages.dart';
-import 'package:lighthouse_/core/error/failure.dart';
-import 'package:lighthouse_/features/packages/data/models/edit_package_model.dart';
-import 'package:lighthouse_/features/packages/data/models/edit_packate_info_response_model.dart';
-import 'package:lighthouse_/features/packages/domain/usecase/add_new_package_usecase.dart';
+import 'package:lighthouse/core/constants/messages.dart';
+import 'package:lighthouse/core/error/failure.dart';
+import 'package:lighthouse/features/packages/data/models/edit_package_model.dart';
+import 'package:lighthouse/features/packages/data/models/edit_packate_info_response_model.dart';
+import 'package:lighthouse/features/packages/domain/usecase/add_new_package_usecase.dart';
 import 'package:meta/meta.dart';
 
 part 'add_new_package_event.dart';

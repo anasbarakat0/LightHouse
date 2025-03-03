@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:lighthouse_/core/error/failure.dart';
-import 'package:lighthouse_/features/login/data/models/login_model.dart';
-import 'package:lighthouse_/features/login/data/models/login_response_model.dart';
-import 'package:lighthouse_/features/login/domain/usecase/login_usecase.dart';
+import 'package:lighthouse/core/error/failure.dart';
+import 'package:lighthouse/features/login/data/models/login_model.dart';
+import 'package:lighthouse/features/login/data/models/login_response_model.dart';
+import 'package:lighthouse/features/login/domain/usecase/login_usecase.dart';
 import 'package:meta/meta.dart';
 
 part 'login_event.dart';

@@ -1,15 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:lighthouse_/common/widget/drop_down_button_form_field_widget.dart';
-import 'package:lighthouse_/common/widget/text_field_widget.dart';
-import 'package:lighthouse_/core/resources/colors.dart';
-import 'package:lighthouse_/features/premium_client/data/models/premium_client_model.dart';
+import 'package:lighthouse/common/widget/drop_down_button_form_field_widget.dart';
+import 'package:lighthouse/common/widget/text_field_widget.dart';
+import 'package:lighthouse/core/resources/colors.dart';
+import 'package:lighthouse/features/premium_client/data/models/premium_client_model.dart';
 
 void AddPremiumClientDialog(BuildContext context, Function(PremiumClient) add) {
   TextEditingController firstName = TextEditingController();
   TextEditingController lastName = TextEditingController();
   TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
+  // TextEditingController password = TextEditingController();
   TextEditingController phoneNumber = TextEditingController();
   TextEditingController study = TextEditingController();
   TextEditingController birthDate = TextEditingController();
@@ -44,27 +44,27 @@ void AddPremiumClientDialog(BuildContext context, Function(PremiumClient) add) {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  MyTextField(
+                  MyTextFieldDialog(
                     controller: firstName,
                     labelText: "first_name".tr(),
                     isPassword: false,
                   ),
-                  MyTextField(
+                  MyTextFieldDialog(
                     controller: lastName,
                     labelText: "last_name".tr(),
                     isPassword: false,
                   ),
-                  MyTextField(
+                  MyTextFieldDialog(
                     controller: email,
                     labelText: "email".tr(),
                     isPassword: false,
                   ),
-                  MyTextField(
-                    controller: password,
-                    labelText: "password".tr(),
-                    isPassword: true,
-                  ),
-                  MyTextField(
+                  // MyTextFieldDialog(
+                  //   controller: password,
+                  //   labelText: "password".tr(),
+                  //   isPassword: true,
+                  // ),
+                  MyTextFieldDialog(
                     controller: phoneNumber,
                     labelText: "phone_number".tr(),
                     isPassword: false,
@@ -88,12 +88,12 @@ void AddPremiumClientDialog(BuildContext context, Function(PremiumClient) add) {
                       ),
                     ],
                   ),
-                  MyTextField(
+                  MyTextFieldDialog(
                     controller: study,
                     labelText: "study".tr(),
                     isPassword: false,
                   ),
-                  MyTextField(
+                  MyTextFieldDialog(
                     controller: birthDate,
                     labelText: "birth_date".tr(),
                     isPassword: false,
@@ -109,11 +109,11 @@ void AddPremiumClientDialog(BuildContext context, Function(PremiumClient) add) {
                           firstName: firstName.text,
                           lastName: lastName.text,
                           email: email.text,
-                          password: password.text,
+                          password: phoneNumber.text,
                           phoneNumber: phoneNumber.text,
                           gender: selectedRole,
                           study: study.text,
-                          birthDate: '',
+                          birthDate: birthDate.text,
                         ),
                       );
                       Navigator.of(context).pop();

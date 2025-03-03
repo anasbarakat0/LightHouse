@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:lighthouse_/common/widget/gradient_scaffold.dart';
-import 'package:lighthouse_/core/network/network_connection.dart';
-import 'package:lighthouse_/core/resources/colors.dart';
-import 'package:lighthouse_/features/login/data/models/login_model.dart';
-import 'package:lighthouse_/features/login/data/repository/login_repo.dart';
-import 'package:lighthouse_/features/login/data/sources/remote/login_service.dart';
-import 'package:lighthouse_/features/login/domain/usecase/login_usecase.dart';
-import 'package:lighthouse_/features/login/presentation/bloc/login_bloc.dart';
-import 'package:lighthouse_/features/login/presentation/widget/password_text_field.dart';
-import 'package:lighthouse_/features/login/presentation/widget/textfield.dart';
-import 'package:lighthouse_/features/mian_window/presentation/view/mian_screen.dart';
+import 'package:lighthouse/common/widget/gradient_scaffold.dart';
+import 'package:lighthouse/core/network/network_connection.dart';
+import 'package:lighthouse/core/resources/colors.dart';
+import 'package:lighthouse/features/login/data/models/login_model.dart';
+import 'package:lighthouse/features/login/data/repository/login_repo.dart';
+import 'package:lighthouse/features/login/data/sources/remote/login_service.dart';
+import 'package:lighthouse/features/login/domain/usecase/login_usecase.dart';
+import 'package:lighthouse/features/login/presentation/bloc/login_bloc.dart';
+import 'package:lighthouse/features/login/presentation/widget/password_text_field.dart';
+import 'package:lighthouse/features/login/presentation/widget/textfield.dart';
+import 'package:lighthouse/features/main_window/presentation/view/main_screen.dart';
 
 class LoginWindows extends StatefulWidget {
   const LoginWindows({super.key});
@@ -34,7 +34,7 @@ class _LoginWindowsState extends State<LoginWindows> {
           loginRepo: LoginRepo(
               LoginService(dio: Dio()),
               NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker())))),
+                  internetConnectionChecker: InternetConnectionChecker.instance)))),
       child: Builder(
         builder: (context) {
           return GradientScaffold(
@@ -45,7 +45,7 @@ class _LoginWindowsState extends State<LoginWindows> {
                     height: MediaQuery.of(context).size.height,
                     color: lightGrey,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 140),
+                      padding: const EdgeInsets.symmetric(horizontal: 100),
                       child: SizedBox(
                         width: 440,
                         child: Column(
@@ -61,7 +61,7 @@ class _LoginWindowsState extends State<LoginWindows> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const SizedBox(height: 80),
+                                const SizedBox(height: 40),
                                 Text(
                                   "log_in".tr(),
                                   style: const TextStyle(
@@ -105,7 +105,7 @@ class _LoginWindowsState extends State<LoginWindows> {
                                 const SizedBox(height: 10),
                                 MyPasswordTextField(
                                     controller: password, hint: "Password",dark: true),
-                                const SizedBox(height: 85),
+                                const SizedBox(height: 45),
                                 BlocConsumer<LoginBloc, LoginState>(
                                   listener: (context, state) {
                                     if (state is LoginSuccess) {
@@ -168,9 +168,9 @@ class _LoginWindowsState extends State<LoginWindows> {
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width / 2,
                   child: Container(
-                    padding: EdgeInsets.all(100),
+                    padding: const EdgeInsets.all(100),
                     child: SvgPicture.asset(
-                      "assets/svg/lighthouse_ch.svg",
+                      "assets/svg/lighthousech.svg",
                     ),
                   ),
                 ),

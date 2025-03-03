@@ -3,27 +3,29 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:lighthouse_/common/widget/header.dart';
-import 'package:lighthouse_/common/widget/main_button.dart';
-import 'package:lighthouse_/common/widget/pagination.dart';
-import 'package:lighthouse_/core/network/network_connection.dart';
-import 'package:lighthouse_/core/resources/colors.dart';
-import 'package:lighthouse_/features/login/presentation/view/login.dart';
-import 'package:lighthouse_/features/packages/data/models/edit_package_model.dart';
-import 'package:lighthouse_/features/packages/data/repository/add_new_package_repo.dart';
-import 'package:lighthouse_/features/packages/data/repository/edit_package_info_repo.dart';
-import 'package:lighthouse_/features/packages/data/repository/get_all_active_packages_repo.dart';
-import 'package:lighthouse_/features/packages/data/source/remote/add_new_package_service.dart';
-import 'package:lighthouse_/features/packages/data/source/remote/edit_package_info_service.dart';
-import 'package:lighthouse_/features/packages/data/source/remote/get_all_active_packages_service.dart';
-import 'package:lighthouse_/features/packages/domain/usecase/add_new_package_usecase.dart';
-import 'package:lighthouse_/features/packages/domain/usecase/edit_package_info_usecase.dart';
-import 'package:lighthouse_/features/packages/domain/usecase/get_all_active_packages_usecase.dart';
-import 'package:lighthouse_/features/packages/presentation/bloc/add_new_package_bloc.dart';
-import 'package:lighthouse_/features/packages/presentation/bloc/edit_package_info_bloc.dart';
-import 'package:lighthouse_/features/packages/presentation/bloc/get_all_active_packages_bloc.dart';
-import 'package:lighthouse_/features/packages/presentation/widgets/add_package_dialog.dart';
-import 'package:lighthouse_/features/packages/presentation/widgets/package_card.dart';
+import 'package:lighthouse/common/widget/header.dart';
+import 'package:lighthouse/common/widget/main_button.dart';
+import 'package:lighthouse/common/widget/pagination.dart';
+import 'package:lighthouse/core/network/network_connection.dart';
+import 'package:lighthouse/core/resources/colors.dart';
+import 'package:lighthouse/core/utils/responsive.dart';
+import 'package:lighthouse/features/login/presentation/view/login.dart';
+import 'package:lighthouse/features/packages/data/models/edit_package_model.dart';
+import 'package:lighthouse/features/packages/data/repository/add_new_package_repo.dart';
+import 'package:lighthouse/features/packages/data/repository/edit_package_info_repo.dart';
+import 'package:lighthouse/features/packages/data/repository/get_all_active_packages_repo.dart';
+import 'package:lighthouse/features/packages/data/source/remote/add_new_package_service.dart';
+import 'package:lighthouse/features/packages/data/source/remote/edit_package_info_service.dart';
+import 'package:lighthouse/features/packages/data/source/remote/get_all_active_packages_service.dart';
+import 'package:lighthouse/features/packages/domain/usecase/add_new_package_usecase.dart';
+import 'package:lighthouse/features/packages/domain/usecase/edit_package_info_usecase.dart';
+import 'package:lighthouse/features/packages/domain/usecase/get_all_active_packages_usecase.dart';
+import 'package:lighthouse/features/packages/presentation/bloc/add_new_package_bloc.dart';
+import 'package:lighthouse/features/packages/presentation/bloc/edit_package_info_bloc.dart';
+import 'package:lighthouse/features/packages/presentation/bloc/get_all_active_packages_bloc.dart';
+import 'package:lighthouse/features/packages/presentation/widgets/add_package_dialog.dart';
+import 'package:lighthouse/features/packages/presentation/widgets/edit_package_dialog.dart';
+import 'package:lighthouse/features/packages/presentation/widgets/package_card.dart';
 
 class PackagesPage extends StatefulWidget {
   const PackagesPage({super.key});
@@ -49,7 +51,7 @@ class _PackagesPageState extends State<PackagesPage> {
                 getAllActivePackagesService:
                     GetAllActivePackagesService(dio: Dio()),
                 networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker(),
+                  internetConnectionChecker: InternetConnectionChecker.instance,
                 ),
               ),
             ),
@@ -63,7 +65,7 @@ class _PackagesPageState extends State<PackagesPage> {
                   dio: Dio(),
                 ),
                 networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker(),
+                  internetConnectionChecker: InternetConnectionChecker.instance,
                 ),
               ),
             ),
@@ -109,7 +111,7 @@ class _PackagesPageState extends State<PackagesPage> {
               addNewPackageRepo: AddNewPackageRepo(
                 addNewPackageService: AddNewPackageService(dio: Dio()),
                 networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker(),
+                  internetConnectionChecker: InternetConnectionChecker.instance,
                 ),
               ),
             ),
@@ -118,8 +120,9 @@ class _PackagesPageState extends State<PackagesPage> {
         BlocListener<AddNewPackageBloc, AddNewPackageState>(
             listener: (BuildContext context, state) {
           if (state is PackageAdded) {
-            context.read<GetAllActivePackagesBloc>()
-              .add(GetAllActivePackages(page: currentPage, size: perPage));
+            context
+                .read<GetAllActivePackagesBloc>()
+                .add(GetAllActivePackages(page: currentPage, size: perPage));
 
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -149,20 +152,20 @@ class _PackagesPageState extends State<PackagesPage> {
             );
           }
         }),
+        
       ],
       child: Builder(builder: (context) {
         return Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              const SizedBox(height: 18),
-              const HeaderWidget(),
+              HeaderWidget(title: "package_management".tr()),
               const SizedBox(height: 25),
-              Text(
+              if(Responsive.isDesktop(context)) Text(
                 "package_management".tr(),
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
-              const SizedBox(height: 40),
+               if(Responsive.isDesktop(context))const SizedBox(height: 40),
               MainButton(
                   onTap: () {
                     createPackageDialog(context, (package) {
@@ -173,7 +176,7 @@ class _PackagesPageState extends State<PackagesPage> {
                   },
                   title: "add_package".tr(),
                   icon: const Icon(Icons.add)),
-                  const SizedBox(height: 10),
+              const SizedBox(height: 10),
               BlocConsumer<GetAllActivePackagesBloc, GetAllActivePackagesState>(
                   builder: (BuildContext context, state) {
                 if (state is ExceptionWhilePackages) {
@@ -187,7 +190,6 @@ class _PackagesPageState extends State<PackagesPage> {
                   return Expanded(
                       child: Stack(
                     children: [
-                      
                       ListView.builder(
                         clipBehavior: Clip.antiAlias,
                         itemCount: state.activePackages.body.length,
@@ -196,9 +198,30 @@ class _PackagesPageState extends State<PackagesPage> {
                               state.activePackages.body[index].toMap());
 
                           return Padding(
-                            padding:index==state.activePackages.body.length-1? const EdgeInsets.only(bottom: 20):index==0? const EdgeInsets.only(top: 10): const EdgeInsets.only(),
+                            padding:
+                                index == state.activePackages.body.length - 1
+                                    ? const EdgeInsets.only(bottom: 20)
+                                    : index == 0
+                                        ? const EdgeInsets.only(top: 10)
+                                        : const EdgeInsets.only(),
                             child: PackageCard(
-                              onChanged: (type) {
+                              // onChanged: (type) {
+                              //   context.read<EditPackageInfoBloc>().add(
+                              //         EditPackageInfo(
+                              //           id: state.activePackages.body[index].id,
+                              //           package: PackageModel(
+                              //             numOfHours: package.numOfHours,
+                              //             price: package.price,
+                              //             description: package.description,
+                              //             packageDurationInDays:
+                              //                 package.packageDurationInDays,
+                              //             active: type,
+                              //           ),
+                              //         ),
+                              //       );
+                              // },
+                              onTap: (){
+                                bool type = state.activePackages.body[index].active? false : true;
                                 context.read<EditPackageInfoBloc>().add(
                                       EditPackageInfo(
                                         id: state.activePackages.body[index].id,
@@ -213,23 +236,28 @@ class _PackagesPageState extends State<PackagesPage> {
                                       ),
                                     );
                               },
+                              onPressed: () {
+                                editPackageDialog(context,package, (package) {
+                                  context.read<EditPackageInfoBloc>().add(EditPackageInfo(id: state.activePackages.body[index].id,package: package));
+                                });
+                              },
                               package: package,
                             ),
                           );
                         },
                       ),
-                       Positioned.fill(
+                      Positioned.fill(
                         child: Align(
                           alignment: Alignment.topCenter,
                           child: Container(
-                            height: 20, 
+                            height: 20,
                             decoration: const BoxDecoration(
                               gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
                                 colors: [
                                   darkNavy,
-                                  Color.fromARGB(0, 16, 55, 92),
+                                  Color.fromARGB(0, 16, 55, 92)
                                 ],
                               ),
                             ),
@@ -240,13 +268,13 @@ class _PackagesPageState extends State<PackagesPage> {
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
-                            height: 20, 
+                            height: 20,
                             decoration: const BoxDecoration(
                               gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
                                 colors: [
-                                   Color.fromARGB(0, 16, 55, 92),
+                                  Color.fromARGB(0, 16, 55, 92),
                                   darkNavy,
                                 ],
                               ),

@@ -1,4 +1,4 @@
-package com.example.lighthouse_
+package com.example.lighthouse
 
 import io.flutter.embedding.android.FlutterActivity
 

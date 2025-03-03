@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:lighthouse_/core/constants/app_url.dart';
-import 'package:lighthouse_/core/error/exception.dart';
-import 'package:lighthouse_/core/utils/service.dart';
-import 'package:lighthouse_/features/premium_client/data/models/premium_client_model.dart';
+import 'package:lighthouse/core/constants/app_url.dart';
+import 'package:lighthouse/core/error/exception.dart';
+import 'package:lighthouse/core/utils/service.dart';
+import 'package:lighthouse/features/premium_client/data/models/premium_client_model.dart';
 
 class AddPremiumClientService extends Service {
   AddPremiumClientService({required super.dio});

@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:lighthouse_/core/constants/messages.dart';
-import 'package:lighthouse_/core/error/failure.dart';
-import 'package:lighthouse_/features/setting/domain/usecase/get_hourly_price_usecase.dart';
+import 'package:lighthouse/core/constants/messages.dart';
+import 'package:lighthouse/core/error/failure.dart';
+import 'package:lighthouse/features/setting/domain/usecase/get_hourly_price_usecase.dart';
 import 'package:meta/meta.dart';
 
 part 'get_hourly_price_event.dart';
