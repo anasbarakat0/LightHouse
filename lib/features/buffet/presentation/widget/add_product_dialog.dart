@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lighthouse/common/widget/my_button.dart';
 import 'package:lighthouse/common/widget/text_field_widget.dart';
 import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/features/buffet/data/models/product_model.dart';
@@ -18,7 +19,10 @@ void addProductDialog(BuildContext context, Function(ProductModel) add) {
         return AlertDialog(
           title: Text(
             "add_product".tr(),
-            style: const TextStyle(color: darkNavy),
+            style: Theme.of(context)
+                .textTheme
+                .labelLarge
+                ?.copyWith(color: darkNavy),
           ),
           backgroundColor: Colors.white,
           content: SizedBox(
@@ -30,7 +34,6 @@ void addProductDialog(BuildContext context, Function(ProductModel) add) {
                   controller: name,
                   labelText: "product_name".tr(),
                   isPassword: false,
-                  
                 ),
                 MyTextFieldDialog(
                   controller: costPrice,
@@ -60,8 +63,7 @@ void addProductDialog(BuildContext context, Function(ProductModel) add) {
                   controller: barCode,
                   labelText: "barcode".tr(),
                   isPassword: false,
-
-                  onSubmitted: (barcode){
+                  onSubmitted: (barcode) {
                     add(
                       ProductModel(
                         name: name.text,
@@ -74,27 +76,27 @@ void addProductDialog(BuildContext context, Function(ProductModel) add) {
                     Navigator.of(context).pop();
                   },
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    add(
-                      ProductModel(
-                        name: name.text,
-                        costPrice: double.parse(costPrice.text),
-                        quantity: int.parse(quantity.text),
-                        consumptionPrice: double.parse(consumptionPrice.text),
-                        barCode: barCode.text,
-                      ),
-                    );
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    "add".tr(),
-                    style: Theme.of(context).textTheme.labelMedium,
-                  ),
-                ),
               ],
             ),
           ),
+          actions: [
+            MyButton(
+              onPressed: () {
+                add(
+                  ProductModel(
+                    name: name.text,
+                    costPrice: double.parse(costPrice.text),
+                    quantity: int.parse(quantity.text),
+                    consumptionPrice: double.parse(consumptionPrice.text),
+                    barCode: barCode.text,
+                  ),
+                );
+                Navigator.of(context).pop();
+              },
+              child: Text("add".tr(),
+                  style: Theme.of(context).textTheme.labelLarge),
+            ),
+          ],
         );
       });
 }

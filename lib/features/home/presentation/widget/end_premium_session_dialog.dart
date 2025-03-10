@@ -2,42 +2,54 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/features/home/data/models/finish_premium_session_response_model.dart';
-import 'package:lighthouse/features/home/presentation/widget/fields.dart';
+import 'package:lighthouse/features/home/presentation/widget/detail_row.dart';
+import 'package:lighthouse/features/home/presentation/widget/product_detail_row.dart';
+import 'package:lighthouse/features/home/presentation/widget/total_price_row.dart';
 
-void endSessionDialog(
-    BuildContext context, Body sessionData) {
+void endSessionDialog(BuildContext context, Body sessionData) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text(
           'session_info'.tr(),
-          style: const TextStyle(
-            fontSize: 20.0,
-            fontWeight: FontWeight.w600,
-            color: darkNavy,
-          ),
+          style:
+              Theme.of(context).textTheme.labelLarge?.copyWith(color: darkNavy),
         ),
         backgroundColor: Colors.white,
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              buildDetailRow("${"date".tr()}: ", sessionData.date),
-              buildDetailRow("${"started_at".tr()}: ", sessionData.startTime),
-              buildDetailRow("${"first_name".tr()}: ", sessionData.firstName),
-              buildDetailRow("${"last_name".tr()}: ", sessionData.lastName),
-              // buildDetailRow(
-              //     "${"created_by".tr()}: ", sessionData.createdBy.firstName),
-              buildDetailRow("${"buffetInvoicePrice".tr()}: ",
-                  "${sessionData.buffetInvoicePrice.toString()} ${"s.p".tr()}"),
+              DetailRow(
+                title: "${"date".tr()}: ",
+                value: sessionData.date,
+              ),
+              DetailRow(
+                title: "${"started_at".tr()}: ",
+                value: sessionData.startTime,
+              ),
+              DetailRow(
+                title: "${"first_name".tr()}: ",
+                value: sessionData.firstName,
+              ),
+              DetailRow(
+                title: "${"last_name".tr()}: ",
+                value: sessionData.lastName,
+              ),
+              // DetailRow(
+              //   title: "${"created_by".tr()}: ",
+              //   value: sessionData.createdBy.firstName,
+              // ),
+              DetailRow(
+                title: "${"buffetInvoicePrice".tr()}: ",
+                value:
+                    "${sessionData.buffetInvoicePrice.toString()} ${"s.p".tr()}",
+              ),
               Divider(thickness: 0.5, color: navy),
               Text(
                 "buffet_invoice".tr(),
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w900,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
               SizedBox(height: 20),
               Column(
@@ -65,20 +77,21 @@ void endSessionDialog(
                               children: [
                                 Column(
                                   children: invoice.orders.map((order) {
-                                    return buildProductDetailRow(
-                                        order.productName,
-                                        order.quantity,
-                                        order.price);
+                                    return ProductDetailRow(
+                                      productName: order.productName,
+                                      quantity: order.quantity,
+                                      price: order.price,
+                                    );
                                   }).toList(),
                                 ),
                                 SizedBox(
                                   height: 20,
                                 ),
                                 Text(
-                                  "${"invoice_price".tr()}: ${invoice.totalPrice}",
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
+                                    "${"invoice_price".tr()}: ${invoice.totalPrice}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium),
                               ],
                             ),
                           ),
@@ -92,13 +105,12 @@ void endSessionDialog(
           ),
         ),
         actions: [
-          buildTotalPriceRow(sessionData.totalPrice),
-          
+          TotalPriceRow(totalPrice: sessionData.totalPrice),
           const SizedBox(height: 10),
           SizedBox(
             height: 45,
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.of(context).pop();
               },
               child: Container(
@@ -109,11 +121,10 @@ void endSessionDialog(
                 ),
                 child: Text(
                   "done".tr(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelMedium
+                      ?.copyWith(color: Colors.white),
                 ),
               ),
             ),

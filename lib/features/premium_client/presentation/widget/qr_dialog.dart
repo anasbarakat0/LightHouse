@@ -12,11 +12,7 @@ void premiumClientInfo(BuildContext context, Body client) {
         
         title:  Text(
           'client_info'.tr(),
-          style: const TextStyle(
-            fontSize: 20.0,
-            fontWeight: FontWeight.w600,
-            color: darkNavy,
-          ),
+          style: Theme.of(context).textTheme.titleSmall,
         ),
         backgroundColor: Colors.white,
         content: Column(
@@ -30,52 +26,31 @@ void premiumClientInfo(BuildContext context, Body client) {
                   children: [
                     Text(
                       "first_name".tr(),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: darkNavy,
-                      ),
+                      style: Theme.of(context).textTheme.titleSmall,
                     ),
                     Text(
                       "last_name".tr(),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: darkNavy,
-                      ),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
                       "email".tr(),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: darkNavy,
-                      ),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
                       "phone_number".tr(),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: darkNavy,
-                      ),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
                       "study".tr(),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: darkNavy,
-                      ),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
                       "gender".tr(),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: darkNavy,
-                      ),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
                       "birth_date".tr(),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: darkNavy,
-                      ),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                   ],
                 ),
@@ -85,59 +60,31 @@ void premiumClientInfo(BuildContext context, Body client) {
                   children: [
                     Text(
                       client.firstName,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: darkNavy,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
                       client.lastName,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: darkNavy,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
                       client.email,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: darkNavy,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
                       client.phoneNumber,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: darkNavy,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
                       client.study,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: darkNavy,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
                       client.gender,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: darkNavy,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
                       client.birthDate.toString(),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: darkNavy,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                   ],
                 ),
@@ -170,10 +117,9 @@ void premiumClientInfo(BuildContext context, Body client) {
                         ),
                         child: Text(
                           "delete".tr(),
-                          style: TextStyle(
+                          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+
                             color: Colors.red[900],
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
@@ -193,15 +139,14 @@ void premiumClientInfo(BuildContext context, Body client) {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                              color: const Color.fromRGBO(255, 111, 0, 1),
+                              color: orange,
                               width: 1),
                         ),
                         child: Text(
                           "edit".tr(),
-                          style: TextStyle(
-                            color: Colors.amber[900],
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
+                          style:Theme.of(context).textTheme.labelMedium?.copyWith(
+                            color: orange,
+
                           ),
                         ),
                       ),
@@ -226,11 +171,7 @@ void premiumClientInfo(BuildContext context, Body client) {
                       color: orange),
                   child:  Text(
                     "done".tr(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
                 ),
                 onTap: () {

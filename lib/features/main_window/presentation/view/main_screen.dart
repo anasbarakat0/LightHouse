@@ -14,6 +14,7 @@ import 'package:lighthouse/features/main_window/data/sources/start_express_sessi
 import 'package:lighthouse/features/main_window/domain/usecase/start_express_session_usecase.dart';
 import 'package:lighthouse/features/main_window/presentation/bloc/start_express_session_bloc.dart';
 import 'package:lighthouse/features/main_window/presentation/widget/express_sessions_dialog.dart';
+import 'package:lighthouse/features/main_window/presentation/widget/print_express_qr.dart';
 import 'package:lighthouse/features/packages/presentation/view/packages_page.dart';
 import 'package:lighthouse/features/premium_client/presentation/view/premium_clients_page.dart';
 import 'package:lighthouse/features/admin_management/presentation/view/admin_management.dart';
@@ -22,6 +23,7 @@ import 'package:lighthouse/features/main_window/presentation/view/empty_screen.d
 import 'package:lighthouse/features/main_window/presentation/widget/side_menu_bar.dart';
 import 'package:lighthouse/features/main_window/presentation/widget/summary.dart';
 import 'package:lighthouse/features/setting/presentation/view/settings_page.dart';
+import 'package:lighthouse/features/tasks/presentation/view/to_do_tasks.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MainScreen extends StatefulWidget {
@@ -39,7 +41,7 @@ class _MainScreenState extends State<MainScreen> {
     const PremiumClientsPage(),
     const PackagesPage(),
     const BuffetPage(),
-    const EmptyWidget(),
+    const ToDoTasks(),
     const EmptyWidget(),
     const AdminManagement(),
     const SettingsPage()
@@ -49,7 +51,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
-    storage.get<SharedPreferences>().setInt("index", 1);
+    memory.get<SharedPreferences>().setInt("index", 1);
     super.initState();
   }
   
@@ -60,7 +62,7 @@ class _MainScreenState extends State<MainScreen> {
 
   void onMenuItemSelected(int index) {
     if (index == 10) {
-      storage.get<SharedPreferences>().setBool("auth", false);
+      memory.get<SharedPreferences>().setBool("auth", false);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -68,13 +70,15 @@ class _MainScreenState extends State<MainScreen> {
         ),
       );
     } else {
-      storage.get<SharedPreferences>().setInt("index", index);
+      memory.get<SharedPreferences>().setInt("index", index);
       setState(() {
         selectedIndex = index;
       });
     }
   }
  
+   late String printerName = "XP-80C (copy 1)";
+  late String printerAddress = "192.168.123.100";
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +99,7 @@ class _MainScreenState extends State<MainScreen> {
         BlocListener<StartExpressSessionBloc, StartExpressSessionState>(
           listener: (context, state) {
             if (state is SessionStarted) {
+              printExpressQr(printerAddress,printerName,state.response.body); 
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.green,
@@ -111,14 +116,14 @@ class _MainScreenState extends State<MainScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.red[800],
-                  content: Text(state.message),
+                  content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
                 ),
               );
             } else if (state is ForbiddenSessionStarted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.red[800],
-                  content: Text(state.message),
+                  content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
                 ),
               );
               Navigator.pushReplacement(
@@ -136,7 +141,7 @@ class _MainScreenState extends State<MainScreen> {
           floatingActionButtonLocation: isDesktop
               ? FloatingActionButtonLocation.startFloat
               : FloatingActionButtonLocation.endFloat,
-          floatingActionButton: FloatingActionButton.extended(
+          floatingActionButton: Responsive.isMobile(context)? null: FloatingActionButton.extended(
             onPressed: () {
               startExpressSession(context, (fullName) {
                 context
@@ -150,7 +155,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
             label: Text(
               'add_session'.tr(),
-              style: const TextStyle(color: navy),
+              style: Theme.of(context).textTheme.labelMedium,
             ),
             backgroundColor: lightGrey,
           ),

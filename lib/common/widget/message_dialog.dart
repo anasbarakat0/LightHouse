@@ -10,7 +10,7 @@ void message(BuildContext context, String title, List<String> messages,
       return AlertDialog(
         title: Text(
           title,
-          style: const TextStyle(color: darkNavy),
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: darkNavy),
         ),
         backgroundColor: Colors.white,
         content: SizedBox(
@@ -25,11 +25,7 @@ void message(BuildContext context, String title, List<String> messages,
                     child: ListTile(
                       title: Text(
                         messages[index],
-                        style: const TextStyle(
-                          color: darkNavy,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: darkNavy),
                       ),
                     ),
                   );

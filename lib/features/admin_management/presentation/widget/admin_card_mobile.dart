@@ -69,7 +69,7 @@ class AdminCard extends StatelessWidget {
                   children: [
                     Text(
                       adminInfoModel.firstName,
-                      style: Theme.of(context).textTheme.labelMedium,
+                      style: Theme.of(context).textTheme.labelSmall,
                     ),
                     const SizedBox(width: 15),
                     Container(

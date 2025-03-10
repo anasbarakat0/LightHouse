@@ -2,10 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:lighthouse/common/widget/header.dart';
 import 'package:lighthouse/core/network/network_connection.dart';
+import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/core/utils/responsive.dart';
+import 'package:lighthouse/core/utils/shared_preferences.dart';
+import 'package:lighthouse/core/utils/task_notifier.dart';
 import 'package:lighthouse/features/login/presentation/view/login.dart';
 import 'package:lighthouse/features/setting/data/repository/edit_hourly_price_repo.dart';
 import 'package:lighthouse/features/setting/data/repository/get_hourly_price_repo.dart';
@@ -18,6 +22,7 @@ import 'package:lighthouse/features/setting/presentation/bloc/get_hourly_price_b
 import 'package:lighthouse/features/setting/presentation/widget/language_drop_down_switcher.dart';
 import 'package:lighthouse/features/setting/presentation/widget/settings_text_field_widget.dart';
 import 'package:lighthouse/features/setting/presentation/widget/submit_editing_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -28,7 +33,16 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   TextEditingController hourlyPrice = TextEditingController();
+  TextEditingController capacity = TextEditingController();
   bool readOnly = false;
+
+  @override
+  void initState() {
+    super.initState();
+    capacity.text =
+        "${memory.get<SharedPreferences>().getInt("capacity") ?? 50}";
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -67,7 +81,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 backgroundColor: Colors.green[800],
-                content: Text(state.message),
+                content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
               ),
             );
           } else {
@@ -75,21 +89,21 @@ class _SettingsPageState extends State<SettingsPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.red[800],
-                  content: Text(state.message),
+                  content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
                 ),
               );
             } else if (state is OfflineEditingPrice) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.red[800],
-                  content: Text(state.message),
+                  content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
                 ),
               );
             } else if (state is ForbiddenEditing) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.red[800],
-                  content: Text(state.message),
+                  content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
                 ),
               );
               Navigator.pushReplacement(
@@ -112,7 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 backgroundColor: Colors.red[800],
-                content: Text(state.message),
+                content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
               ),
             );
             readOnly = true;
@@ -123,7 +137,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 backgroundColor: Colors.red[800],
-                content: Text(state.message),
+                content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
               ),
             );
             Navigator.pushReplacement(
@@ -140,13 +154,14 @@ class _SettingsPageState extends State<SettingsPage> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              HeaderWidget(title:"settings".tr()),
+              HeaderWidget(title: "settings".tr()),
               const SizedBox(height: 25),
-              if(Responsive.isDesktop(context)) Text(
-                "settings".tr(),
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-              if(Responsive.isDesktop(context)) const SizedBox(height: 40),
+              if (Responsive.isDesktop(context))
+                Text(
+                  "settings".tr(),
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              if (Responsive.isDesktop(context)) const SizedBox(height: 40),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -154,6 +169,13 @@ class _SettingsPageState extends State<SettingsPage> {
                   const SizedBox(height: 10),
                   SettingsTextFieldWidget(
                     controller: hourlyPrice,
+                    label: "Hourly_Price",
+                    suffix: SvgPicture.asset(
+                      "assets/svg/hourly_price.svg",
+                      width: 28,
+                      height: 28,
+                      color: orange,
+                    ),
                     onSubmitted: (string) {
                       submitEditingDialog(context, () {
                         context.read<EditHourlyPriceBloc>().add(
@@ -168,6 +190,20 @@ class _SettingsPageState extends State<SettingsPage> {
                       });
                     },
                     readOnly: readOnly,
+                  ),
+                  const SizedBox(height: 10),
+                  SettingsTextFieldWidget(
+                    controller: capacity,
+                    readOnly: false,
+                    label: "capacity",
+                    suffix: Icon(Icons.people_alt_outlined,
+                      color: orange,),
+                    onSubmitted: (p0) {
+                      memory
+                          .get<SharedPreferences>()
+                          .setInt("capacity", int.parse(p0));
+                          capacityNotifier.value = int.parse(p0);
+                    },
                   ),
                 ],
               ),

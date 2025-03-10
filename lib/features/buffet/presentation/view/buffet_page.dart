@@ -38,52 +38,13 @@ class BuffetPage extends StatefulWidget {
 }
 
 class _BuffetPageState extends State<BuffetPage> {
+  int perPage = 16;
+  int currentPage = 1;
+
   @override
   Widget build(BuildContext context) {
-    int perPage = 5;
-    int currentPage = 1;
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => AddProductBloc(
-            AddProductUsecase(
-              addProductRepo: AddProductRepo(
-                addProductService: AddProductService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.instance,
-                ),
-              ),
-            ),
-          ),
-        ),
-        BlocListener<AddProductBloc, AddProductState>(
-          listener: (context, state) {
-            switch (state) {
-              case ProductAdded():
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: Colors.green,
-                    content: Text(state.response),
-                  ),
-                );
-                context
-                    .read<GetAllProductsBloc>()
-                    .add(GetAllProducts(page: currentPage, size: perPage));
-                break;
-              case ExceptionAddProduct():
-                return errorMessage(context, "error".tr(), [state.message]);
-              case ForbiddenAddProduct():
-                errorMessage(context, "unauthorized".tr(), [state.message]);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LoginWindows(),
-                  ),
-                );
-              default:
-            }
-          },
-        ),
         BlocProvider(
           create: (context) => GetAllProductsBloc(
             GetAllProductsUsecase(
@@ -124,15 +85,16 @@ class _BuffetPageState extends State<BuffetPage> {
           listener: (context, state) {
             switch (state) {
               case ProductEdited():
+                context
+                    .read<GetAllProductsBloc>()
+                    .add(GetAllProducts(page: currentPage, size: perPage));
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     backgroundColor: Colors.green,
                     content: Text(state.response),
                   ),
                 );
-                context
-                    .read<GetAllProductsBloc>()
-                    .add(GetAllProducts(page: currentPage, size: perPage));
+
                 break;
               case ExceptionEditProduct():
                 return errorMessage(context, "error".tr(), [state.message]);
@@ -145,6 +107,46 @@ class _BuffetPageState extends State<BuffetPage> {
                   ),
                 );
               default:
+            }
+          },
+        ),
+        BlocProvider(
+          create: (context) => AddProductBloc(
+            AddProductUsecase(
+              addProductRepo: AddProductRepo(
+                addProductService: AddProductService(dio: Dio()),
+                networkConnection: NetworkConnection(
+                  internetConnectionChecker: InternetConnectionChecker.instance,
+                ),
+              ),
+            ),
+          ),
+        ),
+        BlocListener<AddProductBloc, AddProductState>(
+          listener: (context, state) {
+            if (state case ProductAdded()) {
+              context
+                  .read<GetAllProductsBloc>()
+                  .add(GetAllProducts(page: currentPage, size: perPage));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.green,
+                  content: Text(state.response),
+                ),
+              );
+              context
+                  .read<GetAllProductsBloc>()
+                  .add(GetAllProducts(page: currentPage, size: perPage));
+            } else if (state case ExceptionAddProduct()) {
+              return errorMessage(context, "error".tr(), [state.message]);
+            } else if (state case ForbiddenAddProduct()) {
+              errorMessage(context, "unauthorized".tr(), [state.message]);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginWindows(),
+                ),
+              );
             }
           },
         ),
@@ -161,7 +163,7 @@ class _BuffetPageState extends State<BuffetPage> {
                   if (Responsive.isDesktop(context))
                     Text(
                       "buffet".tr(),
-                      style: Theme.of(context).textTheme.headlineLarge,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
                   if (Responsive.isDesktop(context)) const SizedBox(height: 40),
                   Expanded(
@@ -180,117 +182,122 @@ class _BuffetPageState extends State<BuffetPage> {
                         }
                       },
                       builder: (context, state) {
-                        switch (state) {
-                          case SuccessGettingProducts():
-                            return Column(
-                              children: [
-                                Expanded(
-                                  child: GridView.builder(
-                                    gridDelegate:
-                                         SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: Responsive.isDesktop(context)
-                                                ? (MediaQuery.of(context)
-                                                            .size
-                                                            .width >
-                                                        1620
-                                                    ? 4
-                                                    : MediaQuery.of(context)
-                                                                .size
-                                                                .width >
-                                                            1250
-                                                        ? 3
-                                                        : MediaQuery.of(context)
-                                                                    .size
-                                                                    .width >
-                                                                480
-                                                            ? 2
-                                                            : 1)
-                                                : (MediaQuery.of(context)
-                                                            .size
-                                                            .width >
-                                                        1000
-                                                    ? 4
-                                                    : MediaQuery.of(context)
-                                                                .size
-                                                                .width >
-                                                            730
-                                                        ? 3
-                                                        : MediaQuery.of(context)
-                                                                    .size
-                                                                    .width >
-                                                                510
-                                                            ? 2
-                                                            : 1),
-                                      crossAxisSpacing: 8,
-                                      mainAxisSpacing: 8,
-                                      mainAxisExtent: 262
-                                    ),
-                                    itemCount: state.response.body.length,
-                                    itemBuilder: (context, index) {
-                                      var product = ProductModel.fromMap(
-                                          state.response.body[index].toMap());
-                                      return ProductCardWidget(
-                                        product: product,
-                                        delete: () {
-                                          context.read<DeleteProductBloc>().add(
-                                                DeleteProduct(
-                                                  id: state
-                                                      .response.body[index].id,
-                                                ),
-                                              );
-                                        },
-                                        edit: (p) {
-                                          context.read<EditProductBloc>().add(
-                                                EditProduct(
-                                                  product: p,
-                                                  id: state
-                                                      .response.body[index].id,
-                                                ),
-                                              );
-                                        },
-                                      );
-                                    },
-                                  ),
+                        if (state case SuccessGettingProducts()) {
+                          return Column(
+                            children: [
+                              Expanded(
+                                child: GridView.builder(
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: Responsive.isDesktop(
+                                                  context)
+                                              ? (MediaQuery.of(context)
+                                                          .size
+                                                          .width >
+                                                      1620
+                                                  ? 4
+                                                  : MediaQuery.of(context)
+                                                              .size
+                                                              .width >
+                                                          1250
+                                                      ? 3
+                                                      : MediaQuery.of(context)
+                                                                  .size
+                                                                  .width >
+                                                              480
+                                                          ? 2
+                                                          : 1)
+                                              : (MediaQuery.of(context)
+                                                          .size
+                                                          .width >
+                                                      1000
+                                                  ? 4
+                                                  : MediaQuery.of(context)
+                                                              .size
+                                                              .width >
+                                                          730
+                                                      ? 3
+                                                      : MediaQuery.of(context)
+                                                                  .size
+                                                                  .width >
+                                                              510
+                                                          ? 2
+                                                          : 1),
+                                          crossAxisSpacing: 8,
+                                          mainAxisSpacing: 8,
+                                          mainAxisExtent: 262),
+                                  itemCount: state.response.body.length,
+                                  itemBuilder: (context, index) {
+                                    var product = ProductModel.fromMap(
+                                        state.response.body[index].toMap());
+                                    return ProductCardWidget(
+                                      product: product,
+                                      delete: () {
+                                        context.read<DeleteProductBloc>().add(
+                                              DeleteProduct(
+                                                id: state
+                                                    .response.body[index].id,
+                                              ),
+                                            );
+                                      },
+                                      edit: (p) {
+                                        context.read<EditProductBloc>().add(
+                                              EditProduct(
+                                                product: p,
+                                                id: state
+                                                    .response.body[index].id,
+                                              ),
+                                            );
+                                      },
+                                    );
+                                  },
                                 ),
-                                PaginationWidget(
-                                    currentPage: currentPage,
-                                    totalPages: (state.response.pageable.total /
-                                            perPage)
-                                        .ceil(),
-                                    onPageChanged: (page) {
-                                      context.read<GetAllProductsBloc>().add(
-                                          GetAllProducts(
-                                              page: page, size: perPage));
-                                      setState(() {
-                                        currentPage = page;
-                                      });
-                                    })
-                              ],
-                            );
-                          case LoadingGetProducts():
-                            return const Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Loading...",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                SizedBox(height: 20),
-                                CircularProgressIndicator(),
-                              ],
-                            );
-                          default:
-                            return const Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Loading...",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                SizedBox(height: 20),
-                                CircularProgressIndicator(),
-                              ],
-                            );
+                              ),
+                              PaginationWidget(
+                                  currentPage: currentPage,
+                                  totalPages:
+                                      (state.response.pageable.total / perPage)
+                                          .ceil(),
+                                  onPageChanged: (page) {
+                                    context.read<GetAllProductsBloc>().add(
+                                        GetAllProducts(
+                                            page: page, size: perPage));
+                                    setState(() {
+                                      currentPage = page;
+                                    });
+                                  })
+                            ],
+                          );
+                        } else if (state case LoadingGetProducts()) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Loading...",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(color: Colors.white),
+                              ),
+                              SizedBox(height: 20),
+                              CircularProgressIndicator(),
+                            ],
+                          );
+                        } else {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Loading...",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(color: Colors.white),
+                              ),
+                              SizedBox(height: 20),
+                              CircularProgressIndicator(),
+                            ],
+                          );
                         }
                       },
                     ),
@@ -299,22 +306,41 @@ class _BuffetPageState extends State<BuffetPage> {
               ),
               Positioned(
                 bottom: 0,
-                child: FloatingActionButton.extended(
-                  onPressed: () {
-                    addProductDialog(context, (product) {
-                      context
-                          .read<AddProductBloc>()
-                          .add(AddProduct(product: product));
-                    });
-                  },
-                  icon: const Icon(
-                    Icons.add_box,
-                    color: orange,
-                  ),
-                  label: Text("add_product".tr()),
-                  backgroundColor: Colors.white,
-                  foregroundColor: navy,
-                ),
+                child: Responsive.isMobile(context)
+                    ? FloatingActionButton(
+                        onPressed: () {
+                          addProductDialog(context, (product) {
+                            context
+                                .read<AddProductBloc>()
+                                .add(AddProduct(product: product));
+                          });
+                        },
+                        backgroundColor: Colors.white,
+                        foregroundColor: navy,
+                        child: const Icon(
+                          Icons.add_box,
+                          color: orange,
+                        ),
+                      )
+                    : FloatingActionButton.extended(
+                        onPressed: () {
+                          addProductDialog(context, (product) {
+                            context
+                                .read<AddProductBloc>()
+                                .add(AddProduct(product: product));
+                          });
+                        },
+                        icon: const Icon(
+                          Icons.add_box,
+                          color: orange,
+                        ),
+                        label: Text(
+                          "add_product".tr(),
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
+                        backgroundColor: Colors.white,
+                        foregroundColor: navy,
+                      ),
               ),
             ],
           ),

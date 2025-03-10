@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:lighthouse/core/resources/colors.dart';
+import 'package:lighthouse/core/utils/task_notifier.dart';
 
 class LanguageDropdownSwitcher extends StatelessWidget {
   const LanguageDropdownSwitcher({super.key});
@@ -13,8 +14,9 @@ class LanguageDropdownSwitcher extends StatelessWidget {
       height: 69,
       alignment: Alignment.center,
       decoration: BoxDecoration(
+        color: navy,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(width: 1, color: Colors.white),
+        // border: Border.all(width: 1, color: yellow),
       ),
       padding: const EdgeInsets.all(8),
       child: DropdownButtonFormField<Locale>(
@@ -31,6 +33,7 @@ class LanguageDropdownSwitcher extends StatelessWidget {
         dropdownColor: orange,
         onChanged: (Locale? newLocale) {
           if (newLocale != null) {
+            languageNotifier.value = !languageNotifier.value;
             context.setLocale(newLocale);
           }
         },
@@ -40,14 +43,14 @@ class LanguageDropdownSwitcher extends StatelessWidget {
             value: const Locale('en'),
             child: Text(
               'english'.tr(),
-              style: const TextStyle(color: Colors.white),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
             ),
           ),
           DropdownMenuItem(
             value: const Locale('ar'),
             child: Text(
               'arabic'.tr(),
-              style: const TextStyle(color: Colors.white),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
             ),
           ),
         ],

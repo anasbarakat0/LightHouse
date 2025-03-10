@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:lighthouse/features/premium_client/presentation/widget/icon_text_widget.dart';
-import 'package:lighthouse/core/resources/colors.dart';
 
 class ClientInfoWidget extends StatelessWidget {
   final String uuid;
@@ -44,7 +43,7 @@ class ClientInfoWidget extends StatelessWidget {
                   width: 23, height: 23, color: color),
               const SizedBox(width: 10),
               Text(gender.toLowerCase().tr(),
-                  style: const TextStyle(fontSize: 18.0, color: navy)),
+                  style: Theme.of(context).textTheme.bodyMedium),
             ],
           ),
           const SizedBox(height: 5),

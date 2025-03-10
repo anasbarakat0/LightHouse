@@ -20,7 +20,6 @@ class PaginationWidget extends StatelessWidget {
     return FittedBox(
       child: Container(
         alignment: Alignment.center,
-        // width: double.maxFinite,
         decoration: BoxDecoration(
           color: navy,
           borderRadius: BorderRadius.circular(12),
@@ -58,15 +57,14 @@ class PaginationWidget extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           backgroundColor: page == currentPage
-                              ? yellow
+                              ? orange
                               : darkNavy,
                         ),
                         child: Text(
                           '$page',
-                          style: TextStyle(
-                            color: page == currentPage
-                                ? orange
-                                : Colors.white,
+                          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            
+                            color:Colors.white,
                           ),
                         ),
                         onPressed: () => onPageChanged(page),
@@ -89,7 +87,7 @@ class PaginationWidget extends StatelessWidget {
                     decoration: InputDecoration(
                       label:  Align(
                         alignment: Alignment.center, // Center-align the label
-                        child: Text("Page No.".tr()),
+                        child: Text("Page No.".tr(),style: Theme.of(context).textTheme.bodySmall?.copyWith(color: grey),),
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                       contentPadding: const EdgeInsets.only(bottom: 16),

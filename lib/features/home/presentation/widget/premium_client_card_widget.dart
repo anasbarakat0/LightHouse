@@ -9,11 +9,13 @@ import 'package:lighthouse/features/home/data/models/active_sessions_response_mo
 class PremiumClientCardWidget extends StatelessWidget {
   BuildContext context;
   ActivePremiumSession premiumSession;
+  Function() onTap;
   Function() onPressed;
   PremiumClientCardWidget({
     super.key,
     required this.context,
     required this.premiumSession,
+    required this.onTap,
     required this.onPressed,
   });
 
@@ -22,48 +24,58 @@ class PremiumClientCardWidget extends StatelessWidget {
     return Stack(
       alignment: AlignmentDirectional.bottomEnd,
       children: [
-        Card(
-          color: lightGrey,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          elevation: 5,
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 150,
-                      child: Text(
-                        "${premiumSession.firstName} ${premiumSession.lastName}",
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+        InkWell(
+          onTap: onTap,
+          child: Card(
+            
+            color: lightGrey,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            elevation: 5,
+            
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 150,
+                        child: Text(
+                          "${premiumSession.firstName} ${premiumSession.lastName}",
+                         style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            overflow: TextOverflow.ellipsis
+                            
+                          ),
+                          maxLines: 2,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${'started_at'.tr()}: ${premiumSession.startTime}',
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                    const Spacer(),
-                    Text(
-                      '${'created_by'.tr()}: ${premiumSession.createdBy.firstName} ${premiumSession.createdBy.lastName}',
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                  ],
-                ),
-                const Icon(
-                  Icons.stars_sharp,
-                  color: yellow,
-                ),
-              ],
+                      const SizedBox(height: 4),
+                      Text(
+                        '${'started_at'.tr()}: ${premiumSession.startTime}',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: grey
+                          ),
+                      ),
+                      const Spacer(),
+                      Text(
+                        '${'created_by'.tr()}: ${premiumSession.createdBy.firstName} ${premiumSession.createdBy.lastName}',
+                        style:  Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: grey
+                          ),
+                      ),
+                    ],
+                  ),
+                  const Icon(
+                    Icons.stars_sharp,
+                    color: yellow,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -74,7 +86,7 @@ class PremiumClientCardWidget extends StatelessWidget {
           foregroundColor: navy,
           backgroundColor: orange,
           child: const Icon(
-            Icons.info_outline,
+            Icons.logout,
           ),
           
         ),

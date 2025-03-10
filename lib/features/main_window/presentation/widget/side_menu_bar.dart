@@ -5,6 +5,7 @@ import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/core/utils/responsive.dart';
 import 'package:lighthouse/core/utils/shared_preferences.dart';
 import 'package:lighthouse/features/main_window/data/sources/menu_data.dart';
+import 'package:lighthouse/features/main_window/presentation/widget/menu_entry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SideMenuWidget extends StatefulWidget {
@@ -19,10 +20,10 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
   late int selectedIndex;
   @override
   void initState() {
-    selectedIndex = storage.get<SharedPreferences>().getInt("index")?? 1;
+    selectedIndex = memory.get<SharedPreferences>().getInt("index") ?? 1;
     super.initState();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final data = SideMenuData();
@@ -39,60 +40,32 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
       child: Column(
         children: [
           SvgPicture.asset(
-            width: Responsive.isDesktop(context)?MediaQuery.of(context).size.width / 8:MediaQuery.of(context).size.width / 3,
+            width: Responsive.isDesktop(context)
+                ? MediaQuery.of(context).size.width / 8
+                : MediaQuery.of(context).size.width / 3,
             context.locale.languageCode == "en"
                 ? "assets/svg/en-logo.svg"
                 : "assets/svg/ar-logo.svg",
           ),
-           SizedBox(
-            height: Responsive.isDesktop(context)?50:30,
+          SizedBox(
+            height: Responsive.isDesktop(context) ? 50 : 30,
           ),
           Expanded(
             child: ListView.builder(
+              
               itemCount: data.menu.length,
-              itemBuilder: (context, index) => buildMenuEntry(data, index),
+              itemBuilder: (context, index) => MenuEntry(
+                data: data,
+                index: index,
+                isSelected: selectedIndex == index,
+                onTap: () => setState(() {
+                  widget.changeindex(index);
+                  selectedIndex = index;
+                }),
+              ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget buildMenuEntry(SideMenuData data, int index) {
-    dynamic isSelected = selectedIndex == index;
-
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(6.0),
-        ),
-        color: isSelected ? lightGrey : Colors.transparent,
-      ),
-      child: InkWell(
-        onTap: () => setState(() {
-          widget.changeindex(index);
-          selectedIndex = index;
-        }),
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
-              child: Icon(
-                data.menu[index].icon,
-                color: isSelected ? orange : lightGrey,
-              ),
-            ),
-            Text(
-              data.menu[index].title,
-              style: TextStyle(
-                fontSize: 16,
-                color: isSelected ? navy : lightGrey,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

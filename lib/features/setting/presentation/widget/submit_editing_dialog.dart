@@ -9,7 +9,7 @@ void submitEditingDialog(BuildContext context, void Function() edit,void Functio
       return AlertDialog(
         title:  Text(
           "edit".tr(),
-          style: const TextStyle(color: darkNavy),
+          style: Theme.of(context).textTheme.labelLarge,
         ),
         backgroundColor: Colors.white,
         content: SizedBox(
@@ -19,11 +19,7 @@ void submitEditingDialog(BuildContext context, void Function() edit,void Functio
             children: [
                Text(
                 "edit_price_submitting".tr(),
-                style: const TextStyle(
-                  color: darkNavy,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 20),
               Row(
@@ -40,11 +36,7 @@ void submitEditingDialog(BuildContext context, void Function() edit,void Functio
                           ),
                           child:  Text(
                             "back".tr(),
-                            style: const TextStyle(
-                              color: orange,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: Theme.of(context).textTheme.labelLarge,
                           ),
                         ),
                         onTap: () {
@@ -67,11 +59,7 @@ void submitEditingDialog(BuildContext context, void Function() edit,void Functio
                           ),
                           child:  Text(
                             "submit".tr(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: Theme.of(context).textTheme.labelLarge,
                           ),
                         ),
                         onTap: () {

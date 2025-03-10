@@ -6,12 +6,12 @@ import 'package:lighthouse/features/login/presentation/view/login.dart';
 import 'package:lighthouse/features/main_window/presentation/view/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() async {
-  
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
   await setUp();
+
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('ar')],
@@ -34,6 +34,7 @@ class MainApp extends StatelessWidget {
       locale: context.locale,
       title: "LightHouse".tr(),
       theme: ThemeData(
+        fontFamily: "Proxima Nova",
         colorScheme: ColorScheme.fromSwatch().copyWith(
           brightness: Brightness.dark,
           primary: orange,
@@ -44,46 +45,60 @@ class MainApp extends StatelessWidget {
             foregroundColor: orange,
           ),
         ),
-        textTheme: const TextTheme(
-          headlineLarge: TextStyle(
-            fontSize: 32.0,
-            fontWeight: FontWeight.bold,
+        textTheme:  TextTheme(
+          titleLarge: TextStyle(
+            fontSize: 30.0,
+            fontWeight: FontWeight.w800,
+            fontFamily: context.locale.countryCode == 'en'? "Proxima Nova":"NotoSansArabic",
             color: Colors.white,
           ),
-          headlineMedium: TextStyle(
+          titleMedium: TextStyle(
+            fontSize: 28.0,
+            fontWeight: FontWeight.w600,
+            fontFamily:  context.locale.countryCode == 'en'? "Proxima Nova":"NotoSansArabic",
+            color: navy,
+          ),
+          titleSmall: TextStyle(
             fontSize: 24.0,
             fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-          headlineSmall: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
+            fontFamily:  context.locale.countryCode == 'en'? "Proxima Nova":"NotoSansArabic",
+            color: navy,
           ),
           bodyLarge: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.normal,
-            color: Colors.white,
+            fontSize: 22.0,
+            fontWeight: FontWeight.w400,
+            fontFamily: context.locale.countryCode == 'en'? "Raleway" : "NotoKufiArabic",
+            color: navy,
           ),
           bodyMedium: TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.w400,
+            fontFamily: context.locale.countryCode == 'en'? "Raleway" : "NotoKufiArabic",
+            color: navy,
+          ),
+          bodySmall: TextStyle(
             fontSize: 14.0,
-            fontWeight: FontWeight.normal,
-            color: darkNavy,
+            fontWeight: FontWeight.w400,
+            fontFamily: context.locale.countryCode == 'en'? "Raleway" : "NotoKufiArabic",
+            color: navy,
           ),
           labelLarge: TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.w600,
-            color: Colors.white,
+            fontFamily:  context.locale.countryCode == 'en'? "Proxima Nova":"NotoSansArabic",
+            color: navy,
           ),
           labelMedium: TextStyle(
             fontSize: 16.0,
             fontWeight: FontWeight.w600,
-            color: Colors.white,
+            fontFamily:  context.locale.countryCode == 'en'? "Proxima Nova":"NotoSansArabic",
+            color: navy,
           ),
           labelSmall: TextStyle(
-            fontSize: 12.0,
+            fontSize: 14.0,
             fontWeight: FontWeight.w600,
-            color: Colors.white,
+            fontFamily:  context.locale.countryCode == 'en'? "Proxima Nova":"NotoSansArabic",
+            color: navy,
           ),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -95,7 +110,7 @@ class MainApp extends StatelessWidget {
         scaffoldBackgroundColor: darkNavy,
         useMaterial3: true,
       ),
-      home: storage.get<SharedPreferences>().getBool("auth") ?? false
+      home: memory.get<SharedPreferences>().getBool("auth") ?? false
           ? const MainScreen()
           : const LoginWindows(),
     );

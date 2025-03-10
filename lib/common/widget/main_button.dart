@@ -34,7 +34,7 @@ class MainButton extends StatelessWidget {
                 const SizedBox(width: 15),
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.labelLarge,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.white,fontWeight: FontWeight.w800),
                 ),
               ],
             ),

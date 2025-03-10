@@ -14,6 +14,7 @@ class GetAllActivePackagesBloc
   GetAllActivePackagesBloc(this.getAllActivePackagesUsecase)
       : super(GetAllActivePackagesInitial()) {
     on<GetAllActivePackages>((event, emit) async {
+      emit(LoadingShowingPackage());
       var data = await getAllActivePackagesUsecase.call(event.page, event.size);
       data.fold((failures) {
         switch (failures) {

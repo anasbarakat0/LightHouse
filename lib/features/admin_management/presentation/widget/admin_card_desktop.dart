@@ -41,7 +41,7 @@ class AdminCardDesktop extends StatelessWidget {
                     children: [
                       Text(
                         "  ${adminInfoModel.firstName.replaceFirst(adminInfoModel.firstName[0], adminInfoModel.firstName[0].toUpperCase())} ${adminInfoModel.lastName.replaceFirst(adminInfoModel.lastName[0], adminInfoModel.lastName[0].toUpperCase())}",
-                        style: Theme.of(context).textTheme.labelMedium,
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(color: Colors.white),
                       ),
                       const SizedBox(width: 15),
                       Container(
@@ -62,7 +62,7 @@ class AdminCardDesktop extends StatelessWidget {
                               : adminInfoModel.role == "MANAGER"
                                   ? "manager".tr()
                                   : "admin".tr(),
-                          style: Theme.of(context).textTheme.labelSmall,
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Colors.white),
                         ),
                       ),
                     ],
@@ -72,33 +72,6 @@ class AdminCardDesktop extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          // InkWell(
-          //   onTap: onPressedEdit,
-          //   child: Container(
-          //     height: 69,
-          //     alignment: Alignment.center,
-          //     decoration: BoxDecoration(
-          //       borderRadius: BorderRadius.circular(10),
-          //       border: Border.all(
-          //           width: 1, color: const Color.fromRGBO(255, 111, 0, 1)),
-          //     ),
-          //     child: Padding(
-          //       padding: const EdgeInsets.symmetric(horizontal: 17),
-          //       child: Row(
-          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //         children: [
-          //           const Icon(Icons.edit),
-          //           const SizedBox(width: 10),
-          //           Text(
-          //             "edit".tr(),
-          //             style: Theme.of(context).textTheme.labelMedium,
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // const SizedBox(width: 10),
           InkWell(
             onTap: onPressedDelete,
             child: Container(
@@ -122,7 +95,7 @@ class AdminCardDesktop extends StatelessWidget {
                     const SizedBox(width: 10),
                     Text(
                       "delete".tr(),
-                      style: Theme.of(context).textTheme.labelMedium,
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(color: Colors.white),
                     ),
                   ],
                 ),

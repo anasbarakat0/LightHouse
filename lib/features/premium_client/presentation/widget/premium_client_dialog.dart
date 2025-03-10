@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lighthouse/common/widget/drop_down_button_form_field_widget.dart';
 import 'package:lighthouse/common/widget/text_field_widget.dart';
-import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/features/premium_client/data/models/premium_client_model.dart';
 
 void AddPremiumClientDialog(BuildContext context, Function(PremiumClient) add) {
@@ -37,7 +36,10 @@ void AddPremiumClientDialog(BuildContext context, Function(PremiumClient) add) {
           }
 
           return AlertDialog(
-            title: Text("add".tr(),style: const TextStyle(color: darkNavy),),
+            title: Text(
+              "add".tr(),
+              style: Theme.of(context).textTheme.labelLarge,
+            ),
             backgroundColor: Colors.white,
             content: SizedBox(
               width: 300,
@@ -120,7 +122,7 @@ void AddPremiumClientDialog(BuildContext context, Function(PremiumClient) add) {
                     },
                     child: Text(
                       "add_client".tr(),
-                      style: Theme.of(context).textTheme.labelMedium,
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                   ),
                 ],

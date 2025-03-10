@@ -39,11 +39,10 @@ class MyTextFieldDialog extends StatelessWidget {
         onTap: onTap,
         onSubmitted: onSubmitted,
         onChanged: onChanged,
-        style: const TextStyle(
-            color: darkNavy), // Set text color to darkNavy
+        style: Theme.of(context).textTheme.bodyMedium, // Set text color to darkNavy
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: const TextStyle(color: darkNavy),
+          labelStyle: Theme.of(context).textTheme.labelSmall,
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
                 color: darkNavy, width: 2.0),

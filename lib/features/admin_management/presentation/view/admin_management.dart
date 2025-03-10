@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:lighthouse/common/widget/main_button.dart';
 import 'package:lighthouse/core/network/network_connection.dart';
 import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/core/utils/responsive.dart';
@@ -113,11 +114,12 @@ class AdminManagement extends StatelessWidget {
               const SizedBox(
                 height: 25,
               ),
-              if(Responsive.isDesktop(context)) Text(
-                "admin_management".tr(),
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-              if(Responsive.isDesktop(context)) const SizedBox(height: 40),
+              if (Responsive.isDesktop(context))
+                Text(
+                  "admin_management".tr(),
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              if (Responsive.isDesktop(context)) const SizedBox(height: 40),
               BlocListener<AddNewAdminBloc, AddNewAdminState>(
                 listener: (context, state) {
                   if (state is ErrorCreatingAdmin) {
@@ -136,39 +138,22 @@ class AdminManagement extends StatelessWidget {
                     );
                   }
                 },
-                child: InkWell(
-                  onTap: () {
-                    void data(NewAdminModel admin) {
-                      context
-                          .read<AddNewAdminBloc>()
-                          .add(AddAdmin(admin: admin));
-                    }
+                child: MainButton(
+                    onTap: () {
+                      void data(NewAdminModel admin) {
+                        context
+                            .read<AddNewAdminBloc>()
+                            .add(AddAdmin(admin: admin));
+                      }
+                      createAdmin(context, data);
 
-                    createAdmin(context, data);
-                  },
-                  child: SizedBox(
-                    height: 69,
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: yellow,
-                      ),
-                      child: FittedBox(
-                        child: Row(
-                          children: [
-                            const Icon(Icons.person_add_sharp, color: orange),
-                            const SizedBox(width: 15),
-                            Text(
-                              "create_admin".tr(),
-                              style: Theme.of(context).textTheme.labelLarge,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                    },
+                    title: "create_admin".tr(),
+                    icon: const Icon(
+                      Icons.person_add_sharp,
+                      color: orange,
+                    )),
+                
               ),
               const SizedBox(height: 20),
               BlocConsumer<AllAdminInfoBloc, AllAdminInfoState>(
@@ -187,12 +172,18 @@ class AdminManagement extends StatelessWidget {
                   if (state is ErrorFetchingAdmins) {
                     return Text(
                       state.message,
-                      style: const TextStyle(color: Colors.white),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: Colors.white),
                     );
                   } else if (state is ForbiddenFetching) {
                     return Text(
                       state.message,
-                      style: const TextStyle(color: Colors.white),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: Colors.white),
                     );
                   } else if (state is SucessFetchingAdmins) {
                     return Expanded(

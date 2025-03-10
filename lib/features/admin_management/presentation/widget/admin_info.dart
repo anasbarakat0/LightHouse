@@ -10,9 +10,12 @@ void showAdminInfo(BuildContext context, AdminInfoModel admin) {
         BuildContext context,
       ) {
         return AlertDialog(
-          title:  Text(
+          title: Text(
             "admin_info".tr(),
-            style: const TextStyle(color: darkNavy),
+            style: Theme.of(context)
+                .textTheme
+                .labelLarge
+                ?.copyWith(color: darkNavy),
           ),
           backgroundColor: Colors.white,
           content: FittedBox(
@@ -23,68 +26,78 @@ void showAdminInfo(BuildContext context, AdminInfoModel admin) {
                   children: [
                     Text(
                       "id".tr(),
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: Theme.of(context).textTheme.labelSmall,
                     ),
                     Text(
                       "first_name".tr(),
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: Theme.of(context).textTheme.labelSmall,
                     ),
                     Text(
                       "last_name".tr(),
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: Theme.of(context).textTheme.labelSmall,
                     ),
                     Text(
                       "email".tr(),
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: Theme.of(context).textTheme.labelSmall,
                     ),
                     Text(
                       "role".tr(),
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: Theme.of(context).textTheme.labelSmall,
                     ),
                   ],
                 ),
-                const SizedBox(width: 20),
+                const SizedBox(width: 5),
+                Column(
+                  children: [
+                    Text(
+                      ":",
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
+                    Text(
+                      ":",
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
+                    Text(
+                      ":",
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
+                    Text(
+                      ":",
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
+                    Text(
+                      ":",
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       admin.id,
-                      style: const TextStyle(
-                        color: darkNavy,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                     Text(
                       admin.firstName,
-                      style: const TextStyle(
-                        color: darkNavy,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                     Text(
                       admin.lastName,
-                      style: const TextStyle(
-                        color: darkNavy,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                     Text(
                       admin.email,
-                      style: const TextStyle(
-                        color: darkNavy,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                     Text(
                       admin.role == "SuperAdmin"
-                              ? "supper_admin".tr()
-                              : admin.role == "MANAGER"
-                                  ? "manager".tr()
-                                  : "admin".tr(),
-                      style: const TextStyle(
-                        color: darkNavy,
-                        fontWeight: FontWeight.bold,
-                      ),
+                          ? "supper_admin".tr()
+                          : admin.role == "MANAGER"
+                              ? "manager".tr()
+                              : "admin".tr(),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
                 ),

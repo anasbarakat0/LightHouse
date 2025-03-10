@@ -28,8 +28,8 @@ class LoginRepo {
         print("loginRepo.try");
         var data = await loginService.loginService(user);
         LoginResponseModel response = LoginResponseModel.fromMap(data.data);
-        storage.get<SharedPreferences>().setBool("auth", true);
-        storage.get<SharedPreferences>().setString("token", response.body.token);
+        memory.get<SharedPreferences>().setBool("auth", true);
+        memory.get<SharedPreferences>().setString("token", response.body.token);
         return Right(response);
       } on BAD_REQUEST catch (e) {
         print("loginRepo.BAD_REQUEST");

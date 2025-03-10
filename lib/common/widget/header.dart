@@ -30,11 +30,7 @@ class _HeaderWidgetState extends State<HeaderWidget> {
         if (!Responsive.isDesktop(context))
           Text(
             widget.title,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-              fontSize: 20
-            ),
+            style: Theme.of(context).textTheme.titleMedium,
           ),
         if (!Responsive.isDesktop(context))
           Row(

@@ -17,39 +17,42 @@ class SearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-       
-        suffixIcon: const Icon(
-          Icons.search,
-          color: darkNavy,
+    return SizedBox(
+      height: 65,
+      child: TextField(
+        controller: controller,
+         textAlignVertical: TextAlignVertical.top,
+        decoration: InputDecoration(
+          suffixIcon:  Icon(
+            Icons.search,
+            color: darkNavy,
+          ),
+          filled: true,
+          fillColor: navy,
+          labelText: "Search",
+          labelStyle: Theme.of(context).textTheme.labelMedium?.copyWith(color: Colors.white),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20),
+      
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: orange, width: 1.0),
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          focusColor: darkNavy,
+          disabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.grey),
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: darkNavy),
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          floatingLabelBehavior: FloatingLabelBehavior.never,
         ),
-        filled: true,
-        fillColor: navy,
-        labelText: "Search",
-        labelStyle: const TextStyle(color: Colors.grey),
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20),
-
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: orange, width: 1.0),
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        focusColor: darkNavy,
-        disabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.grey),
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: darkNavy),
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        floatingLabelBehavior: FloatingLabelBehavior.never,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
+        onChanged: onChanged,
+        onSubmitted: onSubmitted,
       ),
-      style: Theme.of(context).textTheme.labelMedium,
-      onChanged: onChanged,
-      onSubmitted: onSubmitted,
     );
   }
 }

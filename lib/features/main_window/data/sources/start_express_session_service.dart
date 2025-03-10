@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:lighthouse/core/constants/app_url.dart';
 import 'package:lighthouse/core/error/exception.dart';
 import 'package:lighthouse/core/utils/service.dart';
+import 'package:lighthouse/core/utils/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StartExpressSessionService extends Service {
   StartExpressSessionService({required super.dio});
@@ -13,18 +15,38 @@ class StartExpressSessionService extends Service {
         options: options(true),
         data: {"fullName": fullName},
       );
-      print("StartExpressSessionService  return response");
+
+      final prefs = memory.get<SharedPreferences>();
+      String? memoryDate = prefs.getString("memoryDate");
+      String dateString = response.data["localDateTime"];
+      DateTime currentDateTime = DateTime.parse(dateString);
+
+      if (memoryDate != null) {
+        DateTime storedDate = DateTime.parse(memoryDate);
+        if (storedDate.year == currentDateTime.year &&
+            storedDate.month == currentDateTime.month &&
+            storedDate.day == currentDateTime.day) {
+          
+          int visits = prefs.getInt("visits") ?? 0;
+          prefs.setInt("visits", visits + 1);
+        } else {
+          // prefs.setInt("onGround", 1);
+          prefs.setInt("visits", 1);
+          prefs.setString("memoryDate", dateString);
+        }
+      } else {
+        // prefs.setInt("onGround", 1);
+        prefs.setInt("visits", 1);
+        prefs.setString("memoryDate", dateString);
+      }
+
       return response;
     } on DioException catch (e) {
-      print("StartExpressSessionService  DioException");
       if (e.response!.data["status"] == "BAD_REQUEST") {
-        print("StartExpressSessionService  BAD_REQUEST");
         throw BAD_REQUEST.fromMap(e.response!.data);
       } else if (e.response!.data['status'] == 403) {
-        print("StartExpressSessionService  Forbidden");
         throw Forbidden();
       } else {
-        print("StartExpressSessionService  else");
         rethrow;
       }
     }

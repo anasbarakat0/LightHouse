@@ -1,128 +1,123 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:lighthouse/common/widget/my_button.dart';
+import 'package:lighthouse/core/resources/colors.dart';
+import 'package:lighthouse/features/premium_client/data/models/get_all_active_packages_response.dart';
 
-class UserPackageCard extends StatelessWidget {
-  final Map<String, dynamic> packageData;
-  final Color color;
+class PackageCardWidget extends StatelessWidget {
+  final ActivePackage packageData;
+  final VoidCallback onTap;
 
-  const UserPackageCard({
+  const PackageCardWidget({
     super.key,
     required this.packageData,
-    required this.color,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final DateFormat formatter = DateFormat('yyyy/MM/dd');
-    final String startDate =
-        formatter.format(DateTime.parse(packageData['startDate']));
-    final bool isActive = packageData['active'];
-
-    return Stack(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: isActive
-                  ? [Colors.green.shade400, Colors.green.shade800]
-                  : [Colors.red.shade400, Colors.red.shade800],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.15),
-                blurRadius: 10,
-                offset: const Offset(4, 4),
-              ),
-            ],
-          ),
-          padding: const EdgeInsets.all(18),
-          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Package ID with Icon
-              Row(
-                children: [
-                  Icon(Icons.card_giftcard, color: Colors.white, size: 22),
-                  const SizedBox(width: 8),
-                  Text(
-                    "${("Package ID").tr()}: ${packageData['packageId']}",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-
-              // Consumed Hours
-              _infoRow(Icons.timer, "Consumed Hours: ${packageData['consumedHours']}"),
-              
-              // Start Date
-              _infoRow(Icons.date_range, "Start Date: $startDate"),
-              
-              // Remaining Days
-              _infoRow(Icons.hourglass_bottom, "Remaining Days: ${packageData['remainingDays']}"),
-            ],
-          ),
+    return Container(
+      width: 300,
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        gradient: LinearGradient(
+          colors: [
+            Colors.white,
+            grey,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-
-        // Status Badge
-        Positioned(
-          left: 40,
-          bottom: 30,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.8),
-              borderRadius: BorderRadius.circular(30),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 8,
-                ),
-              ],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.white.withOpacity(0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                packageData.name ?? "Name".tr(),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: orange,
+                    ),
+              ),
             ),
-            child: Row(
+            const SizedBox(height: 12),
+            Row(
               children: [
-                Icon(
-                  isActive ? Icons.check_circle : Icons.cancel,
-                  color: isActive ? Colors.green : Colors.red,
-                  size: 18,
+                const Icon(
+                  Icons.access_time,
+                  size: 20,
+                  color: orange,
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  isActive ? "Active" : "Inactive",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: isActive ? Colors.green.shade800 : Colors.red.shade800,
-                  ),
+                  "${packageData.numOfHours} ${("hrs").tr()}",
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
             ),
-          ),
+            const SizedBox(height: 8),
+            // Duration Row
+            Row(
+              children: [
+                const Icon(
+                  Icons.calendar_today,
+                  size: 20,
+                  color: orange,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  "${packageData.packageDurationInDays} ${("days").tr()}",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            // Description Section
+            Text(
+              packageData.description.isNotEmpty
+                  ? packageData.description
+                  : "No description available",
+              style: Theme.of(context).textTheme.bodySmall,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 8),
+            const Spacer(),
+            // Price
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                "${"Price".tr()}: ${packageData.price} ${"s.p".tr()}",
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
+            ),
+            SizedBox(height: 12),
+            // Activate button
+            Align(
+              alignment: Alignment.center,
+              child: MyButton(
+                onPressed: onTap,
+                child: Center(
+                  child: Text("Activate".tr(),
+                      style: Theme.of(context).textTheme.labelLarge),
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
-    );
-  }
-
-  Widget _infoRow(IconData icon, String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          Icon(icon, color: Colors.white, size: 20),
-          const SizedBox(width: 10),
-          Text(
-            text,
-            style: TextStyle(color: Colors.white, fontSize: 14),
-          ),
-        ],
       ),
     );
   }

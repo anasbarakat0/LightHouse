@@ -24,7 +24,7 @@ class GetPremiumUserByNameService extends Service {
           headers: {
             'Accept': '*/*',
             'Authorization':
-                'Bearer  ${storage.get<SharedPreferences>().getString("token")} ',
+                'Bearer  ${memory.get<SharedPreferences>().getString("token")} ',
             'Connection': 'keep-alive',
           },
         ),

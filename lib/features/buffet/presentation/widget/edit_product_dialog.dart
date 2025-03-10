@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lighthouse/common/widget/my_button.dart';
 import 'package:lighthouse/common/widget/text_field_widget.dart';
 import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/features/buffet/data/models/product_model.dart';
@@ -24,7 +25,10 @@ void editProductDialog(
         return AlertDialog(
           title: Text(
             "edit_product".tr(),
-            style: const TextStyle(color: darkNavy),
+            style: Theme.of(context)
+                .textTheme
+                .labelLarge
+                ?.copyWith(color: darkNavy),
           ),
           backgroundColor: Colors.white,
           content: SizedBox(
@@ -78,28 +82,27 @@ void editProductDialog(
                     Navigator.of(context).pop();
                   },
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    
-                    edit(
-                      ProductModel(
-                        name: name.text,
-                        costPrice: double.parse(costPrice.text),
-                        quantity: int.parse(quantity.text),
-                        consumptionPrice: double.parse(consumptionPrice.text),
-                        barCode: barCode.text,
-                      ),
-                    );
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    "edit".tr(),
-                    style: Theme.of(context).textTheme.labelMedium,
-                  ),
-                ),
               ],
             ),
           ),
+          actions: [
+            MyButton(
+              onPressed: () {
+                edit(
+                  ProductModel(
+                    name: name.text,
+                    costPrice: double.parse(costPrice.text),
+                    quantity: int.parse(quantity.text),
+                    consumptionPrice: double.parse(consumptionPrice.text),
+                    barCode: barCode.text,
+                  ),
+                );
+                Navigator.of(context).pop();
+              },
+              child: Text("edit".tr(),
+                  style: Theme.of(context).textTheme.labelLarge),
+            ),
+          ],
         );
       });
 }

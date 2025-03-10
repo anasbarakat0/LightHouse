@@ -30,15 +30,8 @@ class _MyPasswordTextFieldState extends State<MyPasswordTextField> {
       decoration: InputDecoration(
         labelText: widget.label,
         hintText: widget.hint,
-        hintStyle: const TextStyle(
-          color: Color.fromARGB(255, 202, 202, 202),
-          fontSize: 14,
-        ),
-        labelStyle: const TextStyle(
-          color: orange,
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-        ),
+        hintStyle: Theme.of(context).textTheme.bodyMedium,
+        labelStyle: Theme.of(context).textTheme.titleSmall,
         filled: false,
         fillColor: Colors.grey.shade800,
         contentPadding: const EdgeInsets.symmetric(
@@ -77,10 +70,8 @@ class _MyPasswordTextFieldState extends State<MyPasswordTextField> {
           },
         ),
       ),
-      style:  TextStyle(
-        color:widget.dark??false? navy: Colors.white,
-        fontSize: 16,
-      ),
+      style:  Theme.of(context).textTheme.titleSmall?.copyWith(color:widget.dark??false? navy: Colors.white,),
+        
       keyboardType: TextInputType.visiblePassword,
     );
   }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lighthouse/core/resources/colors.dart';
 
 class IconTextWidget extends StatelessWidget {
   final String icon;
@@ -22,9 +21,8 @@ class IconTextWidget extends StatelessWidget {
         const SizedBox(width: 10),
         Text(
           text,
-          style: const TextStyle(
-            fontSize: 18.0,
-            color: navy,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+
             overflow: TextOverflow.clip
           ),
         ),

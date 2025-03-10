@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:lighthouse/core/constants/app_url.dart';
 import 'package:lighthouse/core/error/exception.dart';
 import 'package:lighthouse/core/utils/service.dart';
+import 'package:lighthouse/core/utils/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FinishPremiumSessionService extends Service {
   FinishPremiumSessionService({required super.dio});
@@ -10,6 +12,9 @@ class FinishPremiumSessionService extends Service {
     try {
       response = await dio.put("$baseUrl/api/v1/sessions/premium/$id",
           options: options(true));
+
+          final prefs = memory.get<SharedPreferences>();
+
       return response;
     } on DioException catch (e) {
      

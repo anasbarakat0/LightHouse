@@ -13,15 +13,15 @@ class Service {
   options(bool auth) {
     Options options;
     if (auth) {
-      print(storage.get<SharedPreferences>().getString("token"));
+      print(memory.get<SharedPreferences>().getString("token"));
       options = Options(
         headers: {
           'Accept': '*/*',
           'Authorization':
-              'Bearer  ${storage.get<SharedPreferences>().getString("token")} ',
+              'Bearer  ${memory.get<SharedPreferences>().getString("token")} ',
         },
       );
-      //${storage.get<SharedPreferences>().getString("token")}
+      //${memory.get<SharedPreferences>().getString("token")}
       return options;
     } else {
       options = Options(

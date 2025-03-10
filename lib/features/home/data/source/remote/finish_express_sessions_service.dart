@@ -12,17 +12,14 @@ class FinishExpressSessionsService extends Service {
         "$baseUrl/api/v1/sessions/express/$id",
         options: options(true),
       );
+
       return response;
-     } on DioException catch (e) {
-   
+    } on DioException catch (e) {
       if (e.response!.data["status"] == "BAD_REQUEST") {
-      
         throw BAD_REQUEST.fromMap(e.response!.data);
       } else if (e.response!.data['status'] == 403) {
-      
         throw Forbidden();
       } else {
-       
         rethrow;
       }
     }

@@ -47,36 +47,14 @@ class _PackageCardState extends State<PackageCard> {
             children: [
               Row(
                 children: [
-                  const Text(
+                  Text(
                     "Premium Package",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: lightGrey,
-                        fontWeight: FontWeight.w900),
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge
+                        ?.copyWith(color: Colors.white),
                   ),
                   const Spacer(),
-                  // Switch(
-                  //   title: Text(widget.package.active? "Active":"Inactive"),
-                  //   value: widget.package.active,
-                  //   onChanged: widget.onChanged,
-                  //   activeColor: Colors.green,
-                  //   inactiveTrackColor: Colors.red,
-                  // ),
-                  // LiteRollingSwitch(
-                  //   animationDuration: Duration.zero,
-                  //   value: widget.package.active,
-                  //   colorOn: Colors.green,
-                  //   colorOff: Colors.red,
-                  //   textOn: 'Active',
-                  //   textOff: 'Inactive',
-                  //   textOnColor: Colors.white,
-                  //   iconOn: Icons.check_circle,
-                  //   iconOff: Icons.cancel,
-                  //   onTap: () {},
-                  //   onDoubleTap: () {},
-                  //   onSwipe: () {},
-                  //   onChanged: widget.onChanged,
-                  // ),
                   FloatingActionButton.small(
                     onPressed: widget.onPressed,
                     backgroundColor: darkNavy,
@@ -85,89 +63,101 @@ class _PackageCardState extends State<PackageCard> {
                   const SizedBox(
                     width: 10,
                   ),
-                  InkWell(
-                    onTap: widget.onTap,
-                    child: Container(
-                      height: 40,
-                      width: 70,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: widget.package.active ? Colors.green : Colors.red,
-                        borderRadius: BorderRadius.circular(10)
+                  SizedBox(
+                    width: 70,
+                    child: FloatingActionButton.small(
+                      onPressed: widget.onTap,
+                      backgroundColor:
+                          widget.package.active ? Colors.green : Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      // padding: const EdgeInsets.symmetric(
-                      //     vertical: 10, horizontal: 16),
                       child: Text(
                         widget.package.active ? 'Active' : 'Inactive',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500
-                        ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelSmall
+                            ?.copyWith(color: Colors.white),
                       ),
                     ),
-                  ),
-                  
-                  
+                  )
                 ],
               ),
               const SizedBox(height: 8),
               Text(
                 widget.package.description,
-                style: const TextStyle(fontSize: 14, color: grey),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: grey),
               ),
               const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Hours".tr(),
-                        style: const TextStyle(fontSize: 12, color: orange),
-                      ),
-                      Text(
-                        "${widget.package.numOfHours} ${"hrs".tr()}",
-                        style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Price".tr(),
-                        style: const TextStyle(fontSize: 12, color: orange),
-                      ),
-                      Text(
-                        "${widget.package.price} ${"S.P".tr()}",
-                        style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Duration".tr(),
-                        style: const TextStyle(fontSize: 12, color: orange),
-                      ),
-                      Text(
-                        "${widget.package.packageDurationInDays} ${"days".tr()}",
-                        style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ],
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(5),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 8,
+                      offset: Offset(2, 4),
+                    ),
+                  ],
+                ),
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Hours".tr(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: orange),
+                        ),
+                        Text(
+                          "${widget.package.numOfHours} ${"hrs".tr()}",
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Price".tr(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: orange),
+                        ),
+                        Text(
+                          "${widget.package.price} ${"S.P".tr()}",
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Duration".tr(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: orange),
+                        ),
+                        Text(
+                          "${widget.package.packageDurationInDays} ${"days".tr()}",
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

@@ -33,9 +33,11 @@ import 'package:lighthouse/features/home/presentation/widget/express_client_card
 import 'package:lighthouse/features/home/presentation/widget/express_session_dialog.dart';
 import 'package:lighthouse/features/home/presentation/widget/premium_client_card_widget.dart';
 import 'package:lighthouse/features/home/presentation/widget/premium_session_dialog.dart';
+import 'package:lighthouse/features/home/presentation/widget/print_invoice.dart';
 import 'package:lighthouse/features/login/presentation/view/login.dart';
 import 'package:lighthouse/features/main_window/presentation/view/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui' as ui;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -52,7 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // ignore: unused_field
   final bool _isConnected = false;
 
-
+  late String printerName = "XP-80C (copy 1)";
+  late String printerAddress = "192.168.123.100";
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +91,8 @@ class _HomeScreenState extends State<HomeScreen> {
         BlocListener<FinishExpressSessionBloc, FinishExpressSessionState>(
           listener: (context, state) {
             if (state is SuccessFinishExpressSession) {
+              printInvoice(
+                  false, printerAddress, printerName, state.response.body);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.green[800],
@@ -104,14 +109,20 @@ class _HomeScreenState extends State<HomeScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.red[800],
-                  content: Text(state.message),
+                  content: Text(
+                    state.message,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ),
               );
             } else if (state is ForbiddenFinishExpressSession) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.red[800],
-                  content: Text(state.message),
+                  content: Text(
+                    state.message,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ),
               );
               Navigator.pushReplacement(
@@ -139,9 +150,10 @@ class _HomeScreenState extends State<HomeScreen> {
         BlocListener<FinishPremiumSessionBloc, FinishPremiumSessionState>(
           listener: (context, state) {
             if (state is SuccessFinishPremiumSession) {
-              storage.get<SharedPreferences>().setInt("index", 1);
-              
-             
+              memory.get<SharedPreferences>().setInt("index", 1);
+              print(state.response);
+              printInvoice(
+                  true, printerAddress, printerName, state.response.body);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.green[800],
@@ -159,14 +171,20 @@ class _HomeScreenState extends State<HomeScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.red[800],
-                  content: Text(state.message),
+                  content: Text(
+                    state.message,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ),
               );
             } else if (state is ForbiddenFinishPremiumSession) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.red[800],
-                  content: Text(state.message),
+                  content: Text(
+                    state.message,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ),
               );
               Navigator.pushReplacement(
@@ -203,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     context.read<FinishPremiumSessionBloc>().add(
                           FinishPreSession(id: state.response.body.id),
                         );
-                        Navigator.of(context).pop();
+                    Navigator.of(context).pop();
                   },
                 );
               });
@@ -212,7 +230,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.red[800],
-                  content: Text(state.message),
+                  content: Text(
+                    state.message,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ),
               );
             } else if (state is ForbiddenGettingSessionById) {
@@ -220,7 +241,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.red[800],
-                  content: Text(state.message),
+                  content: Text(
+                    state.message,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ),
               );
               Navigator.pushReplacement(
@@ -233,59 +257,63 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
         BlocProvider(
-  create: (context) => GetExpressSessionBloc(
-    GetExpressSessionByIdRepo(
-      getExpressSessionByIdService: GetExpressSessionByIdService(dio: Dio()),
-      networkConnection: NetworkConnection(
-        internetConnectionChecker: InternetConnectionChecker.instance,
-      ),
-    ),
-  ),
-),
-BlocListener<GetExpressSessionBloc, GetExpressSessionState>(
-  listener: (context, state) {
-    if (state is SuccessGettingExpressSession) {
-      // عند نجاح جلب البيانات يمكنك عرض الديالوج أو أي إجراء آخر
-      expressSessionDialog(context, state.response.body, () {
-        message(
-          context,
-          "end_session".tr(),
-          [
-            "end_session_message".tr(),
-          ],
-          () {
-            // مثال على إنهاء الجلسة (يفترض وجود بلوك FinishExpressSessionBloc)
-            context.read<FinishExpressSessionBloc>().add(
-                  FinishExpSession(id: state.response.body.id),
+          create: (context) => GetExpressSessionBloc(
+            GetExpressSessionByIdRepo(
+              getExpressSessionByIdService:
+                  GetExpressSessionByIdService(dio: Dio()),
+              networkConnection: NetworkConnection(
+                internetConnectionChecker: InternetConnectionChecker.instance,
+              ),
+            ),
+          ),
+        ),
+        BlocListener<GetExpressSessionBloc, GetExpressSessionState>(
+          listener: (context, state) {
+            if (state is SuccessGettingExpressSession) {
+              expressSessionDialog(context, state.response.body, () {
+                message(
+                  context,
+                  "end_session".tr(),
+                  [
+                    "end_session_message".tr(),
+                  ],
+                  () {
+                    context.read<FinishExpressSessionBloc>().add(
+                          FinishExpSession(id: state.response.body.id),
+                        );
+                    Navigator.of(context).pop();
+                  },
                 );
-            Navigator.of(context).pop();
+              });
+            } else if (state is ExceptionGettingExpressSession) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.red[800],
+                  content: Text(
+                    state.message,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+              );
+            } else if (state is ForbiddenGettingExpressSession) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.red[800],
+                  content: Text(
+                    state.message,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+              );
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginWindows(),
+                ),
+              );
+            }
           },
-        );
-      });
-    } else if (state is ExceptionGettingExpressSession) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red[800],
-          content: Text(state.message),
-        ),
-      );
-    } else if (state is ForbiddenGettingExpressSession) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red[800],
-          content: Text(state.message),
-        ),
-      );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginWindows(),
-        ),
-      );
-    }
-  },
-)
-
+        )
       ],
       child: Builder(
         builder: (context) {
@@ -298,7 +326,7 @@ BlocListener<GetExpressSessionBloc, GetExpressSessionState>(
                 if (Responsive.isDesktop(context))
                   Text(
                     "home".tr(),
-                    style: Theme.of(context).textTheme.headlineLarge,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 if (Responsive.isDesktop(context)) const SizedBox(height: 40),
                 Stack(
@@ -327,14 +355,13 @@ BlocListener<GetExpressSessionBloc, GetExpressSessionState>(
                             },
                             child: Container(
                               alignment: Alignment.center,
-                              width: 120,
+                              width: 140,
                               child: Text(
                                 "express_clients".tr(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium
+                                    ?.copyWith(color: Colors.white),
                               ),
                             ),
                           ),
@@ -348,23 +375,25 @@ BlocListener<GetExpressSessionBloc, GetExpressSessionState>(
                             },
                             child: Container(
                               alignment: Alignment.center,
-                              width: 120,
+                              width: 140,
                               child: Text(
                                 "premium_clients".tr(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium
+                                    ?.copyWith(color: Colors.white),
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    Positioned(
-                      left: selectText ? 0 : null,
-                      right: selectText ? null : 0,
+                    Positioned.directional(
+                      end: selectText ? 0 : null,
+                      start: selectText ? null : 0,
+                      textDirection: context.locale.languageCode == "ar"
+                          ? ui.TextDirection.rtl
+                          : ui.TextDirection.ltr,
                       child: Container(
                         alignment: Alignment.center,
                         height: 48,
@@ -377,11 +406,10 @@ BlocListener<GetExpressSessionBloc, GetExpressSessionState>(
                           selectText
                               ? "premium_clients".tr()
                               : "express_clients".tr(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium
+                              ?.copyWith(color: Colors.white),
                         ),
                       ),
                     )
@@ -394,14 +422,20 @@ BlocListener<GetExpressSessionBloc, GetExpressSessionState>(
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           backgroundColor: Colors.red[800],
-                          content: Text(state.message),
+                          content: Text(
+                            state.message,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
                         ),
                       );
                     } else if (state is ForbiddenGettingSessions) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           backgroundColor: Colors.red[800],
-                          content: Text(state.message),
+                          content: Text(
+                            state.message,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
                         ),
                       );
                       Navigator.pushReplacement(
@@ -443,19 +477,14 @@ BlocListener<GetExpressSessionBloc, GetExpressSessionState>(
                                                 ? (MediaQuery.of(context)
                                                             .size
                                                             .width >
-                                                        1620
+                                                        1806
                                                     ? 4
                                                     : MediaQuery.of(context)
                                                                 .size
                                                                 .width >
-                                                            1250
+                                                            1383
                                                         ? 3
-                                                        : MediaQuery.of(context)
-                                                                    .size
-                                                                    .width >
-                                                                480
-                                                            ? 2
-                                                            : 1)
+                                                        : 2)
                                                 : (MediaQuery.of(context)
                                                             .size
                                                             .width >
@@ -485,14 +514,31 @@ BlocListener<GetExpressSessionBloc, GetExpressSessionState>(
                                         return PremiumClientCardWidget(
                                           context: context,
                                           premiumSession: premiumSession,
+                                          onTap: () => context
+                                              .read<GetPremiumSessionBloc>()
+                                              .add(
+                                                GetPremiumSession(
+                                                  id: premiumSession.id,
+                                                ),
+                                              ),
                                           onPressed: () {
-                                            context
-                                                .read<GetPremiumSessionBloc>()
-                                                .add(
-                                                  GetPremiumSession(
-                                                    id: premiumSession.id,
-                                                  ),
-                                                );
+                                            message(
+                                              context,
+                                              "end_session".tr(),
+                                              [
+                                                "end_session_message".tr(),
+                                              ],
+                                              () {
+                                                context
+                                                    .read<
+                                                        FinishPremiumSessionBloc>()
+                                                    .add(
+                                                      FinishPreSession(
+                                                          id: premiumSession
+                                                              .id),
+                                                    );
+                                              },
+                                            );
                                             // todo
                                             // todo
                                             // todo
@@ -528,7 +574,7 @@ BlocListener<GetExpressSessionBloc, GetExpressSessionState>(
                                                 ? (MediaQuery.of(context)
                                                             .size
                                                             .width >
-                                                        1620
+                                                        1650
                                                     ? 4
                                                     : MediaQuery.of(context)
                                                                 .size
@@ -544,17 +590,17 @@ BlocListener<GetExpressSessionBloc, GetExpressSessionState>(
                                                 : (MediaQuery.of(context)
                                                             .size
                                                             .width >
-                                                        1000
+                                                        1053
                                                     ? 4
                                                     : MediaQuery.of(context)
                                                                 .size
                                                                 .width >
-                                                            730
+                                                            807
                                                         ? 3
                                                         : MediaQuery.of(context)
                                                                     .size
                                                                     .width >
-                                                                510
+                                                                560
                                                             ? 2
                                                             : 1),
                                         crossAxisSpacing: 12.0,
@@ -570,8 +616,25 @@ BlocListener<GetExpressSessionBloc, GetExpressSessionState>(
                                         return ExpressClientCardWidget(
                                           context: context,
                                           expressSession: expressSession,
+                                          onTap: () => context
+                                              .read<GetExpressSessionBloc>()
+                                              .add(GetExpressSession(
+                                                  id: expressSession.id)),
                                           onPressed: () {
-                                           context.read<GetExpressSessionBloc>().add(GetExpressSession(id: expressSession.id));
+                                            message(
+                                              context,
+                                              "end_session".tr(),
+                                              [
+                                                "end_session_message".tr(),
+                                              ],
+                                              () {
+                                                context
+                                                    .read<
+                                                        FinishExpressSessionBloc>()
+                                                    .add(FinishExpSession(
+                                                        id: expressSession.id));
+                                              },
+                                            );
                                           },
                                         );
                                       },

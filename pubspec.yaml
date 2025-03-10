@@ -16,7 +16,6 @@ dependencies:
   flutter_bloc: ^9.0.0
   flutter_slidable: ^4.0.0
   get_it: ^8.0.1
-  shared_preferences: ^2.3.2
   easy_localization: ^3.0.7+1
   flutter_svg: ^2.0.10+1
   lite_rolling_switch: ^1.0.1
@@ -26,6 +25,8 @@ dependencies:
   flutter_launcher_icons: ^0.14.3
   esc_pos_utils_plus: ^2.0.4
   image: ^4.5.2
+  shared_preferences: ^2.5.2
+  translator: ^1.0.3+1
   
 flutter_launcher_icons:
   android: "launcher_icon"
@@ -60,3 +61,84 @@ flutter:
     - assets/svg/
     - assets/icons/
     - assets/images/
+    - assets/fonts/
+    - assets/fonts/ProximaNova/
+    - assets/fonts/NotoSansArabic/
+    - assets/fonts/NotoKufiArabic/
+    - assets/fonts/Raleway/
+    
+  fonts:
+    - family: Proxima Nova
+      fonts:
+        - asset: assets/fonts/ProximaNova/Proxima_Nova_Extrabold.ttf
+          weight: 800
+        - asset: assets/fonts/ProximaNova/Proxima_Nova_Light.ttf
+          weight: 300
+        - asset: assets/fonts/ProximaNova/Proxima_Nova_Regular.ttf
+          weight: 400
+        - asset: assets/fonts/ProximaNova/Proxima_Nova_Semibold.ttf
+          weight: 600
+
+    - family: NotoKufiArabic
+      fonts:
+      - asset: assets/fonts/NotoKufiArabic/NotoKufiArabic-Black.ttf
+        weight: 900
+      - asset: assets/fonts/NotoKufiArabic/NotoKufiArabic-ExtraBold.ttf
+        weight: 800
+      - asset: assets/fonts/NotoKufiArabic/NotoKufiArabic-Bold.ttf
+        weight: 700
+      - asset: assets/fonts/NotoKufiArabic/NotoKufiArabic-SemiBold.ttf
+        weight: 600
+      - asset: assets/fonts/NotoKufiArabic/NotoKufiArabic-Medium.ttf
+        weight: 500
+      - asset: assets/fonts/NotoKufiArabic/NotoKufiArabic-Regular.ttf
+        weight: 400
+      - asset: assets/fonts/NotoKufiArabic/NotoKufiArabic-Light.ttf
+        weight: 300
+      - asset: assets/fonts/NotoKufiArabic/NotoKufiArabic-ExtraLight.ttf
+        weight: 200
+      - asset: assets/fonts/NotoKufiArabic/NotoKufiArabic-Thin.ttf
+        weight: 100
+
+
+    - family: NotoSansArabic
+      fonts:
+        - asset: assets/fonts/NotoSansArabic/NotoSansArabic-Black.ttf
+          weight: 900
+        - asset: assets/fonts/NotoSansArabic/NotoSansArabic-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/NotoSansArabic/NotoSansArabic-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/NotoSansArabic/NotoSansArabic-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/NotoSansArabic/NotoSansArabic-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/NotoSansArabic/NotoSansArabic-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/NotoSansArabic/NotoSansArabic-Light.ttf
+          weight: 300
+        - asset: assets/fonts/NotoSansArabic/NotoSansArabic-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/NotoSansArabic/NotoSansArabic-Thin.ttf
+          weight: 100
+
+    - family: Raleway
+      fonts:
+        - asset: assets/fonts/Raleway/RalewayHeavy.ttf
+          weight: 900
+        - asset: assets/fonts/Raleway/RalewayExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Raleway/RalewayBold.ttf
+          weight: 700
+        - asset: assets/fonts/Raleway/RalewaySemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Raleway/RalewayMedium.ttf
+          weight: 500
+        - asset: assets/fonts/Raleway/RalewayRegular.ttf
+          weight: 400
+        - asset: assets/fonts/Raleway/RalewayLight.ttf
+          weight: 300
+        - asset: assets/fonts/Raleway/RalewayExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Raleway/RalewayThin.ttf
+          weight: 100

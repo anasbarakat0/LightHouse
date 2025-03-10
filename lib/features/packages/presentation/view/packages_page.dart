@@ -87,14 +87,14 @@ class _PackagesPageState extends State<PackagesPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 backgroundColor: Colors.red[800],
-                content: Text(state.message),
+                content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
               ),
             );
           } else if (state is ForbiddenEditPackage) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 backgroundColor: Colors.red[800],
-                content: Text(state.message),
+                content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
               ),
             );
             Navigator.pushReplacement(
@@ -134,14 +134,14 @@ class _PackagesPageState extends State<PackagesPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 backgroundColor: Colors.red[800],
-                content: Text(state.message),
+                content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
               ),
             );
           } else if (state is ForbiddenAddPackage) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 backgroundColor: Colors.red[800],
-                content: Text(state.message),
+                content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
               ),
             );
             Navigator.pushReplacement(
@@ -152,7 +152,6 @@ class _PackagesPageState extends State<PackagesPage> {
             );
           }
         }),
-        
       ],
       child: Builder(builder: (context) {
         return Padding(
@@ -161,11 +160,12 @@ class _PackagesPageState extends State<PackagesPage> {
             children: [
               HeaderWidget(title: "package_management".tr()),
               const SizedBox(height: 25),
-              if(Responsive.isDesktop(context)) Text(
-                "package_management".tr(),
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-               if(Responsive.isDesktop(context))const SizedBox(height: 40),
+              if (Responsive.isDesktop(context))
+                Text(
+                  "package_management".tr(),
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              if (Responsive.isDesktop(context)) const SizedBox(height: 40),
               MainButton(
                   onTap: () {
                     createPackageDialog(context, (package) {
@@ -175,114 +175,67 @@ class _PackagesPageState extends State<PackagesPage> {
                     });
                   },
                   title: "add_package".tr(),
-                  icon: const Icon(Icons.add)),
+                  icon: const Icon(
+                    Icons.add,
+                    color: orange,
+                  )),
               const SizedBox(height: 10),
               BlocConsumer<GetAllActivePackagesBloc, GetAllActivePackagesState>(
                   builder: (BuildContext context, state) {
                 if (state is ExceptionWhilePackages) {
                   return Text(
                     state.message,
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: Colors.white),
                   );
                 } else if (state is ShowingAllPackages) {
                   return Expanded(
-                      child: Stack(
-                    children: [
-                      ListView.builder(
-                        clipBehavior: Clip.antiAlias,
-                        itemCount: state.activePackages.body.length,
-                        itemBuilder: (context, index) {
-                          PackageModel package = PackageModel.fromMap(
-                              state.activePackages.body[index].toMap());
+                      child: ListView.builder(
+                    clipBehavior: Clip.antiAlias,
+                    itemCount: state.activePackages.body.length,
+                    itemBuilder: (context, index) {
+                      PackageModel package = PackageModel.fromMap(
+                          state.activePackages.body[index].toMap());
 
-                          return Padding(
-                            padding:
-                                index == state.activePackages.body.length - 1
-                                    ? const EdgeInsets.only(bottom: 20)
-                                    : index == 0
-                                        ? const EdgeInsets.only(top: 10)
-                                        : const EdgeInsets.only(),
-                            child: PackageCard(
-                              // onChanged: (type) {
-                              //   context.read<EditPackageInfoBloc>().add(
-                              //         EditPackageInfo(
-                              //           id: state.activePackages.body[index].id,
-                              //           package: PackageModel(
-                              //             numOfHours: package.numOfHours,
-                              //             price: package.price,
-                              //             description: package.description,
-                              //             packageDurationInDays:
-                              //                 package.packageDurationInDays,
-                              //             active: type,
-                              //           ),
-                              //         ),
-                              //       );
-                              // },
-                              onTap: (){
-                                bool type = state.activePackages.body[index].active? false : true;
-                                context.read<EditPackageInfoBloc>().add(
-                                      EditPackageInfo(
-                                        id: state.activePackages.body[index].id,
-                                        package: PackageModel(
-                                          numOfHours: package.numOfHours,
-                                          price: package.price,
-                                          description: package.description,
-                                          packageDurationInDays:
-                                              package.packageDurationInDays,
-                                          active: type,
-                                        ),
-                                      ),
-                                    );
-                              },
-                              onPressed: () {
-                                editPackageDialog(context,package, (package) {
-                                  context.read<EditPackageInfoBloc>().add(EditPackageInfo(id: state.activePackages.body[index].id,package: package));
-                                });
-                              },
-                              package: package,
-                            ),
-                          );
-                        },
-                      ),
-                      Positioned.fill(
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: Container(
-                            height: 20,
-                            decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  darkNavy,
-                                  Color.fromARGB(0, 16, 55, 92)
-                                ],
-                              ),
-                            ),
-                          ),
+                      return Padding(
+                        padding: index == state.activePackages.body.length - 1
+                            ? const EdgeInsets.only(bottom: 20)
+                            : index == 0
+                                ? const EdgeInsets.only(top: 10)
+                                : const EdgeInsets.only(),
+                        child: PackageCard(
+                          onTap: () {
+                            bool type = state.activePackages.body[index].active
+                                ? false
+                                : true;
+                            context.read<EditPackageInfoBloc>().add(
+                                  EditPackageInfo(
+                                    id: state.activePackages.body[index].id,
+                                    package: PackageModel(
+                                      numOfHours: package.numOfHours,
+                                      price: package.price,
+                                      description: package.description,
+                                      packageDurationInDays:
+                                          package.packageDurationInDays,
+                                      active: type,
+                                    ),
+                                  ),
+                                );
+                          },
+                          onPressed: () {
+                            editPackageDialog(context, package, (package) {
+                              context.read<EditPackageInfoBloc>().add(
+                                  EditPackageInfo(
+                                      id: state.activePackages.body[index].id,
+                                      package: package));
+                            });
+                          },
+                          package: package,
                         ),
-                      ),
-                      Positioned.fill(
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            height: 20,
-                            decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Color.fromARGB(0, 16, 55, 92),
-                                  darkNavy,
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                      );
+                    },
                   ));
                 } else {
                   return const CircularProgressIndicator();
@@ -297,21 +250,22 @@ class _PackagesPageState extends State<PackagesPage> {
                   });
                 }
               }),
-              Column(
-                children: [
-                  const SizedBox(height: 20),
-                  PaginationWidget(
-                      currentPage: currentPage,
-                      totalPages: totalPages,
-                      onPageChanged: (page) {
-                        context.read<GetAllActivePackagesBloc>().add(
-                            GetAllActivePackages(page: page, size: perPage));
-                        setState(() {
-                          currentPage = page;
-                        });
-                      }),
-                  // const SizedBox(height: 20),
-                ],
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: PaginationWidget(
+                  currentPage: currentPage,
+                  totalPages: totalPages,
+                  onPageChanged: (page) {
+                    context
+                        .read<GetAllActivePackagesBloc>()
+                        .add(GetAllActivePackages(page: page, size: perPage));
+                    setState(
+                      () {
+                        currentPage = page;
+                      },
+                    );
+                  },
+                ),
               )
             ],
           ),
