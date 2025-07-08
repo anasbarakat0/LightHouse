@@ -62,11 +62,11 @@ class _SummaryWidgetState extends State<SummaryWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
+    return SizedBox.expand(
       child: SingleChildScrollView(
+        clipBehavior: Clip.antiAliasWithSaveLayer,
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [navy, darkNavy],
               begin: Alignment.topCenter,
@@ -84,9 +84,10 @@ class _SummaryWidgetState extends State<SummaryWidget> {
                 const SizedBox(height: 20),
                 Text(
                   'summary'.tr(),
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Colors.white
-                              ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(color: Colors.white),
                 ),
                 const SizedBox(height: 16),
                 SummaryDetails(
@@ -107,32 +108,34 @@ class _SummaryWidgetState extends State<SummaryWidget> {
                               const SizedBox(height: 16),
                               Text(
                                 'Pending_Tasks'.tr(),
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: lightGrey
-                              ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: lightGrey,
+                                    ),
                               ),
                               const SizedBox(height: 16),
-                              SizedBox(
-                                height: 381,
-                                child: ListView.builder(
-                                  itemCount: tasks.length,
-                                  itemBuilder: (context, index) {
-                                    final task = tasks[index];
-                                    return TaskDisplayTile(
-                                      title: task['title'] ?? "No Title",
-                                      dateTime: task['dateTime'] ??
-                                          DateTime.now().toIso8601String(),
-                                    );
-                                  },
-                                ),
+                              ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: tasks.length,
+                                itemBuilder: (context, index) {
+                                  final task = tasks[index];
+                                  return TaskDisplayTile(
+                                    title: task['title'] ?? "No Title",
+                                    dateTime: task['dateTime'] ??
+                                        DateTime.now().toIso8601String(),
+                                  );
+                                },
                               ),
                             ],
                           )
                         : Text(
                             "No_pending_tasks!".tr(),
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Colors.white
-                              ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(color: Colors.white),
                           );
                   },
                 ),

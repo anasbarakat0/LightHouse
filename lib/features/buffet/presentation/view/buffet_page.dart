@@ -51,7 +51,18 @@ class _BuffetPageState extends State<BuffetPage> {
               getAllProductsRepo: GetAllProductsRepo(
                 getAllProductsService: GetAllProductsService(dio: Dio()),
                 networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.instance,
+                  internetConnectionChecker: InternetConnectionChecker.createInstance(
+                    addresses: [
+                      AddressCheckOption(
+                        uri: Uri.parse("https://www.google.com"),
+                        timeout: Duration(seconds: 3),
+                      ),
+AddressCheckOption(
+                        uri: Uri.parse("https://1.1.1.1"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -63,7 +74,18 @@ class _BuffetPageState extends State<BuffetPage> {
               deleteProductRepo: DeleteProductRepo(
                 deleteProductService: DeleteProductService(dio: Dio()),
                 networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.instance,
+                  internetConnectionChecker: InternetConnectionChecker.createInstance(
+                    addresses: [
+                      AddressCheckOption(
+                        uri: Uri.parse("https://www.google.com"),
+                        timeout: Duration(seconds: 3),
+                      ),
+AddressCheckOption(
+                        uri: Uri.parse("https://1.1.1.1"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -75,7 +97,18 @@ class _BuffetPageState extends State<BuffetPage> {
               editProductRepo: EditProductRepo(
                 editProductService: EditProductService(dio: Dio()),
                 networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.instance,
+                  internetConnectionChecker: InternetConnectionChecker.createInstance(
+                    addresses: [
+                      AddressCheckOption(
+                        uri: Uri.parse("https://www.google.com"),
+                        timeout: Duration(seconds: 3),
+                      ),
+AddressCheckOption(
+                        uri: Uri.parse("https://1.1.1.1"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -91,7 +124,11 @@ class _BuffetPageState extends State<BuffetPage> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     backgroundColor: Colors.green,
-                    content: Text(state.response),
+                    content: Text(state.response,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: Colors.white)),
                   ),
                 );
 
@@ -116,7 +153,18 @@ class _BuffetPageState extends State<BuffetPage> {
               addProductRepo: AddProductRepo(
                 addProductService: AddProductService(dio: Dio()),
                 networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.instance,
+                  internetConnectionChecker: InternetConnectionChecker.createInstance(
+                    addresses: [
+                      AddressCheckOption(
+                        uri: Uri.parse("https://www.google.com"),
+                        timeout: Duration(seconds: 3),
+                      ),
+AddressCheckOption(
+                        uri: Uri.parse("https://1.1.1.1"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -131,7 +179,11 @@ class _BuffetPageState extends State<BuffetPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.green,
-                  content: Text(state.response),
+                  content: Text(state.response,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: Colors.white)),
                 ),
               );
               context
@@ -194,36 +246,31 @@ class _BuffetPageState extends State<BuffetPage> {
                                               ? (MediaQuery.of(context)
                                                           .size
                                                           .width >
-                                                      1620
+                                                      1630
                                                   ? 4
                                                   : MediaQuery.of(context)
                                                               .size
                                                               .width >
                                                           1250
                                                       ? 3
-                                                      : MediaQuery.of(context)
-                                                                  .size
-                                                                  .width >
-                                                              480
-                                                          ? 2
-                                                          : 1)
+                                                      : 2)
                                               : (MediaQuery.of(context)
                                                           .size
                                                           .width >
-                                                      1000
+                                                      946
                                                   ? 4
                                                   : MediaQuery.of(context)
                                                               .size
                                                               .width >
-                                                          730
+                                                          719
                                                       ? 3
                                                       : MediaQuery.of(context)
                                                                   .size
                                                                   .width >
-                                                              510
+                                                              494
                                                           ? 2
                                                           : 1),
-                                          crossAxisSpacing: 8,
+                                          crossAxisSpacing: 0,
                                           mainAxisSpacing: 8,
                                           mainAxisExtent: 262),
                                   itemCount: state.response.body.length,

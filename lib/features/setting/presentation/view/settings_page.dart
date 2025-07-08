@@ -55,7 +55,18 @@ class _SettingsPageState extends State<SettingsPage> {
                   dio: Dio(),
                 ),
                 networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.instance,
+                  internetConnectionChecker: InternetConnectionChecker.createInstance(
+                    addresses: [
+                      AddressCheckOption(
+                        uri: Uri.parse("https://www.google.com"),
+                        timeout: Duration(seconds: 3),
+                      ),
+AddressCheckOption(
+                        uri: Uri.parse("https://1.1.1.1"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -69,7 +80,18 @@ class _SettingsPageState extends State<SettingsPage> {
                   dio: Dio(),
                 ),
                 networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.instance,
+                  internetConnectionChecker: InternetConnectionChecker.createInstance(
+                    addresses: [
+                      AddressCheckOption(
+                        uri: Uri.parse("https://www.google.com"),
+                        timeout: Duration(seconds: 3),
+                      ),
+AddressCheckOption(
+                        uri: Uri.parse("https://1.1.1.1"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -88,21 +110,21 @@ class _SettingsPageState extends State<SettingsPage> {
             if (state is ErrorEditingPrice) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  backgroundColor: Colors.red[800],
+                  backgroundColor: Colors.redAccent[700],
                   content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
                 ),
               );
             } else if (state is OfflineEditingPrice) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  backgroundColor: Colors.red[800],
+                  backgroundColor: Colors.redAccent[700],
                   content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
                 ),
               );
             } else if (state is ForbiddenEditing) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  backgroundColor: Colors.red[800],
+                  backgroundColor: Colors.redAccent[700],
                   content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
                 ),
               );
@@ -125,7 +147,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                backgroundColor: Colors.red[800],
+                backgroundColor: Colors.redAccent[700],
                 content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
               ),
             );
@@ -136,7 +158,7 @@ class _SettingsPageState extends State<SettingsPage> {
           } else if (state is Forbidden) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                backgroundColor: Colors.red[800],
+                backgroundColor: Colors.redAccent[700],
                 content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
               ),
             );

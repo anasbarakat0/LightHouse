@@ -4,32 +4,43 @@ import 'package:lighthouse/core/utils/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Service {
-  Dio dio;
-  late Response response;
-  Service({
-    required this.dio,
-  });
+  final Dio dio;
 
-  options(bool auth) {
-    Options options;
-    if (auth) {
-      print(memory.get<SharedPreferences>().getString("token"));
-      options = Options(
-        headers: {
-          'Accept': '*/*',
-          'Authorization':
-              'Bearer  ${memory.get<SharedPreferences>().getString("token")} ',
-        },
-      );
-      //${memory.get<SharedPreferences>().getString("token")}
-      return options;
-    } else {
-      options = Options(
-        headers: {
-          'Accept': '*/*',
-          'Content-Type': 'application/json',
-        },
-      );
+  late Response response;
+
+  Service({required this.dio}) {
+    // Attach logging interceptor (for debugging API requests)
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) {
+        print("🔹 API Request: ${options.method} ${options.uri}");
+        print("Headers: ${options.headers}");
+        return handler.next(options);
+      },
+      onResponse: (response, handler) {
+        print("✅ API Response [${response.statusCode}]: ${response.requestOptions.uri}");
+        return handler.next(response);
+      },
+      onError: (DioException e, handler) {
+        print("❌ API Error: ${e.requestOptions.uri}");
+        print("Error Message: ${e.message}");
+        return handler.next(e);
+      },
+    ));
+  }
+
+  Options getOptions({bool auth = false}) {
+    final sharedPrefs = memory.get<SharedPreferences>();
+    final String? token = sharedPrefs.getString("token");
+
+    Map<String, String> headers = {
+      'Accept': '*/*',
+      'Content-Type': 'application/json',
+    };
+
+    if (auth && token != null && token.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $token';
     }
+
+    return Options(headers: headers);
   }
 }

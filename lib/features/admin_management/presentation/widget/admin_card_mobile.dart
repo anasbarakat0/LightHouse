@@ -26,10 +26,12 @@ class AdminCard extends StatelessWidget {
       child: Slidable(
         startActionPane: ActionPane(
           motion: const BehindMotion(),
+          
           children: [
             SlidableAction(
               onPressed: onPressedDelete,
               label: "Delete",
+              
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10),
                   bottomLeft: Radius.circular(10)),
@@ -69,7 +71,9 @@ class AdminCard extends StatelessWidget {
                   children: [
                     Text(
                       adminInfoModel.firstName,
-                      style: Theme.of(context).textTheme.labelSmall,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: Colors.white,
+                          ),
                     ),
                     const SizedBox(width: 15),
                     Container(
@@ -90,7 +94,9 @@ class AdminCard extends StatelessWidget {
                             : adminInfoModel.role == "MANAGER"
                                 ? "manager".tr()
                                 : "admin".tr(),
-                        style: Theme.of(context).textTheme.labelSmall,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: Colors.white,
+                            ),
                       ),
                     ),
                   ],

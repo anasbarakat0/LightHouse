@@ -35,7 +35,18 @@ class _LoginWindowsState extends State<LoginWindows> {
           loginRepo: LoginRepo(
             LoginService(dio: Dio()),
             NetworkConnection(
-              internetConnectionChecker: InternetConnectionChecker.instance,
+              internetConnectionChecker: InternetConnectionChecker.createInstance(
+                    addresses: [
+                      AddressCheckOption(
+                        uri: Uri.parse("https://www.google.com"),
+                        timeout: Duration(seconds: 3),
+                      ),
+AddressCheckOption(
+                        uri: Uri.parse("https://1.1.1.1"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                    ],
+                  ),
             ),
           ),
         ),
@@ -161,7 +172,11 @@ class _LoginWindowsState extends State<LoginWindows> {
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MainScreen()));
         } else if (state is LoginFailed) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(backgroundColor: Colors.red[800], content: Text(state.message)),
+            SnackBar(backgroundColor: Colors.redAccent[700], content: Text(state.message,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: Colors.white))),
           );
         }
       },

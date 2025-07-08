@@ -83,7 +83,18 @@ class _ClientProfileState extends State<ClientProfile> {
               adminByIdRepo: AdminByIdRepo(
                 adminByIdService: AdminByIdService(dio: Dio()),
                 networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.instance,
+                  internetConnectionChecker: InternetConnectionChecker.createInstance(
+                    addresses: [
+                      AddressCheckOption(
+                        uri: Uri.parse("https://www.google.com"),
+                        timeout: Duration(seconds: 3),
+                      ),
+AddressCheckOption(
+                        uri: Uri.parse("https://1.1.1.1"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -95,7 +106,18 @@ class _ClientProfileState extends State<ClientProfile> {
               getAllPackagesByUserIdService:
                   GetAllPackagesByUserIdService(dio: Dio()),
               networkConnection: NetworkConnection(
-                internetConnectionChecker: InternetConnectionChecker.instance,
+                internetConnectionChecker: InternetConnectionChecker.createInstance(
+                    addresses: [
+                      AddressCheckOption(
+                        uri: Uri.parse("https://www.google.com"),
+                        timeout: Duration(seconds: 3),
+                      ),
+AddressCheckOption(
+                        uri: Uri.parse("https://1.1.1.1"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                    ],
+                  ),
               ),
             ),
           )..add(GetAllPackagesByUserId(
@@ -107,7 +129,18 @@ class _ClientProfileState extends State<ClientProfile> {
               getAllActivePackagesService:
                   GetAllActivePackagesService(dio: Dio()),
               networkConnection: NetworkConnection(
-                internetConnectionChecker: InternetConnectionChecker.instance,
+                internetConnectionChecker: InternetConnectionChecker.createInstance(
+                    addresses: [
+                      AddressCheckOption(
+                        uri: Uri.parse("https://www.google.com"),
+                        timeout: Duration(seconds: 3),
+                      ),
+AddressCheckOption(
+                        uri: Uri.parse("https://1.1.1.1"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                    ],
+                  ),
               ),
             ),
           )..add(GetAllActivePackages(page: 1, size: 20)),
@@ -118,7 +151,18 @@ class _ClientProfileState extends State<ClientProfile> {
               subscribeUserToPackageService:
                   SubscribeUserToPackageService(dio: Dio()),
               networkConnection: NetworkConnection(
-                internetConnectionChecker: InternetConnectionChecker.instance,
+                internetConnectionChecker: InternetConnectionChecker.createInstance(
+                    addresses: [
+                      AddressCheckOption(
+                        uri: Uri.parse("https://www.google.com"),
+                        timeout: Duration(seconds: 3),
+                      ),
+AddressCheckOption(
+                        uri: Uri.parse("https://1.1.1.1"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                    ],
+                  ),
               ),
             ),
           ),
@@ -131,7 +175,11 @@ class _ClientProfileState extends State<ClientProfile> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.green,
-                  content: Text(state.response.message),
+                  content: Text(state.response.message,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: Colors.white)),
                 ),
               );
               // Refresh packages after subscription
@@ -328,7 +376,7 @@ class _ClientProfileState extends State<ClientProfile> {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodySmall
-                                ?.copyWith(color: Colors.red[800]),
+                                ?.copyWith(color: Colors.redAccent[700]),
                           ),
                         );
                       } else if (state is OfflineFailureActivePackagesState) {
@@ -338,7 +386,7 @@ class _ClientProfileState extends State<ClientProfile> {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium
-                                ?.copyWith(color: Colors.red[800]),
+                                ?.copyWith(color: Colors.redAccent[700]),
                           ),
                         );
                       } else if (state is SuccessFetchingActivePackages) {
@@ -459,7 +507,7 @@ class _ClientProfileState extends State<ClientProfile> {
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodySmall
-                                    ?.copyWith(color: Colors.red[800]),
+                                    ?.copyWith(color: Colors.redAccent[700]),
                               ),
                             );
                           } else if (state is OfflineFailureState) {
@@ -469,7 +517,7 @@ class _ClientProfileState extends State<ClientProfile> {
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodySmall
-                                    ?.copyWith(color: Colors.red[800]),
+                                    ?.copyWith(color: Colors.redAccent[700]),
                               ),
                             );
                           } else if (state is SuccessFetchingPackages) {

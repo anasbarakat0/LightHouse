@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:lighthouse/core/constants/app_url.dart';
 import 'package:lighthouse/core/error/exception.dart';
 import 'package:lighthouse/core/utils/service.dart';
+// import 'dart:isolate';
 import 'package:lighthouse/features/packages/data/models/edit_package_model.dart';
 
 class AddNewPackageService extends Service {
@@ -9,12 +10,15 @@ class AddNewPackageService extends Service {
 
   Future<Response> addNewPackageService(PackageModel package) async {
     try {
+      // final result = await Isolate.run(() async {
       response = await dio.post(
         "$baseUrl/api/v1/packages",
-        options: options(true),
+        options: getOptions(auth: true),
         data: package.toMap(),
       );
       return response;
+// });
+//       return result;
     }on DioException catch (e) {
        print("67 error");
       if (e.response!.data["status"] == "BAD_REQUEST") {

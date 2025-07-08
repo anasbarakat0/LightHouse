@@ -44,7 +44,18 @@ class AdminManagement extends StatelessWidget {
                   dio: Dio(),
                 ),
                 networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.instance,
+                  internetConnectionChecker: InternetConnectionChecker.createInstance(
+                    addresses: [
+                      AddressCheckOption(
+                        uri: Uri.parse("https://www.google.com"),
+                        timeout: Duration(seconds: 3),
+                      ),
+AddressCheckOption(
+                        uri: Uri.parse("https://1.1.1.1"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -56,7 +67,18 @@ class AdminManagement extends StatelessWidget {
               addNewAdminRepo: AddNewAdminRepo(
                 networkConnection: NetworkConnection(
                     internetConnectionChecker:
-                        InternetConnectionChecker.instance),
+                        InternetConnectionChecker.createInstance(
+                    addresses: [
+                      AddressCheckOption(
+                        uri: Uri.parse("https://www.google.com"),
+                        timeout: Duration(seconds: 3),
+                      ),
+AddressCheckOption(
+                        uri: Uri.parse("https://1.1.1.1"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                    ]
+                  ),),
                 addNewAdminService: AddNewAdminService(dio: Dio()),
               ),
             ),
@@ -70,7 +92,18 @@ class AdminManagement extends StatelessWidget {
                   dio: Dio(),
                 ),
                 NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.instance,
+                  internetConnectionChecker: InternetConnectionChecker.createInstance(
+                    addresses: [
+                      AddressCheckOption(
+                        uri: Uri.parse("https://www.google.com"),
+                        timeout: Duration(seconds: 3),
+                      ),
+AddressCheckOption(
+                        uri: Uri.parse("https://1.1.1.1"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -86,7 +119,11 @@ class AdminManagement extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.green,
-                  content: Text(state.response.message),
+                  content: Text(state.response.message,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: Colors.white)),
                 ),
               );
             }
@@ -133,7 +170,11 @@ class AdminManagement extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         backgroundColor: Colors.green,
-                        content: Text(state.response.message),
+                        content: Text(state.response.message,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: Colors.white)),
                       ),
                     );
                   }

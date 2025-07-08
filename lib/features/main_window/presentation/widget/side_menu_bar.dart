@@ -18,6 +18,7 @@ class SideMenuWidget extends StatefulWidget {
 
 class _SideMenuWidgetState extends State<SideMenuWidget> {
   late int selectedIndex;
+  late bool isManager;
   @override
   void initState() {
     selectedIndex = memory.get<SharedPreferences>().getInt("index") ?? 1;
@@ -57,7 +58,7 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
               itemBuilder: (context, index) => MenuEntry(
                 data: data,
                 index: index,
-                isSelected: selectedIndex == index,
+                isSelected: (memory.get<SharedPreferences>().getInt("index") ?? 1) == index,
                 onTap: () => setState(() {
                   widget.changeindex(index);
                   selectedIndex = index;

@@ -1,3 +1,5 @@
+// import 'dart:isolate';
+
 import 'package:dio/dio.dart';
 import 'package:lighthouse/core/constants/app_url.dart';
 import 'package:lighthouse/core/error/exception.dart';
@@ -11,9 +13,10 @@ class GetAllActiveSessionsService extends Service {
 
   Future<Response> getAllActiveSessionsService() async {
     try {
+      // // final result = await Isolate.run(() async {
       response = await dio.get(
         "$baseUrl/api/v1/sessions/active-sessions",
-        options: options(true),
+        options: getOptions(auth: true),
       );
 
 
@@ -26,6 +29,8 @@ class GetAllActiveSessionsService extends Service {
       activeSessionsNotifier.value = onGround;
 
       return response;
+// });
+//       return result;
     } on DioException catch (e) {
       if (e.response!.data["status"] == "BAD_REQUEST") {
         throw BAD_REQUEST.fromMap(e.response!.data);

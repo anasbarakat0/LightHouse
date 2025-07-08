@@ -45,22 +45,29 @@ class ExpressClientCardWidget extends StatelessWidget {
                         width: 150,
                         child: Text(
                           expressSession.fullName,
-                          style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            overflow: TextOverflow.ellipsis
-                            
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium
+                              ?.copyWith(overflow: TextOverflow.ellipsis),
                           maxLines: 2,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         '${'started_at'.tr()}: ${expressSession.startTime}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: grey),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: grey, overflow: TextOverflow.ellipsis),
+                        maxLines: 1,
                       ),
                       const Spacer(),
-                      Text(
-                        '${'created_by'.tr()}: ${expressSession.createdBy.firstName} ${expressSession.createdBy.lastName}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: grey),
+                      SizedBox(
+                        width: 178,
+                        child: Text(
+                          '${'created_by'.tr()}: ${expressSession.createdBy.firstName} ${expressSession.createdBy.lastName}',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: grey, overflow: TextOverflow.ellipsis),
+                          maxLines: 1,
+                        ),
                       ),
                     ],
                   ),
@@ -83,7 +90,6 @@ class ExpressClientCardWidget extends StatelessWidget {
             Icons.logout,
           ),
         ),
-
       ],
     );
   }

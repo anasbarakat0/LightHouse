@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lighthouse/core/resources/colors.dart';
+import 'package:lighthouse/core/utils/responsive.dart';
 import 'package:lighthouse/core/utils/shared_preferences.dart';
 import 'package:lighthouse/core/utils/task_notifier.dart';
 import 'package:lighthouse/features/main_window/presentation/widget/custom_cart.dart';
@@ -38,22 +39,33 @@ class _SummaryDetailsState extends State<SummaryDetails> {
   @override
   Widget build(BuildContext context) {
     bool row = MediaQuery.of(context).size.width >1460;
+    bool isDesktop = Responsive.isDesktop(context);
+    bool isMobile = Responsive.isMobile(context);
     return CustomCard(
       color: lightGrey,
-      child: row? Row(
+      child:isDesktop && !row? Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           DetailsWidget(label:'on_ground'.tr(), value: widget.onGround),
+          SizedBox(width: 100,child: Divider(thickness: 1,color: orange)),
           DetailsWidget(label:'visits'.tr(), value: widget.visits),
+          SizedBox(width: 100,child: Divider(thickness: 1,color: orange)),
           DetailsWidget(label:'capacity1'.tr(), value: capacity),
         ],
-      ):Column(
+      ): isMobile ? Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           DetailsWidget(label:'on_ground'.tr(), value: widget.onGround),
           SizedBox(width: 100,child: Divider(thickness: 1,color: orange)),
           DetailsWidget(label:'visits'.tr(), value: widget.visits),
           SizedBox(width: 100,child: Divider(thickness: 1,color: orange)),
+          DetailsWidget(label:'capacity1'.tr(), value: capacity),
+        ],
+      ):Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          DetailsWidget(label:'on_ground'.tr(), value: widget.onGround),
+          DetailsWidget(label:'visits'.tr(), value: widget.visits),
           DetailsWidget(label:'capacity1'.tr(), value: capacity),
         ],
       ),

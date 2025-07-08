@@ -4,8 +4,8 @@ import 'package:lighthouse/core/constants/messages.dart';
 import 'package:lighthouse/core/error/failure.dart';
 import 'package:meta/meta.dart';
 
-import 'package:lighthouse/features/main_window/data/models/express_session_response_model.dart';
-import 'package:lighthouse/features/main_window/domain/usecase/start_express_session_usecase.dart';
+import 'package:lighthouse/features/home/data/models/express_session_response_model.dart';
+import 'package:lighthouse/features/home/domain/usecase/start_express_session_usecase.dart';
 
 part 'start_express_session_event.dart';
 part 'start_express_session_state.dart';

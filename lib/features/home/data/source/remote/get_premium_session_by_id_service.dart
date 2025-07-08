@@ -1,3 +1,5 @@
+// import 'dart:isolate';
+
 import 'package:dio/dio.dart';
 import 'package:lighthouse/core/constants/app_url.dart';
 import 'package:lighthouse/core/error/exception.dart';
@@ -8,21 +10,20 @@ class GetPremiumSessionByIdService extends Service {
 
   Future<Response> getPremiumSessionByIdService(String id) async {
     try {
-      response = await dio.get(
-        "$baseUrl/api/v1/sessions/premium/$id",
-        options: options(true),
-      );
-      return response;
+      // final result = await Isolate.run(() async {
+        response = await dio.get(
+          "$baseUrl/api/v1/sessions/premium/$id",
+          options: getOptions(auth: true),
+        );
+        return response;
+// });
+//       return result;
     } on DioException catch (e) {
-     
       if (e.response!.data["status"] == "BAD_REQUEST") {
-       
         throw BAD_REQUEST.fromMap(e.response!.data);
       } else if (e.response!.data['status'] == 403) {
-    
         throw Forbidden();
       } else {
-     
         rethrow;
       }
     }

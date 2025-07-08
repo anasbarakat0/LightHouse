@@ -1,3 +1,5 @@
+// import 'dart:isolate';
+
 import 'package:dio/dio.dart';
 import 'package:lighthouse/core/constants/app_url.dart';
 import 'package:lighthouse/core/error/exception.dart';
@@ -8,12 +10,15 @@ class FinishExpressSessionsService extends Service {
 
   Future<Response> finishExpressSessionsService(String id) async {
     try {
+      // final result = await Isolate.run(() async {
       response = await dio.put(
         "$baseUrl/api/v1/sessions/express/$id",
-        options: options(true),
+        options: getOptions(auth: true),
       );
 
       return response;
+// });
+//       return result;
     } on DioException catch (e) {
       if (e.response!.data["status"] == "BAD_REQUEST") {
         throw BAD_REQUEST.fromMap(e.response!.data);

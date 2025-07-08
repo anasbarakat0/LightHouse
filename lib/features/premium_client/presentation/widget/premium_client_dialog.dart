@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lighthouse/common/widget/drop_down_button_form_field_widget.dart';
+import 'package:lighthouse/common/widget/my_button.dart';
 import 'package:lighthouse/common/widget/text_field_widget.dart';
 import 'package:lighthouse/features/premium_client/data/models/premium_client_model.dart';
 
@@ -82,11 +83,17 @@ void AddPremiumClientDialog(BuildContext context, Function(PremiumClient) add) {
                     items: [
                       DropdownMenuItem(
                         value: 'MALE',
-                        child: Text('male'.tr()),
+                        child: Text(
+                          'male'.tr(),
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
                       ),
                       DropdownMenuItem(
                         value: 'FEMALE',
-                        child: Text('female'.tr()),
+                        child: Text(
+                          'female'.tr(),
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
                       ),
                     ],
                   ),
@@ -104,8 +111,12 @@ void AddPremiumClientDialog(BuildContext context, Function(PremiumClient) add) {
                       await selectDate(context);
                     },
                   ),
-                  ElevatedButton(
-                    onPressed: () {
+                  
+                ],
+              ),
+            ),
+            actions: [
+              MyButton(onPressed: () {
                       add(
                         PremiumClient(
                           firstName: firstName.text,
@@ -119,15 +130,11 @@ void AddPremiumClientDialog(BuildContext context, Function(PremiumClient) add) {
                         ),
                       );
                       Navigator.of(context).pop();
-                    },
-                    child: Text(
+                    }, child: Text(
                       "add_client".tr(),
                       style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                    ),)
+            ],
           );
         });
       });

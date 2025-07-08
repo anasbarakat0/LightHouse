@@ -3,32 +3,27 @@ import 'package:dio/dio.dart';
 import 'package:lighthouse/core/constants/app_url.dart';
 import 'package:lighthouse/core/error/exception.dart';
 import 'package:lighthouse/core/utils/service.dart';
+// import 'dart:isolate';
 import 'package:lighthouse/features/login/data/models/login_model.dart';
 
 class LoginService extends Service {
   LoginService({required super.dio});
 
   Future<Response> loginService(LoginModel user) async {
-    print("loginServer");
     try {
-    print("loginServer.try");
+      // final result = await Isolate.run(() async {
       response = await dio.post(
         "$baseUrl/api/v1/dashboard/admins/login",
         data: user.toMap(),
-        options: options(false),
+        options: getOptions(auth: false),
       );
-      print(response.data);
       return response;
+// });
+//       return result;
     } on DioException catch (e) {
-      print(e);
-    print("loginServer.DioException");
       if (e.response!.data["status"] == "BAD_REQUEST") {
-    print("loginServer.if");
         throw BAD_REQUEST.fromMap(e.response!.data);
       } else {
-    print("loginServer.else");
-    print("e.message: ${e.message}");
-    print("e.response!.data: ${e.response!.data}");
         rethrow;
       }
     }

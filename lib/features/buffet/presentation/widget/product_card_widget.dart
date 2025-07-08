@@ -32,7 +32,7 @@ class ProductCardWidget extends StatelessWidget {
             elevation: 4,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: InkWell(
               onTap: () {},
               borderRadius: BorderRadius.circular(16),
@@ -138,7 +138,7 @@ class ProductCardWidget extends StatelessWidget {
               child: SvgPicture.asset(
                 "assets/svg/out_of_stock.svg",
                 width: 200,
-                color: Colors.red[800],
+                color: Colors.redAccent[700],
               ),
             ),
         ],

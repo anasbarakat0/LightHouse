@@ -20,10 +20,12 @@ class MyTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      textAlign: TextAlign.left,
       decoration: InputDecoration(
+        
         labelText: label,
         hintText: hint,
-        hintStyle: Theme.of(context).textTheme.bodyMedium,
+        hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: grey),
         labelStyle: Theme.of(context).textTheme.titleSmall,
         filled: false,
         fillColor: Colors.grey.shade800,

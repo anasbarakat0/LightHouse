@@ -42,8 +42,18 @@ void endSessionDialog(BuildContext context, Body sessionData) {
               //   value: sessionData.createdBy.firstName,
               // ),
               DetailRow(
+                title: "${"num_of_hours".tr()}: ",
+                value:  
+                    "${sessionData.sessionInvoice.hoursAmount.toString()} ${"hrs".tr()}",
+              ),
+              DetailRow(
+                title: "${"sessionInvoicePrice".tr()}: ",
+                value:  
+                    "${sessionData.sessionInvoice.sessionPrice.toString()} ${"s.p".tr()}",
+              ),
+              DetailRow(
                 title: "${"buffetInvoicePrice".tr()}: ",
-                value:
+                value:  
                     "${sessionData.buffetInvoicePrice.toString()} ${"s.p".tr()}",
               ),
               Divider(thickness: 0.5, color: navy),

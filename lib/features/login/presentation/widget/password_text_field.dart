@@ -27,10 +27,11 @@ class _MyPasswordTextFieldState extends State<MyPasswordTextField> {
     return TextField(
       controller: widget.controller,
       obscureText: _obscureText,
+      textAlign: TextAlign.left,
       decoration: InputDecoration(
         labelText: widget.label,
         hintText: widget.hint,
-        hintStyle: Theme.of(context).textTheme.bodyMedium,
+        hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: grey),
         labelStyle: Theme.of(context).textTheme.titleSmall,
         filled: false,
         fillColor: Colors.grey.shade800,
@@ -38,6 +39,7 @@ class _MyPasswordTextFieldState extends State<MyPasswordTextField> {
           vertical: 23,
           horizontal: 40,
         ), // Padding inside the text field
+        
 
         // Border when the TextField is not focused
         enabledBorder: OutlineInputBorder(
@@ -70,7 +72,7 @@ class _MyPasswordTextFieldState extends State<MyPasswordTextField> {
           },
         ),
       ),
-      style:  Theme.of(context).textTheme.titleSmall?.copyWith(color:widget.dark??false? navy: Colors.white,),
+      style:  Theme.of(context).textTheme.bodyMedium?.copyWith(color:widget.dark??false? navy: Colors.white,),
         
       keyboardType: TextInputType.visiblePassword,
     );

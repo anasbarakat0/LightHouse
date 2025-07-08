@@ -22,7 +22,7 @@ class _HeaderWidgetState extends State<HeaderWidget> {
           IconButton(
             icon: const Icon(
               Icons.menu,
-              color: Colors.grey,
+              color: Colors.white,
               size: 25,
             ),
             onPressed: () => Scaffold.of(context).openDrawer(),
@@ -30,7 +30,7 @@ class _HeaderWidgetState extends State<HeaderWidget> {
         if (!Responsive.isDesktop(context))
           Text(
             widget.title,
-            style: Theme.of(context).textTheme.titleMedium,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
           ),
         if (!Responsive.isDesktop(context))
           Row(
@@ -40,7 +40,7 @@ class _HeaderWidgetState extends State<HeaderWidget> {
                   "assets/svg/summary_chart.svg",
                   width: 23,
                   height: 23,
-                  color: Colors.grey,
+                  color: Colors.white,
                 ),
                 onPressed: () => Scaffold.of(context).openEndDrawer(),
               ),

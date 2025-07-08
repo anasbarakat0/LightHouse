@@ -28,7 +28,13 @@ class LoginRepo {
         print("loginRepo.try");
         var data = await loginService.loginService(user);
         LoginResponseModel response = LoginResponseModel.fromMap(data.data);
+        if (response.body.userInfo.role == "MANAGER") {
+          memory.get<SharedPreferences>().setBool("MANAGER", true);
+        } else {
+          memory.get<SharedPreferences>().setBool("MANAGER", false);
+        }
         memory.get<SharedPreferences>().setBool("auth", true);
+        memory.get<SharedPreferences>().setString("userId", response.body.userInfo.id);
         memory.get<SharedPreferences>().setString("token", response.body.token);
         return Right(response);
       } on BAD_REQUEST catch (e) {
@@ -38,7 +44,6 @@ class LoginRepo {
         print("loginRepo.DioException");
         print(e.response!.data);
 
-        
         return Left(ServerFailure(message: e.response!.data.toString()));
       }
     } else {

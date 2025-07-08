@@ -86,6 +86,7 @@
     "session_info": "Session Info",
     "date": "Date",
     "buffetInvoicePrice": "Buffet Invoice Price",
+    "sessionInvoicePrice": "Session Invoice Price",
     "s.p": "s.p",
     "buffet_invoice": "Buffet Invoice",
     "invoice_price": "Invoice Price",

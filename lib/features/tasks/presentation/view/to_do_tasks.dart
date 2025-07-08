@@ -34,30 +34,34 @@ class _ToDoTasksState extends State<ToDoTasks>
   }
 
   void _loadTasks() {
-    final prefs = memory<SharedPreferences>();
-    final String? taskData = prefs.getString('tasks');
-    if (taskData != null) {
-      setState(() {
-        tasks = List<Map<String, dynamic>>.from(json.decode(taskData));
-      });
-      _sortTasks();
-      _controller.forward(); // Play animation when tasks are loaded
-    }
-  }
+  final prefs = memory<SharedPreferences>();
+  final String? taskData = prefs.getString('tasks');
+  final String? userId = prefs.getString("userId");
 
+  if (taskData != null && userId != null) {
+    setState(() {
+      tasks = List<Map<String, dynamic>>.from(json.decode(taskData))
+          .where((task) => task['userId'] == userId)
+          .toList();
+    });
+    _sortTasks();
+    _controller.forward();
+  }
+}
 
   void _saveTasks() {
     final prefs = memory<SharedPreferences>();
     prefs.setString('tasks', json.encode(tasks));
 
-    taskNotifier.value = List.from(tasks.where(
-        (task) => !(task['completed'] ?? true)));
+    taskNotifier.value =
+        List.from(tasks.where((task) => !(task['completed'] ?? true)));
   }
 
   void _addTask(String title) {
     if (title.isNotEmpty && _selectedDateTime != null) {
       setState(() {
         tasks.add({
+          'userId': memory.get<SharedPreferences>().getString("userId"),
           'title': title,
           'completed': false,
           'dateTime': _selectedDateTime!.toIso8601String(),
@@ -163,10 +167,16 @@ class _ToDoTasksState extends State<ToDoTasks>
                     Expanded(
                       child: TextField(
                         controller: _taskController,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: Colors.white),
                         decoration: InputDecoration(
                           labelText: "New_Task".tr(),
-                          labelStyle: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.white),
+                          labelStyle: Theme.of(context)
+                              .textTheme
+                              .labelLarge
+                              ?.copyWith(color: Colors.white),
                           border: InputBorder.none,
                         ),
                       ),
@@ -184,7 +194,10 @@ class _ToDoTasksState extends State<ToDoTasks>
                 if (_selectedDateTime != null)
                   Text(
                     "Scheduled: ${DateFormat('yyyy-MM-dd HH:mm').format(_selectedDateTime!)}",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: yellow),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: yellow),
                   ),
               ],
             ),
@@ -195,7 +208,10 @@ class _ToDoTasksState extends State<ToDoTasks>
                 ? Center(
                     child: Text(
                       "No_pending_tasks!".tr(),
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: grey),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: grey),
                     ),
                   )
                 : FadeTransition(

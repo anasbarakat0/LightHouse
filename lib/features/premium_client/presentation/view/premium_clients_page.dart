@@ -59,7 +59,19 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                   dio: Dio(),
                 ),
                 NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.instance,
+                  internetConnectionChecker:
+                      InternetConnectionChecker.createInstance(
+                    addresses: [
+                      AddressCheckOption(
+                        uri: Uri.parse("https://www.google.com"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                      AddressCheckOption(
+                        uri: Uri.parse("https://1.1.1.1"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -73,7 +85,19 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                   dio: Dio(),
                 ),
                 networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.instance,
+                  internetConnectionChecker:
+                      InternetConnectionChecker.createInstance(
+                    addresses: [
+                      AddressCheckOption(
+                        uri: Uri.parse("https://www.google.com"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                      AddressCheckOption(
+                        uri: Uri.parse("https://1.1.1.1"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -86,7 +110,19 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                 startPremiumSessionService:
                     StartPremiumSessionService(dio: Dio()),
                 networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.instance,
+                  internetConnectionChecker:
+                      InternetConnectionChecker.createInstance(
+                    addresses: [
+                      AddressCheckOption(
+                        uri: Uri.parse("https://www.google.com"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                      AddressCheckOption(
+                        uri: Uri.parse("https://1.1.1.1"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -98,7 +134,11 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.green,
-                  content: Text(state.response),
+                  content: Text(state.response,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: Colors.white)),
                 ),
               );
               Navigator.pushReplacement(
@@ -110,7 +150,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
             } else if (state is ExceptionStartSession) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  backgroundColor: Colors.red[800],
+                  backgroundColor: Colors.redAccent[700],
                   content: Text(state.message,
                       style: Theme.of(context)
                           .textTheme
@@ -121,7 +161,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
             } else if (state is ForbiddenStartSession) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  backgroundColor: Colors.red[800],
+                  backgroundColor: Colors.redAccent[700],
                   content: Text(state.message,
                       style: Theme.of(context)
                           .textTheme
@@ -144,7 +184,19 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
               getPremiumUserByNameService:
                   GetPremiumUserByNameService(dio: Dio()),
               networkConnection: NetworkConnection(
-                internetConnectionChecker: InternetConnectionChecker.instance,
+                internetConnectionChecker:
+                    InternetConnectionChecker.createInstance(
+                  addresses: [
+                    AddressCheckOption(
+                      uri: Uri.parse("https://www.google.com"),
+                      timeout: Duration(seconds: 3),
+                    ),
+                    AddressCheckOption(
+                      uri: Uri.parse("https://1.1.1.1"),
+                      timeout: Duration(seconds: 3),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -156,7 +208,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
             } else if (state is ExceptionGettingPremiumUserByName) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  backgroundColor: Colors.red[800],
+                  backgroundColor: Colors.redAccent[700],
                   content: Text(state.message,
                       style: Theme.of(context)
                           .textTheme
@@ -167,7 +219,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
             } else if (state is ForbiddenGettingPremiumUserByName) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  backgroundColor: Colors.red[800],
+                  backgroundColor: Colors.redAccent[700],
                   content: Text(state.message,
                       style: Theme.of(context)
                           .textTheme
@@ -190,11 +242,11 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              HeaderWidget(title: "admin_management".tr()),
+              HeaderWidget(title: "clients".tr()),
               const SizedBox(height: 25),
               if (Responsive.isDesktop(context))
                 Text(
-                  "admin_management".tr(),
+                  "clients".tr(),
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               if (Responsive.isDesktop(context)) const SizedBox(height: 40),
@@ -204,7 +256,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                     print(state.message);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        backgroundColor: Colors.red[800],
+                        backgroundColor: Colors.redAccent[700],
                         content: Text(state.message,
                             style: Theme.of(context)
                                 .textTheme
@@ -217,7 +269,11 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         backgroundColor: Colors.green,
-                        content: Text(state.response.message),
+                        content: Text(state.response.message,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(color: Colors.white)),
                       ),
                     );
                     context
@@ -227,7 +283,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                     print(state.message);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        backgroundColor: Colors.red[800],
+                        backgroundColor: Colors.redAccent[700],
                         content: Text(state.message,
                             style: Theme.of(context)
                                 .textTheme

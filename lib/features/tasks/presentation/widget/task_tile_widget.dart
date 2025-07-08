@@ -26,7 +26,7 @@ class AnimatedTaskTile extends StatelessWidget {
     bool past = DateTime.parse(dateTime).isBefore(DateTime.now());
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 14),
       child: TweenAnimationBuilder(
         duration: const Duration(milliseconds: 500),
         tween: Tween<double>(begin: 0, end: 1),
@@ -59,14 +59,14 @@ class AnimatedTaskTile extends StatelessWidget {
               title,
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 decoration: completed ? TextDecoration.lineThrough : null,
-                color: completed ? Colors.green : past? Colors.red: Colors.white,
+                color: completed ? Colors.greenAccent[400] : past? Colors.redAccent[700]: Colors.white,
 
               ),
             ),
             subtitle: Text("Scheduled: $formattedDate",
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: yellow),),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: grey),),
             trailing: IconButton(
-                icon: Icon(Icons.delete, color: Colors.red[800]), onPressed: onDelete),
+                icon: Icon(Icons.delete, color: Colors.redAccent[700]), onPressed: onDelete),
           ),
         ),
       ),
