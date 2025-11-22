@@ -34,7 +34,8 @@ class StartPremiumSessionBloc
             emit(LoadingStartSession());
         }
       }, (response) {
-        print("45176");
+        print("4517691");
+        print("response: $response");
         emit(SuccessStartSession(response: response));
       });
     });

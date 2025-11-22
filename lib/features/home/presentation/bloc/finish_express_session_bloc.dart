@@ -17,7 +17,12 @@ class FinishExpressSessionBloc
   ) : super(FinishExpressSessionInitial()) {
     on<FinishExpSession>((event, emit) async {
      
-      var data = await finishExpressSessionUsecase.call(event.id);
+      var data = await finishExpressSessionUsecase.call(
+        event.id,
+        discountCode: event.discountCode,
+        manualDiscountAmount: event.manualDiscountAmount,
+        manualDiscountNote: event.manualDiscountNote,
+      );
       data.fold((failure) {
         switch (failure) {
           case ServerFailure():

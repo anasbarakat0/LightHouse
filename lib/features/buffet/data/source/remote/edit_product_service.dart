@@ -12,7 +12,7 @@ class EditProductService extends Service {
     try {
       // final result = await Isolate.run(() async {
       response = await dio.put(
-        "$baseUrl/api/v1/products/$id",
+        "$baseUrl/api/products/$id",
         options: getOptions(auth: true),
         data: product.toMap(),
       );

@@ -8,11 +8,30 @@ import 'package:lighthouse/core/utils/service.dart';
 class FinishPremiumSessionService extends Service {
   FinishPremiumSessionService({required super.dio});
 
-  Future<Response> finishPremiumSessionService(String id) async {
+  Future<Response> finishPremiumSessionService(
+    String id, {
+    String? discountCode,
+    double? manualDiscountAmount,
+    String? manualDiscountNote,
+  }) async {
     try {
       // final result = await Isolate.run(() async {
+      final Map<String, dynamic> data = {};
+
+      if (discountCode != null && discountCode.isNotEmpty) {
+        data['discountCode'] = discountCode;
+      }
+
+      if (manualDiscountAmount != null && manualDiscountAmount >= 0) {
+        data['manualDiscountAmount'] = manualDiscountAmount;
+      }
+
+      if (manualDiscountNote != null && manualDiscountNote.isNotEmpty) {
+        data['manualDiscountNote'] = manualDiscountNote;
+      }
+
       response = await dio.put("$baseUrl/api/v1/sessions/premium/$id",
-          options: getOptions(auth: true));
+          data: data.isNotEmpty ? data : null, options: getOptions(auth: true));
 
       return response;
 // });

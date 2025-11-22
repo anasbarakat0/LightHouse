@@ -1,7 +1,5 @@
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:lighthouse/core/resources/colors.dart';
 
 class AnimatedTaskTile extends StatelessWidget {
   final String title;
@@ -22,51 +20,216 @@ class AnimatedTaskTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String formattedDate =
-        DateFormat('yyyy-MM-dd HH:mm').format(DateTime.parse(dateTime));
-    bool past = DateTime.parse(dateTime).isBefore(DateTime.now());
+        DateFormat('MMM dd, yyyy • HH:mm').format(DateTime.parse(dateTime));
+    final bool past = DateTime.parse(dateTime).isBefore(DateTime.now());
+    final bool isOverdue = past && !completed;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 14),
+      padding: const EdgeInsets.only(bottom: 12),
       child: TweenAnimationBuilder(
         duration: const Duration(milliseconds: 500),
         tween: Tween<double>(begin: 0, end: 1),
         builder: (context, double value, child) {
           return Transform.scale(
             scale: value,
-            child: child,
+            child: Opacity(
+              opacity: value,
+              child: child,
+            ),
           );
         },
         child: Container(
           decoration: BoxDecoration(
-            color: darkNavy,
-            borderRadius: BorderRadius.circular(15),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: completed
+                  ? [
+                      Colors.green.withOpacity(0.1),
+                      Colors.green.withOpacity(0.05),
+                    ]
+                  : isOverdue
+                      ? [
+                          Colors.red.withOpacity(0.15),
+                          Colors.red.withOpacity(0.05),
+                        ]
+                      : [
+                          const Color(0xFF1A2F4A),
+                          const Color(0xFF0F1E2E),
+                        ],
+            ),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: completed
+                  ? Colors.green.withOpacity(0.3)
+                  : isOverdue
+                      ? Colors.red.withOpacity(0.3)
+                      : Colors.white.withOpacity(0.1),
+              width: 1,
+            ),
             boxShadow: [
               BoxShadow(
-                  color: Colors.black54,
-                  blurRadius: 10,
-                  offset: const Offset(3, 6))
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+                spreadRadius: 0,
+              ),
             ],
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-          child: ListTile(
-            leading: IconButton(
-              icon: Icon(
-                  completed ? Icons.check_circle : Icons.radio_button_unchecked,
-                  color: completed ? orange : grey),
-              onPressed: onToggle,
-            ),
-            title: Text(
-              title,
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                decoration: completed ? TextDecoration.lineThrough : null,
-                color: completed ? Colors.greenAccent[400] : past? Colors.redAccent[700]: Colors.white,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onToggle,
+              borderRadius: BorderRadius.circular(16),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    // Checkbox
+                    Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: completed
+                            ? LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Colors.green.withOpacity(0.8),
+                                  Colors.green.withOpacity(0.6),
+                                ],
+                              )
+                            : null,
+                        color: completed ? null : Colors.transparent,
+                        border: Border.all(
+                          color: completed
+                              ? Colors.green
+                              : Colors.white.withOpacity(0.3),
+                          width: 2,
+                        ),
+                      ),
+                      child: completed
+                          ? const Icon(
+                              Icons.check,
+                              color: Colors.white,
+                              size: 18,
+                            )
+                          : null,
+                    ),
+                    const SizedBox(width: 16),
 
+                    // Task Content
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: TextStyle(
+                              color: completed
+                                  ? Colors.greenAccent[400]
+                                  : isOverdue
+                                      ? Colors.redAccent[400]
+                                      : Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              decoration: completed
+                                  ? TextDecoration.lineThrough
+                                  : null,
+                              decorationThickness: 2,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.access_time,
+                                size: 14,
+                                color: isOverdue
+                                    ? Colors.redAccent[400]
+                                    : Colors.white.withOpacity(0.6),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                formattedDate,
+                                style: TextStyle(
+                                  color: isOverdue
+                                      ? Colors.redAccent[400]
+                                      : Colors.white.withOpacity(0.6),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                  decoration: completed
+                                      ? TextDecoration.lineThrough
+                                      : null,
+                                ),
+                              ),
+                              if (isOverdue) ...[
+                                const SizedBox(width: 8),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: Colors.red.withOpacity(0.3),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    "Overdue".tr(),
+                                    style: TextStyle(
+                                      color: Colors.redAccent[400],
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Delete Button
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: onDelete,
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Colors.red.withOpacity(0.2),
+                                Colors.red.withOpacity(0.1),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Colors.red.withOpacity(0.3),
+                              width: 1,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.delete_outline,
+                            color: Colors.red,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            subtitle: Text("Scheduled: $formattedDate",
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: grey),),
-            trailing: IconButton(
-                icon: Icon(Icons.delete, color: Colors.redAccent[700]), onPressed: onDelete),
           ),
         ),
       ),

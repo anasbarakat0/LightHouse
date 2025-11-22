@@ -47,16 +47,19 @@ class GetAllActivePackagesResponse {
       status: map['status'] as String,
       localDateTime: map['localDateTime'] as String,
       body: List<ActivePackage>.from(
-        (map['body'] as List<dynamic>).map((x) => ActivePackage.fromMap(x as Map<String, dynamic>)),
+        (map['body'] as List<dynamic>)
+            .map((x) => ActivePackage.fromMap(x as Map<String, dynamic>)),
       ),
-      pageable: PaginationResponse.fromMap(map['pageable'] as Map<String, dynamic>),
+      pageable:
+          PaginationResponse.fromMap(map['pageable'] as Map<String, dynamic>),
     );
   }
 
   String toJson() => json.encode(toMap());
 
   factory GetAllActivePackagesResponse.fromJson(String source) =>
-      GetAllActivePackagesResponse.fromMap(json.decode(source) as Map<String, dynamic>);
+      GetAllActivePackagesResponse.fromMap(
+          json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -97,7 +100,8 @@ class ActivePackage {
       numOfHours: numOfHours ?? this.numOfHours,
       price: price ?? this.price,
       description: description ?? this.description,
-      packageDurationInDays: packageDurationInDays ?? this.packageDurationInDays,
+      packageDurationInDays:
+          packageDurationInDays ?? this.packageDurationInDays,
       active: active ?? this.active,
     );
   }
@@ -115,14 +119,16 @@ class ActivePackage {
   }
 
   factory ActivePackage.fromMap(Map<String, dynamic> map) {
+    final num priceNum = (map['price'] as num? ?? 0);
     return ActivePackage(
-      id: map['id'] as String,
-      name: map['name'] ?? "Name" ,
-      numOfHours: map['numOfHours'] as int,
-      price: map['price'] as double,
-      description: map['description'] as String,
-      packageDurationInDays: map['packageDurationInDays'] as int,
-      active: map['active'] as bool,
+      id: (map['id'] ?? '').toString(),
+      name: (map['name'] ?? "Name").toString(),
+      numOfHours: (map['numOfHours'] as num? ?? 0).toInt(),
+      price: priceNum.toDouble(),
+      description: (map['description'] ?? '').toString(),
+      packageDurationInDays:
+          (map['packageDurationInDays'] as num? ?? 0).toInt(),
+      active: (map['active'] as bool? ?? false),
     );
   }
 
@@ -181,5 +187,6 @@ class PaginationResponse {
       PaginationResponse.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'PaginationResponse(page: $page, perPage: $perPage, total: $total)';
+  String toString() =>
+      'PaginationResponse(page: $page, perPage: $perPage, total: $total)';
 }

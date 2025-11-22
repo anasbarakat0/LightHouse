@@ -6,7 +6,13 @@ abstract class FinishExpressSessionEvent {}
 
 class FinishExpSession extends FinishExpressSessionEvent {
   final String id;
+  final String? discountCode;
+  final double? manualDiscountAmount;
+  final String? manualDiscountNote;
   FinishExpSession({
     required this.id,
+    this.discountCode,
+    this.manualDiscountAmount,
+    this.manualDiscountNote,
   });
 }

@@ -20,20 +20,34 @@ class MenuEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Check if this is Sign Out (index 10, not 11!)
+    final isSignOut = index == 10;
+
     return Opacity(
-      opacity: ((memory.get<SharedPreferences>().getBool("MANAGER") ?? true)? false:true) &&
-              [0, 2, 4, 5, 7, 8, 9].contains(index)
+      opacity: ((memory.get<SharedPreferences>().getBool("MANAGER") ?? true)
+                  ? false
+                  : true) &&
+              [2, 4, 5, 7, 8, 9].contains(index)
           ? 0.5
           : 1,
       child: Container(
-        // alignment: Al,
         margin: const EdgeInsets.symmetric(vertical: 5),
         decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(6.0)),
-          color: isSelected ? lightGrey : Colors.transparent,
+          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+          color: isSignOut
+              ? Colors.red
+                  .withOpacity(0.15) // Always red background for Sign Out
+              : (isSelected ? lightGrey : Colors.transparent),
+          border: isSignOut
+              ? Border.all(
+                  color: Colors.red.shade600, // Stronger red border
+                  width: 1.5,
+                )
+              : null,
         ),
         child: InkWell(
           onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -42,7 +56,9 @@ class MenuEntry extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
                 child: Icon(
                   data.menu[index].icon,
-                  color: isSelected ? orange : lightGrey,
+                  color: isSignOut
+                      ? Colors.red.shade600 // Stronger red for icon
+                      : (isSelected ? orange : lightGrey),
                 ),
               ),
               Expanded(
@@ -52,9 +68,14 @@ class MenuEntry extends StatelessWidget {
                   child: Text(
                     data.menu[index].title,
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          fontWeight:
-                              isSelected ? FontWeight.w600 : FontWeight.w400,
-                          color: isSelected ? navy : lightGrey,
+                          fontWeight: isSignOut
+                              ? FontWeight.w700 // Bolder for Sign Out
+                              : (isSelected
+                                  ? FontWeight.w600
+                                  : FontWeight.w400),
+                          color: isSignOut
+                              ? Colors.red.shade600 // Stronger red for text
+                              : (isSelected ? navy : lightGrey),
                         ),
                   ),
                 ),

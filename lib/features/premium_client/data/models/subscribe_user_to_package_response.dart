@@ -38,18 +38,30 @@ class SubscribeUserToPackageResponse {
   }
 
   factory SubscribeUserToPackageResponse.fromMap(Map<String, dynamic> map) {
+    final Map<String, dynamic>? bodyMap = map['body'] as Map<String, dynamic>?;
     return SubscribeUserToPackageResponse(
-      message: map['message'] as String,
-      status: map['status'] as String,
-      localDateTime: map['localDateTime'] as String,
-      body: ActivePackage.fromMap(map['body'] as Map<String, dynamic>),
+      message: (map['message'] ?? '').toString(),
+      status: (map['status'] ?? '').toString(),
+      localDateTime: (map['localDateTime'] ?? '').toString(),
+      body: bodyMap == null
+          ? ActivePackage(
+              id: '',
+              name: 'Unknown',
+              numOfHours: 0,
+              price: 0.0,
+              description: '',
+              packageDurationInDays: 0,
+              active: false,
+            )
+          : ActivePackage.fromMap(bodyMap),
     );
   }
 
   String toJson() => json.encode(toMap());
 
   factory SubscribeUserToPackageResponse.fromJson(String source) =>
-      SubscribeUserToPackageResponse.fromMap(json.decode(source) as Map<String, dynamic>);
+      SubscribeUserToPackageResponse.fromMap(
+          json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {

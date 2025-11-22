@@ -11,17 +11,17 @@ class GetAllPremiumClientsService extends Service {
     try {
       // final result = await Isolate.run(() async {
       response = await dio.get(
-        "$baseUrl/api/v1/dashboard/users/all-users?page=$page&size=$size",
+        "$baseUrl/api/v1/dashboard/users/all?page=$page&size=$size",
         options: getOptions(auth: true),
       );
       if (response.data['message'] == "There is no users") {
         throw NoData(message: response.data['message']);
       } else {
-
         return response;
-      }// });
+      } // });
 //       return result;
     } on DioException catch (e) {
+      
       if (e.response!.data["status"] == "BAD_REQUEST") {
         print("54137");
         throw BAD_REQUEST.fromMap(e.response!.data);

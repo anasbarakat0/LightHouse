@@ -30,21 +30,41 @@ class _SummaryWidgetState extends State<SummaryWidget> {
     onGround = memory.get<SharedPreferences>().getInt("onGround") ?? 0;
     visits = memory.get<SharedPreferences>().getInt("visits") ?? 0;
     capacity = memory.get<SharedPreferences>().getInt("capacity") ?? 100;
-    capacityNotifier.addListener(() {
+    capacityNotifier.addListener(_onCapacityChanged);
+    languageNotifier.addListener(_onLanguageChanged);
+    activeSessionsNotifier.addListener(_onActiveSessionsChanged);
+  }
+
+  void _onCapacityChanged() {
+    if (mounted) {
       setState(() {
         capacity = capacityNotifier.value;
       });
-    });
-    languageNotifier.addListener(() {
+    }
+  }
+
+  void _onLanguageChanged() {
+    if (mounted) {
       setState(() {
         language = languageNotifier.value;
       });
-    });
-    activeSessionsNotifier.addListener(() {
+    }
+  }
+
+  void _onActiveSessionsChanged() {
+    if (mounted) {
       setState(() {
         onGround = activeSessionsNotifier.value;
       });
-    });
+    }
+  }
+
+  @override
+  void dispose() {
+    capacityNotifier.removeListener(_onCapacityChanged);
+    languageNotifier.removeListener(_onLanguageChanged);
+    activeSessionsNotifier.removeListener(_onActiveSessionsChanged);
+    super.dispose();
   }
 
   Future<void> _loadTasks() async {
@@ -62,10 +82,16 @@ class _SummaryWidgetState extends State<SummaryWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.expand(
-      child: SingleChildScrollView(
-        clipBehavior: Clip.antiAliasWithSaveLayer,
+    return Drawer(
+      backgroundColor: Colors.transparent,
+      width: MediaQuery.of(context).size.width,
+      child: MediaQuery.removePadding(
+        context: context,
+        removeTop: true,
+        removeBottom: true,
         child: Container(
+          width: double.infinity,
+          height: double.infinity,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [navy, darkNavy],
@@ -73,73 +99,79 @@ class _SummaryWidgetState extends State<SummaryWidget> {
               end: Alignment.bottomCenter,
             ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                Chart(
-                  onGround: onGround,
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  'summary'.tr(),
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.copyWith(color: Colors.white),
-                ),
-                const SizedBox(height: 16),
-                SummaryDetails(
-                  visits: visits,
-                  onGround: onGround,
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-                  child: const Divider(thickness: 0.5),
-                ),
-                ValueListenableBuilder<List<Map<String, dynamic>>>(
-                  valueListenable: taskNotifier,
-                  builder: (context, tasks, _) {
-                    return tasks.isNotEmpty
-                        ? Column(
-                            children: [
-                              const SizedBox(height: 16),
-                              Text(
-                                'Pending_Tasks'.tr(),
+          child: SingleChildScrollView(
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 40),
+                    Chart(
+                      onGround: onGround,
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'summary'.tr(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: Colors.white),
+                    ),
+                    const SizedBox(height: 16),
+                    SummaryDetails(
+                      visits: visits,
+                      onGround: onGround,
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                      child: const Divider(thickness: 0.5),
+                    ),
+                    ValueListenableBuilder<List<Map<String, dynamic>>>(
+                      valueListenable: taskNotifier,
+                      builder: (context, tasks, _) {
+                        return tasks.isNotEmpty
+                            ? Column(
+                                children: [
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    'Pending_Tasks'.tr(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          color: lightGrey,
+                                        ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: tasks.length,
+                                    itemBuilder: (context, index) {
+                                      final task = tasks[index];
+                                      return TaskDisplayTile(
+                                        title: task['title'] ?? "No Title",
+                                        dateTime: task['dateTime'] ??
+                                            DateTime.now().toIso8601String(),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              )
+                            : Text(
+                                "No_pending_tasks!".tr(),
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium
-                                    ?.copyWith(
-                                      color: lightGrey,
-                                    ),
-                              ),
-                              const SizedBox(height: 16),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: tasks.length,
-                                itemBuilder: (context, index) {
-                                  final task = tasks[index];
-                                  return TaskDisplayTile(
-                                    title: task['title'] ?? "No Title",
-                                    dateTime: task['dateTime'] ??
-                                        DateTime.now().toIso8601String(),
-                                  );
-                                },
-                              ),
-                            ],
-                          )
-                        : Text(
-                            "No_pending_tasks!".tr(),
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(color: Colors.white),
-                          );
-                  },
+                                    ?.copyWith(color: Colors.white),
+                              );
+                      },
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

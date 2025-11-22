@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:lighthouse/common/widget/header.dart';
 import 'package:lighthouse/core/network/network_connection.dart';
 import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/core/utils/responsive.dart';
@@ -22,6 +21,11 @@ import 'package:lighthouse/features/setting/presentation/bloc/get_hourly_price_b
 import 'package:lighthouse/features/setting/presentation/widget/language_drop_down_switcher.dart';
 import 'package:lighthouse/features/setting/presentation/widget/settings_text_field_widget.dart';
 import 'package:lighthouse/features/setting/presentation/widget/submit_editing_dialog.dart';
+import 'package:lighthouse/features/setting/presentation/widget/change_password_dialog.dart';
+import 'package:lighthouse/features/setting/data/repository/change_password_repo.dart';
+import 'package:lighthouse/features/setting/data/source/change_password_service.dart';
+import 'package:lighthouse/features/setting/domain/usecase/change_password_usecase.dart';
+import 'package:lighthouse/features/setting/presentation/bloc/change_password_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -55,13 +59,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   dio: Dio(),
                 ),
                 networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.createInstance(
+                  internetConnectionChecker:
+                      InternetConnectionChecker.createInstance(
                     addresses: [
                       AddressCheckOption(
                         uri: Uri.parse("https://www.google.com"),
                         timeout: Duration(seconds: 3),
                       ),
-AddressCheckOption(
+                      AddressCheckOption(
                         uri: Uri.parse("https://1.1.1.1"),
                         timeout: Duration(seconds: 3),
                       ),
@@ -80,13 +85,14 @@ AddressCheckOption(
                   dio: Dio(),
                 ),
                 networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.createInstance(
+                  internetConnectionChecker:
+                      InternetConnectionChecker.createInstance(
                     addresses: [
                       AddressCheckOption(
                         uri: Uri.parse("https://www.google.com"),
                         timeout: Duration(seconds: 3),
                       ),
-AddressCheckOption(
+                      AddressCheckOption(
                         uri: Uri.parse("https://1.1.1.1"),
                         timeout: Duration(seconds: 3),
                       ),
@@ -97,142 +103,453 @@ AddressCheckOption(
             ),
           ),
         ),
-        BlocListener<EditHourlyPriceBloc, EditHourlyPriceState>(
-            listener: (BuildContext context, state) {
-          if (state is SuccessEditingPrice) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: Colors.green[800],
-                content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
-              ),
-            );
-          } else {
-            if (state is ErrorEditingPrice) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Colors.redAccent[700],
-                  content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
+        BlocProvider(
+          create: (context) => ChangePasswordBloc(
+            ChangePasswordUsecase(
+              changePasswordRepo: ChangePasswordRepo(
+                changePasswordService: ChangePasswordService(dio: Dio()),
+                networkConnection: NetworkConnection(
+                  internetConnectionChecker:
+                      InternetConnectionChecker.createInstance(
+                    addresses: [
+                      AddressCheckOption(
+                        uri: Uri.parse("https://www.google.com"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                      AddressCheckOption(
+                        uri: Uri.parse("https://1.1.1.1"),
+                        timeout: Duration(seconds: 3),
+                      ),
+                    ],
+                  ),
                 ),
-              );
-            } else if (state is OfflineEditingPrice) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Colors.redAccent[700],
-                  content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
-                ),
-              );
-            } else if (state is ForbiddenEditing) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Colors.redAccent[700],
-                  content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
-                ),
-              );
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const LoginWindows(),
-                ),
-              );
-            }
-            context.read<GetHourlyPriceBloc>().add(GetHourlyPrice());
-          }
-        }),
-        BlocListener<GetHourlyPriceBloc, GetHourlyPriceState>(
-            listener: (BuildContext context, state) {
-          if (state is SuccessGettingPrice) {
-            hourlyPrice.text = state.price.toString();
-          } else if (state is ErrorGettingPrice) {
-            hourlyPrice.text = state.message;
-
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: Colors.redAccent[700],
-                content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
               ),
-            );
-            readOnly = true;
-          } else if (state is OfflineGettingPrice) {
-            hourlyPrice.text = state.message;
-            readOnly = true;
-          } else if (state is Forbidden) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: Colors.redAccent[700],
-                content: Text(state.message,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white)),
-              ),
-            );
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const LoginWindows(),
-              ),
-            );
-          }
-        })
+            ),
+          ),
+        ),
       ],
-      child: Builder(builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              HeaderWidget(title: "settings".tr()),
-              const SizedBox(height: 25),
-              if (Responsive.isDesktop(context))
-                Text(
-                  "settings".tr(),
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              if (Responsive.isDesktop(context)) const SizedBox(height: 40),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const LanguageDropdownSwitcher(),
-                  const SizedBox(height: 10),
-                  SettingsTextFieldWidget(
-                    controller: hourlyPrice,
-                    label: "Hourly_Price",
-                    suffix: SvgPicture.asset(
-                      "assets/svg/hourly_price.svg",
-                      width: 28,
-                      height: 28,
-                      color: orange,
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<EditHourlyPriceBloc, EditHourlyPriceState>(
+            listener: (BuildContext context, state) {
+              if (state is SuccessEditingPrice) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.green[800],
+                    content: Text(state.message,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(color: Colors.white)),
+                  ),
+                );
+              } else {
+                if (state is ErrorEditingPrice) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Colors.redAccent[700],
+                      content: Text(state.message,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.white)),
                     ),
-                    onSubmitted: (string) {
-                      submitEditingDialog(context, () {
-                        context.read<EditHourlyPriceBloc>().add(
-                              EditHourlyPrice(
-                                hourlyPrice: double.parse(hourlyPrice.text),
+                  );
+                } else if (state is OfflineEditingPrice) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Colors.redAccent[700],
+                      content: Text(state.message,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.white)),
+                    ),
+                  );
+                } else if (state is ForbiddenEditing) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Colors.redAccent[700],
+                      content: Text(state.message,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.white)),
+                    ),
+                  );
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginWindows(),
+                    ),
+                  );
+                }
+                context.read<GetHourlyPriceBloc>().add(GetHourlyPrice());
+              }
+            },
+          ),
+          BlocListener<GetHourlyPriceBloc, GetHourlyPriceState>(
+            listener: (BuildContext context, state) {
+              if (state is SuccessGettingPrice) {
+                hourlyPrice.text = state.price.toString();
+              } else if (state is ErrorGettingPrice) {
+                hourlyPrice.text = state.message;
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.redAccent[700],
+                    content: Text(state.message,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(color: Colors.white)),
+                  ),
+                );
+                readOnly = true;
+              } else if (state is OfflineGettingPrice) {
+                hourlyPrice.text = state.message;
+                readOnly = true;
+              } else if (state is Forbidden) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.redAccent[700],
+                    content: Text(state.message,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(color: Colors.white)),
+                  ),
+                );
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginWindows(),
+                  ),
+                );
+              }
+            },
+          ),
+        ],
+        child: Builder(builder: (context) {
+          final isMobile = Responsive.isMobile(context);
+
+          return Scaffold(
+            backgroundColor: darkNavy,
+            body: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                SliverPadding(
+                  padding: EdgeInsets.all(isMobile ? 16 : 24),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                      // Desktop Title
+                      if (Responsive.isDesktop(context))
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 32),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      orange.withOpacity(0.25),
+                                      orange.withOpacity(0.15),
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(
+                                    color: orange.withOpacity(0.3),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Icon(
+                                  Icons.settings,
+                                  color: orange,
+                                  size: 32,
+                                ),
                               ),
-                            );
-                      }, () {
-                        context
-                            .read<GetHourlyPriceBloc>()
-                            .add(GetHourlyPrice());
-                      });
-                    },
-                    readOnly: readOnly,
+                              const SizedBox(width: 20),
+                              Text(
+                                "settings".tr(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      const SizedBox(height: 16),
+
+                      // Settings Cards
+                      _buildSettingsCard(
+                        context,
+                        "Language".tr(),
+                        Icons.language,
+                        Colors.blue,
+                        const LanguageDropdownSwitcher(),
+                        isMobile,
+                      ),
+                      const SizedBox(height: 16),
+
+                      _buildSettingsCard(
+                        context,
+                        "Hourly_Price".tr(),
+                        Icons.attach_money,
+                        Colors.green,
+                        SettingsTextFieldWidget(
+                          controller: hourlyPrice,
+                          label: "Hourly_Price",
+                          suffix: SvgPicture.asset(
+                            "assets/svg/hourly_price.svg",
+                            width: 28,
+                            height: 28,
+                            color: orange,
+                          ),
+                          onSubmitted: (string) {
+                            submitEditingDialog(context, () {
+                              context.read<EditHourlyPriceBloc>().add(
+                                    EditHourlyPrice(
+                                      hourlyPrice:
+                                          double.parse(hourlyPrice.text),
+                                    ),
+                                  );
+                            }, () {
+                              context
+                                  .read<GetHourlyPriceBloc>()
+                                  .add(GetHourlyPrice());
+                            });
+                          },
+                          readOnly: readOnly,
+                        ),
+                        isMobile,
+                      ),
+                      const SizedBox(height: 16),
+
+                      _buildSettingsCard(
+                        context,
+                        "capacity".tr(),
+                        Icons.people_alt_outlined,
+                        Colors.purple,
+                        SettingsTextFieldWidget(
+                          controller: capacity,
+                          readOnly: false,
+                          label: "capacity",
+                          suffix: Icon(
+                            Icons.people_alt_outlined,
+                            color: orange,
+                          ),
+                          onSubmitted: (p0) {
+                            memory
+                                .get<SharedPreferences>()
+                                .setInt("capacity", int.parse(p0));
+                            capacityNotifier.value = int.parse(p0);
+                          },
+                        ),
+                        isMobile,
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Change Password Card
+                      _buildChangePasswordCard(context, isMobile),
+                    ]),
                   ),
-                  const SizedBox(height: 10),
-                  SettingsTextFieldWidget(
-                    controller: capacity,
-                    readOnly: false,
-                    label: "capacity",
-                    suffix: Icon(Icons.people_alt_outlined,
-                      color: orange,),
-                    onSubmitted: (p0) {
-                      memory
-                          .get<SharedPreferences>()
-                          .setInt("capacity", int.parse(p0));
-                          capacityNotifier.value = int.parse(p0);
-                    },
+                ),
+              ],
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget _buildSettingsCard(
+    BuildContext context,
+    String title,
+    IconData icon,
+    Color iconColor,
+    Widget child,
+    bool isMobile,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFF1A2F4A),
+            const Color(0xFF0F1E2E),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: iconColor.withOpacity(0.2),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+            spreadRadius: 0,
+          ),
+          BoxShadow(
+            color: iconColor.withOpacity(0.1),
+            blurRadius: 15,
+            offset: const Offset(0, 4),
+            spreadRadius: -2,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      iconColor.withOpacity(0.25),
+                      iconColor.withOpacity(0.15),
+                    ],
                   ),
-                ],
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: iconColor.withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Icon(icon, color: iconColor, size: 20),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                title,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.5,
+                ),
               ),
             ],
           ),
-        );
-      }),
+          const SizedBox(height: 16),
+          child,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChangePasswordCard(BuildContext context, bool isMobile) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFF1A2F4A),
+            const Color(0xFF0F1E2E),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.blue.withOpacity(0.2),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+            spreadRadius: 0,
+          ),
+          BoxShadow(
+            color: Colors.blue.withOpacity(0.1),
+            blurRadius: 15,
+            offset: const Offset(0, 4),
+            spreadRadius: -2,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.blue.withOpacity(0.25),
+                      Colors.blue.withOpacity(0.15),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: Colors.blue.withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: const Icon(
+                  Icons.lock_reset,
+                  color: Colors.blue,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                "Security".tr(),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            height: 56,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                showChangePasswordDialog(context);
+              },
+              icon: const Icon(Icons.lock_reset, color: Colors.white, size: 20),
+              label: Text(
+                "change_password".tr(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue.shade600,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 4,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -28,23 +28,26 @@ class _HeaderWidgetState extends State<HeaderWidget> {
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         if (!Responsive.isDesktop(context))
-          Text(
-            widget.title,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+          Expanded(
+            child: Text(
+              widget.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(color: Colors.white),
+            ),
           ),
         if (!Responsive.isDesktop(context))
-          Row(
-            children: [
-              IconButton(
-                icon: SvgPicture.asset(
-                  "assets/svg/summary_chart.svg",
-                  width: 23,
-                  height: 23,
-                  color: Colors.white,
-                ),
-                onPressed: () => Scaffold.of(context).openEndDrawer(),
-              ),
-            ],
+          IconButton(
+            icon: SvgPicture.asset(
+              "assets/svg/summary_chart.svg",
+              width: 23,
+              height: 23,
+              color: Colors.white,
+            ),
+            onPressed: () => Scaffold.of(context).openEndDrawer(),
           ),
       ],
     );

@@ -4,23 +4,114 @@ import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/features/home/data/models/finish_premium_session_response_model.dart';
 import 'package:lighthouse/features/home/presentation/widget/detail_row.dart';
 import 'package:lighthouse/features/home/presentation/widget/product_detail_row.dart';
-import 'package:lighthouse/features/home/presentation/widget/total_price_row.dart';
 
 void endSessionDialog(BuildContext context, Body sessionData) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(
-          'session_info'.tr(),
-          style:
-              Theme.of(context).textTheme.labelLarge?.copyWith(color: darkNavy),
-        ),
-        backgroundColor: Colors.white,
-        content: SingleChildScrollView(
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 600, maxHeight: 700),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                const Color(0xFF1A2F4A),
+                const Color(0xFF0F1E2E),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.1),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.4),
+                blurRadius: 30,
+                offset: const Offset(0, 10),
+                spreadRadius: 0,
+              ),
+            ],
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Header
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      yellow.withOpacity(0.2),
+                      yellow.withOpacity(0.1),
+                    ],
+                  ),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  ),
+                  border: Border(
+                    bottom: BorderSide(
+                      color: yellow.withOpacity(0.3),
+                      width: 1,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            yellow.withOpacity(0.3),
+                            yellow.withOpacity(0.15),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: yellow.withOpacity(0.4),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.stars_rounded,
+                        color: yellow,
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Text(
+                        'session_info'.tr(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close_rounded, color: Colors.white),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ],
+                ),
+              ),
+              // Content
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
               DetailRow(
                 title: "${"date".tr()}: ",
                 value: sessionData.date,
@@ -56,90 +147,464 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                 value:  
                     "${sessionData.buffetInvoicePrice.toString()} ${"s.p".tr()}",
               ),
-              Divider(thickness: 0.5, color: navy),
-              Text(
-                "buffet_invoice".tr(),
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              SizedBox(height: 20),
-              Column(
-                children: sessionData.buffetInvoices.map((invoice) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: lightGrey,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 2,
-                            spreadRadius: 1,
-                          )
+                      const SizedBox(height: 16),
+                      Divider(
+                        thickness: 1,
+                        color: Colors.white.withOpacity(0.1),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.restaurant_menu_rounded,
+                            color: orange,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            "buffet_invoice".tr(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                         ],
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Column(
-                                  children: invoice.orders.map((order) {
+                      const SizedBox(height: 16),
+                      if (sessionData.buffetInvoices.isNotEmpty)
+                        ...sessionData.buffetInvoices.map((invoice) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Colors.white.withOpacity(0.08),
+                                    Colors.white.withOpacity(0.03),
+                                  ],
+                                ),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.1),
+                                  width: 1,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ...invoice.orders.map((order) {
                                     return ProductDetailRow(
                                       productName: order.productName,
                                       quantity: order.quantity,
                                       price: order.price,
                                     );
                                   }).toList(),
+                                  const SizedBox(height: 12),
+                                  Divider(
+                                    thickness: 1,
+                                    color: Colors.white.withOpacity(0.1),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "invoice_price".tr(),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Text(
+                                        "${invoice.totalPrice} ${"s.p".tr()}",
+                                        style: const TextStyle(
+                                          color: orange,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList()
+                      else
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            color: Colors.white.withOpacity(0.05),
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.1),
+                              width: 1,
+                            ),
+                          ),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.restaurant_menu_outlined,
+                                  size: 48,
+                                  color: Colors.white.withOpacity(0.3),
                                 ),
-                                SizedBox(
-                                  height: 20,
-                                ),
+                                const SizedBox(height: 12),
                                 Text(
-                                    "${"invoice_price".tr()}: ${invoice.totalPrice}",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium),
+                                  "No buffet items".tr(),
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.6),
+                                    fontSize: 14,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
-                        ],
+                        ),
+                      const SizedBox(height: 24),
+                      // Discount Details Section
+                      if (sessionData.sessionInvoice.totalInvoiceBeforeDiscount != null ||
+                          sessionData.sessionInvoice.discountAmount != null ||
+                          sessionData.sessionInvoice.manualDiscountAmount != null)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              "Discount Details".tr(),
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: darkNavy,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            const SizedBox(height: 12),
+                            if (sessionData.sessionInvoice.totalInvoiceBeforeDiscount != null)
+                              Container(
+                                padding: const EdgeInsets.all(14),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.05),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.1),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Total Before Discount".tr(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    Text(
+                                      "${sessionData.sessionInvoice.totalInvoiceBeforeDiscount} ${"s.p".tr()}",
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            if (sessionData.sessionInvoice.discountAmount != null) ...[
+                              const SizedBox(height: 8),
+                              Container(
+                                padding: const EdgeInsets.all(14),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.green.withOpacity(0.15),
+                                      Colors.green.withOpacity(0.08),
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Colors.green.withOpacity(0.3),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.local_offer_rounded,
+                                          color: Colors.green.shade400,
+                                          size: 18,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          "Coupon Discount".tr(),
+                                          style: TextStyle(
+                                            color: Colors.green.shade300,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      "-${sessionData.sessionInvoice.discountAmount} ${"s.p".tr()}",
+                                      style: TextStyle(
+                                        color: Colors.green.shade300,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                            if (sessionData.sessionInvoice.totalInvoiceAfterDiscount != null &&
+                                sessionData.sessionInvoice.discountAmount != null) ...[
+                              const SizedBox(height: 8),
+                              Container(
+                                padding: const EdgeInsets.all(14),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.05),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.1),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Total After Coupon".tr(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    Text(
+                                      "${sessionData.sessionInvoice.totalInvoiceAfterDiscount} ${"s.p".tr()}",
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                            if (sessionData.sessionInvoice.manualDiscountAmount != null) ...[
+                              const SizedBox(height: 8),
+                              Container(
+                                padding: const EdgeInsets.all(14),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.blue.withOpacity(0.15),
+                                      Colors.blue.withOpacity(0.08),
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Colors.blue.withOpacity(0.3),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.edit_rounded,
+                                              color: Colors.blue.shade300,
+                                              size: 18,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              "Manual Discount".tr(),
+                                              style: TextStyle(
+                                                color: Colors.blue.shade300,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
+                                          "-${sessionData.sessionInvoice.manualDiscountAmount} ${"s.p".tr()}",
+                                          style: TextStyle(
+                                            color: Colors.blue.shade300,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    if (sessionData.sessionInvoice.manualDiscountNote != null &&
+                                        sessionData.sessionInvoice.manualDiscountNote!.isNotEmpty) ...[
+                                      const SizedBox(height: 8),
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withOpacity(0.05),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          sessionData.sessionInvoice.manualDiscountNote!,
+                                          style: TextStyle(
+                                            color: Colors.blue.shade200,
+                                            fontSize: 12,
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            ],
+                            const SizedBox(height: 16),
+                          ],
+                        ),
+                      // Final Total Price
+                      Container(
+                        padding: const EdgeInsets.all(18),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              orange.withOpacity(0.2),
+                              orange.withOpacity(0.1),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: orange.withOpacity(0.4),
+                            width: 1.5,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: orange.withOpacity(0.2),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Final Total".tr(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            Text(
+                              "${sessionData.sessionInvoice.finalTotalAfterAllDiscounts ?? sessionData.totalPrice} ${"s.p".tr()}",
+                              style: const TextStyle(
+                                color: orange,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // Footer Button
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: Colors.white.withOpacity(0.1),
+                      width: 1,
+                    ),
+                  ),
+                ),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () => Navigator.of(context).pop(),
+                      borderRadius: BorderRadius.circular(14),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              orange.withOpacity(0.3),
+                              orange.withOpacity(0.2),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: orange.withOpacity(0.5),
+                            width: 1.5,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: orange.withOpacity(0.3),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.check_circle_rounded,
+                              color: orange,
+                              size: 22,
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              "done".tr(),
+                              style: const TextStyle(
+                                color: orange,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  );
-                }).toList(),
+                  ),
+                ),
               ),
             ],
           ),
         ),
-        actions: [
-          TotalPriceRow(totalPrice: sessionData.totalPrice),
-          const SizedBox(height: 10),
-          SizedBox(
-            height: 45,
-            child: InkWell(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: Container(
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: orange,
-                ),
-                child: Text(
-                  "done".tr(),
-                  style: Theme.of(context)
-                      .textTheme
-                      .labelMedium
-                      ?.copyWith(color: Colors.white),
-                ),
-              ),
-            ),
-          ),
-        ],
       );
     },
   );

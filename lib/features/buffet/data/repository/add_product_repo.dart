@@ -16,11 +16,12 @@ class AddProductRepo {
     required this.networkConnection,
   });
 
-  Future<Either<Failures,String>> addProductRepo(ProductModel product)async{
+  Future<Either<Failures, String>> addProductRepo(ProductModel product) async {
     if (await networkConnection.isConnected) {
       try {
         var data = await addProductService.addProductService(product);
-        return Right(data.data['message']);
+        final dynamic message = data.data['message'];
+        return Right((message ?? 'Success').toString());
       } on Forbidden {
         return Left(ForbiddenFailure(message: forbiddenMessage));
       } on BAD_REQUEST catch (e) {

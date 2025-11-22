@@ -10,7 +10,7 @@ class DeleteProductService extends Service {
   Future<Response> deleteProductService(String id) async{
     try {
       // final result = await Isolate.run(() async {
-      response = await dio.delete("$baseUrl/api/v1/products/$id",options: getOptions(auth: true));
+      response = await dio.delete("$baseUrl/api/products/$id",options: getOptions(auth: true));
     return response;
 // });
 //       return result;

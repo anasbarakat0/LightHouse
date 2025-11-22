@@ -11,7 +11,7 @@ class GetAllPackagesByUserIdService extends Service {
     try {
       // final result = await Isolate.run(() async {
       var response = await dio.get(
-        "$baseUrl/api/v1/user-packages/$userId/active-packages?page=$page&size=$size",
+        "$baseUrl/api/v1/user-packages/active/$userId?page=$page&size=$size",
         options: getOptions(auth: true),
       );
       return response;

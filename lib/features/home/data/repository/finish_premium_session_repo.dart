@@ -17,11 +17,20 @@ class FinishPremiumSessionRepo {
   });
 
   Future<Either<Failures, FinishPremiumSessionResponseModel>>
-      finishPremiumSessionRepo(String id) async {
+      finishPremiumSessionRepo(
+    String id, {
+    String? discountCode,
+    double? manualDiscountAmount,
+    String? manualDiscountNote,
+  }) async {
     if (await networkConnection.isConnected) {
       try {
-        var data =
-            await finishPremiumSessionService.finishPremiumSessionService(id);
+        var data = await finishPremiumSessionService.finishPremiumSessionService(
+          id,
+          discountCode: discountCode,
+          manualDiscountAmount: manualDiscountAmount,
+          manualDiscountNote: manualDiscountNote,
+        );
         var response = FinishPremiumSessionResponseModel.fromMap(data.data);
         return Right(response);
       } on Forbidden {

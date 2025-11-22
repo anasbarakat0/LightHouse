@@ -35,18 +35,19 @@ class _LoginWindowsState extends State<LoginWindows> {
           loginRepo: LoginRepo(
             LoginService(dio: Dio()),
             NetworkConnection(
-              internetConnectionChecker: InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
+              internetConnectionChecker:
+                  InternetConnectionChecker.createInstance(
+                addresses: [
+                  AddressCheckOption(
+                    uri: Uri.parse("https://www.google.com"),
+                    timeout: Duration(seconds: 3),
                   ),
+                  AddressCheckOption(
+                    uri: Uri.parse("https://1.1.1.1"),
+                    timeout: Duration(seconds: 3),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -54,9 +55,12 @@ AddressCheckOption(
       child: Builder(
         builder: (context) {
           return Scaffold(
-            backgroundColor:Responsive.isMobile(context) ? Colors.white:darkNavy,
+            backgroundColor:
+                Responsive.isMobile(context) ? Colors.white : darkNavy,
             body: SingleChildScrollView(
-              child: Responsive.isMobile(context) ? _buildMobileView(context) : _buildDesktopView(context),
+              child: Responsive.isMobile(context)
+                  ? _buildMobileView(context)
+                  : _buildDesktopView(context),
             ),
           );
         },
@@ -70,7 +74,9 @@ AddressCheckOption(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
-          SizedBox(height: 80,),
+          SizedBox(
+            height: 80,
+          ),
           _buildLogo(context, MediaQuery.of(context).size.width / 1.5),
           _buildLoginForm(context),
         ],
@@ -127,12 +133,13 @@ AddressCheckOption(
         if (!Responsive.isMobile(context))
           Text(
             "login_page_script".tr(),
-            style:  Theme.of(context).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         const SizedBox(height: 45),
         _buildInputField("email".tr(), email, "Example@email.com"),
         const SizedBox(height: 10),
-        _buildInputField("password".tr(), password, "Password", isPassword: true),
+        _buildInputField("password".tr(), password, "Password",
+            isPassword: true),
         const SizedBox(height: 45),
         _buildLoginButton(context),
       ],
@@ -143,12 +150,16 @@ AddressCheckOption(
   Widget _buildLogo(BuildContext context, double width) {
     return SvgPicture.asset(
       width: width,
-      context.locale.languageCode == "en" ? "assets/svg/dark-en-logo.svg" : "assets/svg/dark-ar-logo.svg",
+      context.locale.languageCode == "en"
+          ? "assets/svg/dark-en-logo.svg"
+          : "assets/svg/dark-ar-logo.svg",
     );
   }
 
   /// **🔹 Common: Input Field**
-  Widget _buildInputField(String label, TextEditingController controller, String hint, {bool isPassword = false}) {
+  Widget _buildInputField(
+      String label, TextEditingController controller, String hint,
+      {bool isPassword = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -158,7 +169,8 @@ AddressCheckOption(
         ),
         const SizedBox(height: 10),
         isPassword
-            ? MyPasswordTextField(controller: controller, hint: hint, dark: true)
+            ? MyPasswordTextField(
+                controller: controller, hint: hint, dark: true)
             : MyTextField(controller: controller, hint: hint, dark: true),
       ],
     );
@@ -169,25 +181,30 @@ AddressCheckOption(
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state is LoginSuccess) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MainScreen()));
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const MainScreen()));
         } else if (state is LoginFailed) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(backgroundColor: Colors.redAccent[700], content: Text(state.message,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: Colors.white))),
+            SnackBar(
+                backgroundColor: Colors.redAccent[700],
+                content: Text(state.message,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: Colors.white))),
           );
         }
       },
       builder: (context, state) {
         return InkWell(
           onTap: () {
-            context.read<LoginBloc>().add(Login(user: LoginModel(email: email.text, password: password.text)));
+            context.read<LoginBloc>().add(Login(
+                user: LoginModel(email: email.text, password: password.text)));
           },
           child: Container(
             height: 69,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: orange),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10), color: orange),
             alignment: Alignment.center,
             child: Text(
               "log_in".tr(),

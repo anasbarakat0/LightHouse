@@ -13,8 +13,8 @@ class SideMenuData {
       title: 'home'.tr(),
     ),
     MenuModel(
-      icon: Icons.control_camera,
-      title: 'summary'.tr(),
+      icon: Icons.bar_chart_sharp,
+      title: 'Statistics'.tr(),
     ),
     MenuModel(
       icon: Icons.people_sharp,
@@ -25,16 +25,16 @@ class SideMenuData {
       title: 'Packages'.tr(),
     ),
     MenuModel(
+      icon: Icons.local_offer,
+      title: 'Coupons'.tr(),
+    ),
+    MenuModel(
       icon: Icons.storefront,
       title: 'buffet'.tr(),
     ),
     MenuModel(
       icon: Icons.task_alt_outlined,
       title: 'to_do_task'.tr(),
-    ),
-    MenuModel(
-      icon: Icons.bar_chart_sharp,
-      title: 'Statistics'.tr(),
     ),
     MenuModel(
       icon: Icons.manage_accounts,

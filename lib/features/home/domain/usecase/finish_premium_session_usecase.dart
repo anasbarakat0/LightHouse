@@ -11,7 +11,16 @@ class FinishPremiumSessionUsecase {
   });
 
   Future<Either<Failures, FinishPremiumSessionResponseModel>> call(
-      String id) async {
-    return await finishPremiumSessionRepo.finishPremiumSessionRepo(id);
+    String id, {
+    String? discountCode,
+    double? manualDiscountAmount,
+    String? manualDiscountNote,
+  }) async {
+    return await finishPremiumSessionRepo.finishPremiumSessionRepo(
+      id,
+      discountCode: discountCode,
+      manualDiscountAmount: manualDiscountAmount,
+      manualDiscountNote: manualDiscountNote,
+    );
   }
 }

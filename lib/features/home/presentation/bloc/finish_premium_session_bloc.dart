@@ -16,7 +16,12 @@ class FinishPremiumSessionBloc
   ) : super(FinishPremiumSessionInitial()) {
     on<FinishPreSession>((event, emit) async {
 
-      var data = await finishPremiumSessionUsecase.call(event.id);
+      var data = await finishPremiumSessionUsecase.call(
+        event.id,
+        discountCode: event.discountCode,
+        manualDiscountAmount: event.manualDiscountAmount,
+        manualDiscountNote: event.manualDiscountNote,
+      );
       data.fold((failure) {
         switch (failure) {
           case ServerFailure():

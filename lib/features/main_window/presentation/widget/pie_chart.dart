@@ -21,14 +21,24 @@ class _ChartState extends State<Chart> {
 
   @override
   void initState() {
+    super.initState();
     capacity = memory.get<SharedPreferences>().getInt("capacity") ?? 50;
     visits = memory.get<SharedPreferences>().getInt("visits") ?? 0;
-    capacityNotifier.addListener(() {
+    capacityNotifier.addListener(_onCapacityChanged);
+  }
+
+  void _onCapacityChanged() {
+    if (mounted) {
       setState(() {
         capacity = capacityNotifier.value;
       });
-    });
-    super.initState();
+    }
+  }
+
+  @override
+  void dispose() {
+    capacityNotifier.removeListener(_onCapacityChanged);
+    super.dispose();
   }
 
   @override
@@ -66,28 +76,31 @@ class _ChartState extends State<Chart> {
               sectionsSpace: 0,
               centerSpaceRadius: 70,
               startDegreeOffset: -90,
-              sections: 
-                percentage > 100.0
-                    ? [PieChartSectionData(
+              sections: percentage > 100.0
+                  ? [
+                      PieChartSectionData(
                         color: orange,
                         value: 100,
                         showTitle: false,
                         radius: 17,
-                      )]
-                    : [PieChartSectionData(
+                      )
+                    ]
+                  : [
+                      PieChartSectionData(
                         color: orange,
                         value: percentage,
                         showTitle: false,
                         radius: 20,
                       ),
-                PieChartSectionData(
-                  color:
-                      percentageVisits > 100 ? yellow : orange.withOpacity(0),
-                  value: 100 - percentage,
-                  showTitle: false,
-                  radius: 13,
-                ),]
-              ,
+                      PieChartSectionData(
+                        color: percentageVisits > 100
+                            ? yellow
+                            : orange.withOpacity(0),
+                        value: 100 - percentage,
+                        showTitle: false,
+                        radius: 13,
+                      ),
+                    ],
             ),
           ),
           PieChart(
@@ -120,16 +133,18 @@ class _ChartState extends State<Chart> {
                 const SizedBox(height: defaultPadding),
                 Text(
                   "${percentage.toInt()}%",
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            color: orange
-                          ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall
+                      ?.copyWith(color: orange),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   "${widget.onGround} ${"client".tr()}",
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: lightGrey
-                          ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(color: lightGrey),
                 )
               ],
             ),

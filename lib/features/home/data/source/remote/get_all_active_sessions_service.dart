@@ -18,7 +18,7 @@ class GetAllActiveSessionsService extends Service {
         "$baseUrl/api/v1/sessions/active-sessions",
         options: getOptions(auth: true),
       );
-
+      print("response: $response");
 
       final prefs = memory.get<SharedPreferences>();
       

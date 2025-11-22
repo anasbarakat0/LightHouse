@@ -9,3 +9,10 @@ class GetExpressSession extends GetExpressSessionEvent {
     required this.id,
   });
 }
+
+class GetExpressSessionByQrCode extends GetExpressSessionEvent {
+  final String qrCode;
+  GetExpressSessionByQrCode({
+    required this.qrCode,
+  });
+}

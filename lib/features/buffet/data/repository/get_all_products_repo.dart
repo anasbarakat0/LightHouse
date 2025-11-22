@@ -21,7 +21,6 @@ class GetAllProductsRepo {
       try {
         var data = await getAllProductsService.getAllProductsService(page, size);
         var response = GetAllProductsResponseModel.fromMap(data.data);
-        
         return Right(response);
       } on Forbidden {
         return Left(ForbiddenFailure(message: forbiddenMessage));

@@ -16,10 +16,21 @@ class FinishExpressSessionsRepo {
     required this.networkConnection,
   });
 
-  Future<Either<Failures,FinishExpressSessionResponseModel>> finishExpressSessionsRepo(String id)async {
+  Future<Either<Failures, FinishExpressSessionResponseModel>>
+      finishExpressSessionsRepo(
+    String id, {
+    String? discountCode,
+    double? manualDiscountAmount,
+    String? manualDiscountNote,
+  }) async {
     if (await networkConnection.isConnected) {
       try {
-        var data = await finishExpressSessionsService.finishExpressSessionsService(id);
+        var data = await finishExpressSessionsService.finishExpressSessionsService(
+          id,
+          discountCode: discountCode,
+          manualDiscountAmount: manualDiscountAmount,
+          manualDiscountNote: manualDiscountNote,
+        );
         var respond = FinishExpressSessionResponseModel.fromMap(data.data);
         return Right(respond);
       } on Forbidden {

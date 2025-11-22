@@ -46,16 +46,22 @@ class ActivePackages extends AllActivePackagesResponseModel {
   }
 
   factory ActivePackages.fromMap(Map<String, dynamic> map) {
+    final List<dynamic>? rawBody = map['body'] as List<dynamic>?;
+    final Map<String, dynamic>? rawPageable =
+        map['pageable'] as Map<String, dynamic>?;
     return ActivePackages(
-      message: map['message'] as String,
-      status: map['status'] as String,
-      localDateTime: map['localDateTime'] as String,
-      body: List<Body>.from(
-        (map['body'] as List<dynamic>).map<Body>(
-          (x) => Body.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
-      pageable: Pageable.fromMap(map['pageable'] as Map<String, dynamic>),
+      message: (map['message'] ?? '').toString(),
+      status: (map['status'] ?? '').toString(),
+      localDateTime: (map['localDateTime'] ?? '').toString(),
+      body: rawBody == null
+          ? <Body>[]
+          : rawBody
+              .whereType<Map<String, dynamic>>()
+              .map<Body>((x) => Body.fromMap(x))
+              .toList(),
+      pageable: rawPageable == null
+          ? Pageable(page: 0, perPage: 0, total: 0)
+          : Pageable.fromMap(rawPageable),
     );
   }
 
@@ -131,14 +137,17 @@ class NoActivePackages extends AllActivePackagesResponseModel {
   }
 
   factory NoActivePackages.fromMap(Map<String, dynamic> map) {
+    final List<dynamic>? rawBody = map['body'] as List<dynamic>?;
+    final Map<String, dynamic>? rawPageable =
+        map['pageable'] as Map<String, dynamic>?;
     return NoActivePackages(
-      message: map['message'] as String,
-      status: map['status'] as String,
-      localDateTime: map['localDateTime'] as String,
-      body: List<dynamic>.from(
-        (map['body'] as List<dynamic>),
-      ),
-      pageable: Pageable.fromMap(map['pageable'] as Map<String, dynamic>),
+      message: (map['message'] ?? '').toString(),
+      status: (map['status'] ?? '').toString(),
+      localDateTime: (map['localDateTime'] ?? '').toString(),
+      body: rawBody ?? <dynamic>[],
+      pageable: rawPageable == null
+          ? Pageable(page: 0, perPage: 0, total: 0)
+          : Pageable.fromMap(rawPageable),
     );
   }
 
@@ -220,13 +229,15 @@ class Body {
   }
 
   factory Body.fromMap(Map<String, dynamic> map) {
+    final num priceNum = (map['price'] as num? ?? 0);
     return Body(
-      id: map['id'] as String,
-      numOfHours: map['numOfHours'] as int,
-      price: map['price'] as double,
-      description: map['description'] as String,
-      packageDurationInDays: map['packageDurationInDays'] as int,
-      active: map['active'] as bool,
+      id: (map['id'] ?? '').toString(),
+      numOfHours: (map['numOfHours'] as num? ?? 0).toInt(),
+      price: priceNum.toDouble(),
+      description: (map['description'] ?? '').toString(),
+      packageDurationInDays:
+          (map['packageDurationInDays'] as num? ?? 0).toInt(),
+      active: (map['active'] as bool? ?? false),
     );
   }
 
@@ -295,9 +306,9 @@ class Pageable {
 
   factory Pageable.fromMap(Map<String, dynamic> map) {
     return Pageable(
-      page: map['page'] as int,
-      perPage: map['perPage'] as int,
-      total: map['total'] as int,
+      page: (map['page'] as num? ?? 0).toInt(),
+      perPage: (map['perPage'] as num? ?? 0).toInt(),
+      total: (map['total'] as num? ?? 0).toInt(),
     );
   }
 

@@ -140,6 +140,7 @@ class ActiveExpressSession {
     final String qrCode;
     final CreatedBy createdBy;
     final String fullName;
+    final SessionInvoice? sessionInvoice;
     final bool active;
   ActiveExpressSession({
     required this.id,
@@ -148,6 +149,7 @@ class ActiveExpressSession {
     required this.qrCode,
     required this.createdBy,
     required this.fullName,
+    this.sessionInvoice,
     required this.active,
   });
 
@@ -160,6 +162,7 @@ class ActiveExpressSession {
     String? qrCode,
     CreatedBy? createdBy,
     String? fullName,
+    SessionInvoice? sessionInvoice,
     bool? active,
   }) {
     return ActiveExpressSession(
@@ -169,6 +172,7 @@ class ActiveExpressSession {
       qrCode: qrCode ?? this.qrCode,
       createdBy: createdBy ?? this.createdBy,
       fullName: fullName ?? this.fullName,
+      sessionInvoice: sessionInvoice ?? this.sessionInvoice,
       active: active ?? this.active,
     );
   }
@@ -181,6 +185,7 @@ class ActiveExpressSession {
       'qrCode': qrCode,
       'createdBy': createdBy.toMap(),
       'fullName': fullName,
+      'sessionInvoice': sessionInvoice?.toMap(),
       'active': active,
     };
   }
@@ -193,6 +198,9 @@ class ActiveExpressSession {
       qrCode: map['qrCode'] as String,
       createdBy: CreatedBy.fromMap(map['createdBy'] as Map<String,dynamic>),
       fullName: map['fullName'] as String,
+      sessionInvoice: map['sessionInvoice'] != null
+          ? SessionInvoice.fromMap(map['sessionInvoice'] as Map<String, dynamic>)
+          : null,
       active: map['active'] as bool,
     );
   }
@@ -203,7 +211,7 @@ class ActiveExpressSession {
 
   @override
   String toString() {
-    return 'ActiveExpressSession(id: $id, date: $date, startTime: $startTime, qrCode: $qrCode, createdBy: $createdBy, fullName: $fullName, active: $active)';
+    return 'ActiveExpressSession(id: $id, date: $date, startTime: $startTime, qrCode: $qrCode, createdBy: $createdBy, fullName: $fullName, sessionInvoice: $sessionInvoice, active: $active)';
   }
 
   @override
@@ -217,6 +225,7 @@ class ActiveExpressSession {
       other.qrCode == qrCode &&
       other.createdBy == createdBy &&
       other.fullName == fullName &&
+      other.sessionInvoice == sessionInvoice &&
       other.active == active;
   }
 
@@ -228,6 +237,7 @@ class ActiveExpressSession {
       qrCode.hashCode ^
       createdBy.hashCode ^
       fullName.hashCode ^
+      sessionInvoice.hashCode ^
       active.hashCode;
   }
 }
@@ -324,6 +334,7 @@ class ActivePremiumSession {
     final String userId;
     final String firstName;
     final String lastName;
+    final SessionInvoice? sessionInvoice;
     final bool active;
   ActivePremiumSession({
     required this.id,
@@ -334,6 +345,7 @@ class ActivePremiumSession {
     required this.userId,
     required this.firstName,
     required this.lastName,
+    this.sessionInvoice,
     required this.active,
   });
 
@@ -348,6 +360,7 @@ class ActivePremiumSession {
     String? userId,
     String? firstName,
     String? lastName,
+    SessionInvoice? sessionInvoice,
     bool? active,
   }) {
     return ActivePremiumSession(
@@ -359,6 +372,7 @@ class ActivePremiumSession {
       userId: userId ?? this.userId,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
+      sessionInvoice: sessionInvoice ?? this.sessionInvoice,
       active: active ?? this.active,
     );
   }
@@ -373,6 +387,7 @@ class ActivePremiumSession {
       'userId': userId,
       'firstName': firstName,
       'lastName': lastName,
+      'sessionInvoice': sessionInvoice?.toMap(),
       'active': active,
     };
   }
@@ -387,6 +402,9 @@ class ActivePremiumSession {
       userId: map['userId'] as String,
       firstName: map['firstName'] as String,
       lastName: map['lastName'] as String,
+      sessionInvoice: map['sessionInvoice'] != null
+          ? SessionInvoice.fromMap(map['sessionInvoice'] as Map<String, dynamic>)
+          : null,
       active: map['active'] as bool,
     );
   }
@@ -397,7 +415,7 @@ class ActivePremiumSession {
 
   @override
   String toString() {
-    return 'ActivePremiumSession(id: $id, date: $date, startTime: $startTime, qrCode: $qrCode, createdBy: $createdBy, userId: $userId, firstName: $firstName, lastName: $lastName, active: $active)';
+    return 'ActivePremiumSession(id: $id, date: $date, startTime: $startTime, qrCode: $qrCode, createdBy: $createdBy, userId: $userId, firstName: $firstName, lastName: $lastName, sessionInvoice: $sessionInvoice, active: $active)';
   }
 
   @override
@@ -413,6 +431,7 @@ class ActivePremiumSession {
       other.userId == userId &&
       other.firstName == firstName &&
       other.lastName == lastName &&
+      other.sessionInvoice == sessionInvoice &&
       other.active == active;
   }
 
@@ -426,6 +445,92 @@ class ActivePremiumSession {
       userId.hashCode ^
       firstName.hashCode ^
       lastName.hashCode ^
+      sessionInvoice.hashCode ^
       active.hashCode;
+  }
+}
+
+class SessionInvoice {
+  final String id;
+  final String userType;
+  final String session_id;
+  final double hoursAmount;
+  final double sessionPrice;
+  SessionInvoice({
+    required this.id,
+    required this.userType,
+    required this.session_id,
+    required this.hoursAmount,
+    required this.sessionPrice,
+  });
+
+  SessionInvoice copyWith({
+    String? id,
+    String? userType,
+    String? session_id,
+    double? hoursAmount,
+    double? sessionPrice,
+  }) {
+    return SessionInvoice(
+      id: id ?? this.id,
+      userType: userType ?? this.userType,
+      session_id: session_id ?? this.session_id,
+      hoursAmount: hoursAmount ?? this.hoursAmount,
+      sessionPrice: sessionPrice ?? this.sessionPrice,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'userType': userType,
+      'session_id': session_id,
+      'hoursAmount': hoursAmount,
+      'sessionPrice': sessionPrice,
+    };
+  }
+
+  factory SessionInvoice.fromMap(Map<String, dynamic> map) {
+    return SessionInvoice(
+      id: map['id'] as String? ?? '',
+      userType: map['userType'] as String? ?? '',
+      session_id: map['session_id'] as String? ?? '',
+      hoursAmount: (map['hoursAmount'] is double)
+          ? map['hoursAmount']
+          : (map['hoursAmount'] as num?)?.toDouble() ?? 0.0,
+      sessionPrice: (map['sessionPrice'] is double)
+          ? map['sessionPrice']
+          : (map['sessionPrice'] as num?)?.toDouble() ?? 0.0,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory SessionInvoice.fromJson(String source) =>
+      SessionInvoice.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'SessionInvoice(id: $id, userType: $userType, session_id: $session_id, hoursAmount: $hoursAmount, sessionPrice: $sessionPrice)';
+  }
+
+  @override
+  bool operator ==(covariant SessionInvoice other) {
+    if (identical(this, other)) return true;
+
+    return other.id == id &&
+        other.userType == userType &&
+        other.session_id == session_id &&
+        other.hoursAmount == hoursAmount &&
+        other.sessionPrice == sessionPrice;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        userType.hashCode ^
+        session_id.hashCode ^
+        hoursAmount.hashCode ^
+        sessionPrice.hashCode;
   }
 }

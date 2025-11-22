@@ -13,36 +13,32 @@ class StartExpressSessionService extends Service {
   Future<Response> startExpressSessionService(String fullName) async {
     try {
       // final result = await Isolate.run(() async {
-        response = await dio.post(
-          "$baseUrl/api/v1/sessions/new-express-session",
-          options: getOptions(auth: true),
-          data: {"fullName": fullName},
-        );
+      response = await dio.post(
+        "$baseUrl/api/v1/sessions/new-express-session",
+        options: getOptions(auth: true),
+        data: {"fullName": fullName},
+      );
 
-        final prefs = memory.get<SharedPreferences>();
-        String? memoryDate = prefs.getString("memoryDate");
-        String dateString = response.data["localDateTime"];
-        DateTime currentDateTime = DateTime.parse(dateString);
+      final prefs = memory.get<SharedPreferences>();
+      final String? memoryDate = prefs.getString("memoryDate");
+      final String? dateString = response.data["localDateTime"]?.toString();
+      DateTime currentDateTime =
+          DateTime.tryParse(dateString ?? "") ?? DateTime.now();
 
-        if (memoryDate != null) {
-          DateTime storedDate = DateTime.parse(memoryDate);
-          if (storedDate.year == currentDateTime.year &&
-              storedDate.month == currentDateTime.month &&
-              storedDate.day == currentDateTime.day) {
-            int visits = prefs.getInt("visits") ?? 0;
-            prefs.setInt("visits", visits + 1);
-          } else {
-            // prefs.setInt("onGround", 1);
-            prefs.setInt("visits", 1);
-            prefs.setString("memoryDate", dateString);
-          }
-        } else {
-          // prefs.setInt("onGround", 1);
-          prefs.setInt("visits", 1);
-          prefs.setString("memoryDate", dateString);
-        }
+      final DateTime? storedDate =
+          memoryDate != null ? DateTime.tryParse(memoryDate) : null;
+      if (storedDate != null &&
+          storedDate.year == currentDateTime.year &&
+          storedDate.month == currentDateTime.month &&
+          storedDate.day == currentDateTime.day) {
+        final int visits = prefs.getInt("visits") ?? 0;
+        prefs.setInt("visits", visits + 1);
+      } else {
+        prefs.setInt("visits", 1);
+        prefs.setString("memoryDate", currentDateTime.toIso8601String());
+      }
 
-        return response;
+      return response;
 // });
 //       return result;
     } on DioException catch (e) {

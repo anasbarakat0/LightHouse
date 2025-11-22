@@ -17,6 +17,7 @@ class LoginService extends Service {
         data: user.toMap(),
         options: getOptions(auth: false),
       );
+      print("object");
       return response;
 // });
 //       return result;

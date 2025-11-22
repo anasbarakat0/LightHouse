@@ -10,3 +10,10 @@ class GetPremiumSession extends GetPremiumSessionEvent {
     required this.id,
   });
 }
+
+class GetPremiumSessionByQrCode extends GetPremiumSessionEvent {
+  final String qrCode;
+  GetPremiumSessionByQrCode({
+    required this.qrCode,
+  });
+}

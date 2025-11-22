@@ -11,19 +11,20 @@ class StartPremiumSessionService extends Service {
 
   Future<Response> startPremiumSessionService(String id) async {
     try {
-      // final result = await Isolate.run(() async {
       response = await dio.post(
         "$baseUrl/api/v1/sessions/new-premium-session",
         options: getOptions(auth: true),
         data: {"userId": id},
       );
 
+      print("response: $response");
+
       final prefs = memory.get<SharedPreferences>();
       String? memoryDate = prefs.getString("memoryDate");
       String dateString = response.data["localDateTime"];
       DateTime currentDateTime = DateTime.parse(dateString);
 
-      if (memoryDate != null) {
+      if (memoryDate != null && memoryDate.isNotEmpty) {
         DateTime storedDate = DateTime.parse(memoryDate);
         if (storedDate.year == currentDateTime.year &&
             storedDate.month == currentDateTime.month &&
@@ -38,11 +39,11 @@ class StartPremiumSessionService extends Service {
           prefs.setString("memoryDate", dateString);
         }
       } else {
-        // prefs.setInt("onGround", 1);
+        // First time or no stored date
         prefs.setInt("visits", 1);
         prefs.setString("memoryDate", dateString);
       }
-
+      print("response: $response");
       return response;
 // });
 //       return result;

@@ -12,7 +12,7 @@ class AddProductService extends Service {
     try {
       // final result = await Isolate.run(() async {
       response = await dio.post(
-        "$baseUrl/api/v1/products/new",
+        "$baseUrl/api/products/new",
         options: getOptions(auth: true),
         data: product.toMap(),
       );

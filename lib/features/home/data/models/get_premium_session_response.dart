@@ -87,7 +87,7 @@ class Body {
     final String firstName;
     final String lastName;
     final dynamic endTime;
-    final dynamic sessionInvoice;
+    final SessionInvoice? sessionInvoice;
     final double buffetInvoicePrice;
     final List<BuffetInvoice> buffetInvoices;
     final dynamic totalPrice;
@@ -102,7 +102,7 @@ class Body {
     required this.firstName,
     required this.lastName,
     required this.endTime,
-    required this.sessionInvoice,
+    this.sessionInvoice,
     required this.buffetInvoicePrice,
     required this.buffetInvoices,
     required this.totalPrice,
@@ -119,7 +119,7 @@ class Body {
     String? firstName,
     String? lastName,
     dynamic endTime,
-    dynamic sessionInvoice,
+    SessionInvoice? sessionInvoice,
     double? buffetInvoicePrice,
     List<BuffetInvoice>? buffetInvoices,
     dynamic totalPrice,
@@ -154,7 +154,7 @@ class Body {
       'firstName': firstName,
       'lastName': lastName,
       'endTime': endTime,
-      'sessionInvoice': sessionInvoice,
+      'sessionInvoice': sessionInvoice?.toMap(),
       'buffetInvoicePrice': buffetInvoicePrice,
       'buffetInvoices': buffetInvoices,
       'totalPrice': totalPrice,
@@ -174,7 +174,9 @@ class Body {
     firstName: map['firstName'] as String? ?? '',
     lastName: map['lastName'] as String? ?? '',
     endTime: map['endTime'],
-    sessionInvoice: map['sessionInvoice'],
+    sessionInvoice: map['sessionInvoice'] != null
+        ? SessionInvoice.fromMap(map['sessionInvoice'] as Map<String, dynamic>)
+        : null,
     buffetInvoicePrice: (map['buffetInvoicePrice'] is double)
         ? map['buffetInvoicePrice']
         : (map['buffetInvoicePrice'] as num?)?.toInt() ?? 0,
@@ -503,5 +505,90 @@ class CreatedBy {
       lastName.hashCode ^
       email.hashCode ^
       role.hashCode;
+  }
+}
+
+class SessionInvoice {
+  final String id;
+  final String userType;
+  final String session_id;
+  final double hoursAmount;
+  final double sessionPrice;
+  SessionInvoice({
+    required this.id,
+    required this.userType,
+    required this.session_id,
+    required this.hoursAmount,
+    required this.sessionPrice,
+  });
+
+  SessionInvoice copyWith({
+    String? id,
+    String? userType,
+    String? session_id,
+    double? hoursAmount,
+    double? sessionPrice,
+  }) {
+    return SessionInvoice(
+      id: id ?? this.id,
+      userType: userType ?? this.userType,
+      session_id: session_id ?? this.session_id,
+      hoursAmount: hoursAmount ?? this.hoursAmount,
+      sessionPrice: sessionPrice ?? this.sessionPrice,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'userType': userType,
+      'session_id': session_id,
+      'hoursAmount': hoursAmount,
+      'sessionPrice': sessionPrice,
+    };
+  }
+
+  factory SessionInvoice.fromMap(Map<String, dynamic> map) {
+    return SessionInvoice(
+      id: map['id'] as String? ?? '',
+      userType: map['userType'] as String? ?? '',
+      session_id: map['session_id'] as String? ?? '',
+      hoursAmount: (map['hoursAmount'] is double)
+          ? map['hoursAmount']
+          : (map['hoursAmount'] as num?)?.toDouble() ?? 0.0,
+      sessionPrice: (map['sessionPrice'] is double)
+          ? map['sessionPrice']
+          : (map['sessionPrice'] as num?)?.toDouble() ?? 0.0,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory SessionInvoice.fromJson(String source) => SessionInvoice.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'SessionInvoice(id: $id, userType: $userType, session_id: $session_id, hoursAmount: $hoursAmount, sessionPrice: $sessionPrice)';
+  }
+
+  @override
+  bool operator ==(covariant SessionInvoice other) {
+    if (identical(this, other)) return true;
+  
+    return 
+      other.id == id &&
+      other.userType == userType &&
+      other.session_id == session_id &&
+      other.hoursAmount == hoursAmount &&
+      other.sessionPrice == sessionPrice;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+      userType.hashCode ^
+      session_id.hashCode ^
+      hoursAmount.hashCode ^
+      sessionPrice.hashCode;
   }
 }

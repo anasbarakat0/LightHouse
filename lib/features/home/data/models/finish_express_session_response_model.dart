@@ -304,12 +304,24 @@ class SessionInvoice {
   final String session_id;
   final double hoursAmount;
   final double sessionPrice;
+  final double? totalInvoiceBeforeDiscount;
+  final double? discountAmount;
+  final double? totalInvoiceAfterDiscount;
+  final double? manualDiscountAmount;
+  final String? manualDiscountNote;
+  final double? finalTotalAfterAllDiscounts;
   SessionInvoice({
     required this.id,
     required this.userType,
     required this.session_id,
     required this.hoursAmount,
     required this.sessionPrice,
+    this.totalInvoiceBeforeDiscount,
+    this.discountAmount,
+    this.totalInvoiceAfterDiscount,
+    this.manualDiscountAmount,
+    this.manualDiscountNote,
+    this.finalTotalAfterAllDiscounts,
   });
 
   SessionInvoice copyWith({
@@ -318,6 +330,12 @@ class SessionInvoice {
     String? session_id,
     double? hoursAmount,
     double? sessionPrice,
+    double? totalInvoiceBeforeDiscount,
+    double? discountAmount,
+    double? totalInvoiceAfterDiscount,
+    double? manualDiscountAmount,
+    String? manualDiscountNote,
+    double? finalTotalAfterAllDiscounts,
   }) {
     return SessionInvoice(
       id: id ?? this.id,
@@ -325,6 +343,12 @@ class SessionInvoice {
       session_id: session_id ?? this.session_id,
       hoursAmount: hoursAmount ?? this.hoursAmount,
       sessionPrice: sessionPrice ?? this.sessionPrice,
+      totalInvoiceBeforeDiscount: totalInvoiceBeforeDiscount ?? this.totalInvoiceBeforeDiscount,
+      discountAmount: discountAmount ?? this.discountAmount,
+      totalInvoiceAfterDiscount: totalInvoiceAfterDiscount ?? this.totalInvoiceAfterDiscount,
+      manualDiscountAmount: manualDiscountAmount ?? this.manualDiscountAmount,
+      manualDiscountNote: manualDiscountNote ?? this.manualDiscountNote,
+      finalTotalAfterAllDiscounts: finalTotalAfterAllDiscounts ?? this.finalTotalAfterAllDiscounts,
     );
   }
 
@@ -335,6 +359,12 @@ class SessionInvoice {
       'session_id': session_id,
       'hoursAmount': hoursAmount,
       'sessionPrice': sessionPrice,
+      'totalInvoiceBeforeDiscount': totalInvoiceBeforeDiscount,
+      'discountAmount': discountAmount,
+      'totalInvoiceAfterDiscount': totalInvoiceAfterDiscount,
+      'manualDiscountAmount': manualDiscountAmount,
+      'manualDiscountNote': manualDiscountNote,
+      'finalTotalAfterAllDiscounts': finalTotalAfterAllDiscounts,
     };
   }
 
@@ -343,8 +373,14 @@ class SessionInvoice {
       id: map['id'] as String,
       userType: map['userType'] as String,
       session_id: map['session_id'] as String,
-      hoursAmount: map['hoursAmount'] as double,
-      sessionPrice: map['sessionPrice'] as double,
+      hoursAmount: (map['hoursAmount'] is double) ? map['hoursAmount'] : (map['hoursAmount'] as num?)?.toDouble() ?? 0.0,
+      sessionPrice: (map['sessionPrice'] is double) ? map['sessionPrice'] : (map['sessionPrice'] as num?)?.toDouble() ?? 0.0,
+      totalInvoiceBeforeDiscount: map['totalInvoiceBeforeDiscount'] != null ? ((map['totalInvoiceBeforeDiscount'] is double) ? map['totalInvoiceBeforeDiscount'] : (map['totalInvoiceBeforeDiscount'] as num?)?.toDouble()) : null,
+      discountAmount: map['discountAmount'] != null ? ((map['discountAmount'] is double) ? map['discountAmount'] : (map['discountAmount'] as num?)?.toDouble()) : null,
+      totalInvoiceAfterDiscount: map['totalInvoiceAfterDiscount'] != null ? ((map['totalInvoiceAfterDiscount'] is double) ? map['totalInvoiceAfterDiscount'] : (map['totalInvoiceAfterDiscount'] as num?)?.toDouble()) : null,
+      manualDiscountAmount: map['manualDiscountAmount'] != null ? ((map['manualDiscountAmount'] is double) ? map['manualDiscountAmount'] : (map['manualDiscountAmount'] as num?)?.toDouble()) : null,
+      manualDiscountNote: map['manualDiscountNote'] as String?,
+      finalTotalAfterAllDiscounts: map['finalTotalAfterAllDiscounts'] != null ? ((map['finalTotalAfterAllDiscounts'] is double) ? map['finalTotalAfterAllDiscounts'] : (map['finalTotalAfterAllDiscounts'] as num?)?.toDouble()) : null,
     );
   }
 
@@ -355,7 +391,7 @@ class SessionInvoice {
 
   @override
   String toString() {
-    return 'SessionInvoice(id: $id, userType: $userType, session_id: $session_id, hoursAmount: $hoursAmount, sessionPrice: $sessionPrice)';
+    return 'SessionInvoice(id: $id, userType: $userType, session_id: $session_id, hoursAmount: $hoursAmount, sessionPrice: $sessionPrice, totalInvoiceBeforeDiscount: $totalInvoiceBeforeDiscount, discountAmount: $discountAmount, totalInvoiceAfterDiscount: $totalInvoiceAfterDiscount, manualDiscountAmount: $manualDiscountAmount, manualDiscountNote: $manualDiscountNote, finalTotalAfterAllDiscounts: $finalTotalAfterAllDiscounts)';
   }
 
   @override
@@ -366,7 +402,13 @@ class SessionInvoice {
         other.userType == userType &&
         other.session_id == session_id &&
         other.hoursAmount == hoursAmount &&
-        other.sessionPrice == sessionPrice;
+        other.sessionPrice == sessionPrice &&
+        other.totalInvoiceBeforeDiscount == totalInvoiceBeforeDiscount &&
+        other.discountAmount == discountAmount &&
+        other.totalInvoiceAfterDiscount == totalInvoiceAfterDiscount &&
+        other.manualDiscountAmount == manualDiscountAmount &&
+        other.manualDiscountNote == manualDiscountNote &&
+        other.finalTotalAfterAllDiscounts == finalTotalAfterAllDiscounts;
   }
 
   @override
@@ -375,6 +417,12 @@ class SessionInvoice {
         userType.hashCode ^
         session_id.hashCode ^
         hoursAmount.hashCode ^
-        sessionPrice.hashCode;
+        sessionPrice.hashCode ^
+        totalInvoiceBeforeDiscount.hashCode ^
+        discountAmount.hashCode ^
+        totalInvoiceAfterDiscount.hashCode ^
+        manualDiscountAmount.hashCode ^
+        manualDiscountNote.hashCode ^
+        finalTotalAfterAllDiscounts.hashCode;
   }
 }

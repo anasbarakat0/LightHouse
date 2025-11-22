@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/core/utils/task_notifier.dart';
 
 class LanguageDropdownSwitcher extends StatelessWidget {
@@ -11,46 +10,66 @@ class LanguageDropdownSwitcher extends StatelessWidget {
     Locale currentLocale = context.locale;
 
     return Container(
-      height: 69,
+      height: 56,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: navy,
-        borderRadius: BorderRadius.circular(10),
-        // border: Border.all(width: 1, color: yellow),
+        color: Colors.white.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.1),
+          width: 1,
+        ),
       ),
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: DropdownButtonFormField<Locale>(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(12),
         value: currentLocale,
         icon: const Padding(
           padding: EdgeInsetsDirectional.only(end: 8),
           child: Icon(
             Icons.translate,
-            color: orange,
+            color: Colors.blue,
+            size: 20,
           ),
         ),
-        focusColor: const Color.fromRGBO(0, 0, 0, 0),
-        dropdownColor: orange,
+        focusColor: Colors.transparent,
+        dropdownColor: const Color(0xFF1A2F4A),
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.zero,
+        ),
         onChanged: (Locale? newLocale) {
           if (newLocale != null) {
             languageNotifier.value = !languageNotifier.value;
             context.setLocale(newLocale);
           }
         },
-        
         items: [
           DropdownMenuItem(
             value: const Locale('en'),
             child: Text(
               'english'.tr(),
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           DropdownMenuItem(
             value: const Locale('ar'),
             child: Text(
               'arabic'.tr(),
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],
@@ -58,3 +77,4 @@ class LanguageDropdownSwitcher extends StatelessWidget {
     );
   }
 }
+

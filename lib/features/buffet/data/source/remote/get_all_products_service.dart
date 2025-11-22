@@ -11,7 +11,7 @@ class GetAllProductsService extends Service {
     try {
       // final result = await Isolate.run(() async {
         response = await dio.get(
-          "$baseUrl/api/v1/products/all?page=$page&size=$size",
+          "$baseUrl/api/products/all?page=$page&size=$size",
           options: getOptions(auth: false),
         );
         if (response.data["body"] == []) {

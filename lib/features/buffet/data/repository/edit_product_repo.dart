@@ -20,7 +20,7 @@ class EditProductRepo {
     if (await networkConnection.isConnected) {
       try {
         var data =await editProductService.editProductService(product, id);
-        return Right(data.data["message"]);
+        return Right("تم التعديل");
       } on Forbidden {
         return Left(ForbiddenFailure(message: forbiddenMessage));
       } on BAD_REQUEST catch (e) {

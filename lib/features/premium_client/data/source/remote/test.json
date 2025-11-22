@@ -1,0 +1,66 @@
+{
+    "message": "Get premiumsession",
+    "status": "OK",
+    "localDateTime": "2025-11-17T13:57:22.499304633",
+    "body": {
+        "premiumSessionList": [
+            {
+                "id": "fc07440b-2be8-48b2-a31d-2532e1540302",
+                "date": "2025-11-17",
+                "startTime": "13:47:16.863",
+                "qrCode": "8984e58c-a001-4da8-b4c4-589da71ee81d-pcsowRCkkB2Ajd29-0934765825-Premium_User-d0a4f692-c53f-43ed-9e0d-0678f08a89bf",
+                "createdBy": {
+                    "id": "fb11f906-c017-481b-b407-83abe540af76",
+                    "firstName": "Anas",
+                    "lastName": "Barakat",
+                    "email": "cws.lighthouse@gmail.com",
+                    "role": "MANAGER"
+                },
+                "userId": "8984e58c-a001-4da8-b4c4-589da71ee81d",
+                "firstName": "غيث",
+                "lastName": "بيرقدار",
+                "endTime": "13:47:28.969",
+                "sessionInvoice": {
+                    "id": "d1db488e-db2e-4f44-83fe-396a9d5dc3e0",
+                    "userType": "Premium",
+                    "session_id": "fc07440b-2be8-48b2-a31d-2532e1540302",
+                    "hoursAmount": 0,
+                    "sessionPrice": 0
+                },
+                "buffetInvoicePrice": 0,
+                "active": false
+            },
+            {
+                "id": "ca9811ec-62f2-4ee9-b9d7-9ad125b1c7b6",
+                "date": "2025-11-17",
+                "startTime": "13:56:42.946",
+                "qrCode": "8984e58c-a001-4da8-b4c4-589da71ee81d-pcsowRCkkB2Ajd29-0934765825-Premium_User-d0a4f692-c53f-43ed-9e0d-0678f08a89bf",
+                "createdBy": {
+                    "id": "fb11f906-c017-481b-b407-83abe540af76",
+                    "firstName": "Anas",
+                    "lastName": "Barakat",
+                    "email": "cws.lighthouse@gmail.com",
+                    "role": "MANAGER"
+                },
+                "userId": "8984e58c-a001-4da8-b4c4-589da71ee81d",
+                "firstName": "غيث",
+                "lastName": "بيرقدار",
+                "endTime": "13:57:12.539",
+                "sessionInvoice": {
+                    "id": "50058422-6f23-46b8-993e-6672ac4ef8a1",
+                    "userType": "Premium",
+                    "session_id": "ca9811ec-62f2-4ee9-b9d7-9ad125b1c7b6",
+                    "hoursAmount": 0,
+                    "sessionPrice": 0
+                },
+                "buffetInvoicePrice": 4000,
+                "active": false
+            }
+        ],
+        "pagination": {
+            "page": 1,
+            "perPage": 2,
+            "total": 2
+        }
+    }
+}

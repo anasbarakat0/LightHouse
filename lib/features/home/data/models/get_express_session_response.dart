@@ -48,7 +48,8 @@ class GetExpressSessionResponse {
   String toJson() => json.encode(toMap());
 
   factory GetExpressSessionResponse.fromJson(String source) =>
-      GetExpressSessionResponse.fromMap(json.decode(source) as Map<String, dynamic>);
+      GetExpressSessionResponse.fromMap(
+          json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() =>
@@ -57,20 +58,19 @@ class GetExpressSessionResponse {
   @override
   bool operator ==(covariant GetExpressSessionResponse other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.message == message &&
-      other.status == status &&
-      other.localDateTime == localDateTime &&
-      other.body == body;
+
+    return other.message == message &&
+        other.status == status &&
+        other.localDateTime == localDateTime &&
+        other.body == body;
   }
 
   @override
   int get hashCode {
     return message.hashCode ^
-      status.hashCode ^
-      localDateTime.hashCode ^
-      body.hashCode;
+        status.hashCode ^
+        localDateTime.hashCode ^
+        body.hashCode;
   }
 }
 
@@ -83,7 +83,7 @@ class ExpressSessionBody {
   final String userId;
   final String fullName;
   final dynamic endTime;
-  final dynamic sessionInvoice;
+  final SessionInvoice? sessionInvoice;
   final double buffetInvoicePrice;
   final List<BuffetInvoice> buffetInvoices;
   final double totalPrice;
@@ -97,7 +97,7 @@ class ExpressSessionBody {
     required this.userId,
     required this.fullName,
     required this.endTime,
-    required this.sessionInvoice,
+    this.sessionInvoice,
     required this.buffetInvoicePrice,
     required this.buffetInvoices,
     required this.totalPrice,
@@ -113,7 +113,7 @@ class ExpressSessionBody {
     String? userId,
     String? fullName,
     dynamic endTime,
-    dynamic sessionInvoice,
+    SessionInvoice? sessionInvoice,
     double? buffetInvoicePrice,
     List<BuffetInvoice>? buffetInvoices,
     double? totalPrice,
@@ -146,7 +146,7 @@ class ExpressSessionBody {
       'userId': userId,
       'fullName': fullName,
       'endTime': endTime,
-      'sessionInvoice': sessionInvoice,
+      'sessionInvoice': sessionInvoice?.toMap(),
       'buffetInvoicePrice': buffetInvoicePrice,
       'buffetInvoices': buffetInvoices.map((x) => x.toMap()).toList(),
       'totalPrice': totalPrice,
@@ -164,16 +164,17 @@ class ExpressSessionBody {
       userId: map['userId'] as String? ?? '',
       fullName: map['fullName'] as String? ?? '',
       endTime: map['endTime'],
-      sessionInvoice: map['sessionInvoice'],
-     buffetInvoicePrice: (map['buffetInvoicePrice'] is double)
-        ? map['buffetInvoicePrice']
-        : (map['buffetInvoicePrice'] as num?)?.toInt() ?? 0,
-    buffetInvoices: (map['buffetInvoices'] as List<dynamic>)
-        .map((invoice) => BuffetInvoice.fromMap(invoice as Map<String, dynamic>))
-        .toList(),
-    totalPrice: (map['totalPrice'] is int)
-        ? map['totalPrice']
-        : (map['totalPrice'] as num?)?.toInt() ?? 0,
+      sessionInvoice: map['sessionInvoice'] != null
+          ? SessionInvoice.fromMap(map['sessionInvoice'] as Map<String, dynamic>)
+          : null,
+      buffetInvoicePrice:
+          (map['buffetInvoicePrice'] as num?)?.toDouble() ?? 0.0,
+      buffetInvoices: (map['buffetInvoices'] as List<dynamic>?)
+              ?.map((invoice) =>
+                  BuffetInvoice.fromMap(invoice as Map<String, dynamic>))
+              .toList() ??
+          [],
+      totalPrice: (map['totalPrice'] as num?)?.toDouble() ?? 0.0,
       active: map['active'] as bool? ?? false,
     );
   }
@@ -191,38 +192,37 @@ class ExpressSessionBody {
   @override
   bool operator ==(covariant ExpressSessionBody other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.date == date &&
-      other.startTime == startTime &&
-      other.qrCode == qrCode &&
-      other.createdBy == createdBy &&
-      other.userId == userId &&
-      other.fullName == fullName &&
-      other.endTime == endTime &&
-      other.sessionInvoice == sessionInvoice &&
-      other.buffetInvoicePrice == buffetInvoicePrice &&
-      listEquals(other.buffetInvoices, buffetInvoices) &&
-      other.totalPrice == totalPrice &&
-      other.active == active;
+
+    return other.id == id &&
+        other.date == date &&
+        other.startTime == startTime &&
+        other.qrCode == qrCode &&
+        other.createdBy == createdBy &&
+        other.userId == userId &&
+        other.fullName == fullName &&
+        other.endTime == endTime &&
+        other.sessionInvoice == sessionInvoice &&
+        other.buffetInvoicePrice == buffetInvoicePrice &&
+        listEquals(other.buffetInvoices, buffetInvoices) &&
+        other.totalPrice == totalPrice &&
+        other.active == active;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      date.hashCode ^
-      startTime.hashCode ^
-      qrCode.hashCode ^
-      createdBy.hashCode ^
-      userId.hashCode ^
-      fullName.hashCode ^
-      endTime.hashCode ^
-      sessionInvoice.hashCode ^
-      buffetInvoicePrice.hashCode ^
-      buffetInvoices.hashCode ^
-      totalPrice.hashCode ^
-      active.hashCode;
+        date.hashCode ^
+        startTime.hashCode ^
+        qrCode.hashCode ^
+        createdBy.hashCode ^
+        userId.hashCode ^
+        fullName.hashCode ^
+        endTime.hashCode ^
+        sessionInvoice.hashCode ^
+        buffetInvoicePrice.hashCode ^
+        buffetInvoices.hashCode ^
+        totalPrice.hashCode ^
+        active.hashCode;
   }
 }
 
@@ -276,7 +276,8 @@ class BuffetInvoice {
       id: map['id'] as String? ?? '',
       invoiceDate: map['invoiceDate'] as String? ?? '',
       invoiceTime: map['invoiceTime'] as String? ?? '',
-      sessionId: (map['sessionId'] as String?) ?? (map['session_id'] as String? ?? ''),
+      sessionId:
+          (map['sessionId'] as String?) ?? (map['session_id'] as String? ?? ''),
       orders: (map['orders'] as List<dynamic>)
           .map((order) => Order.fromMap(order as Map<String, dynamic>))
           .toList(),
@@ -299,24 +300,23 @@ class BuffetInvoice {
   @override
   bool operator ==(covariant BuffetInvoice other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.invoiceDate == invoiceDate &&
-      other.invoiceTime == invoiceTime &&
-      other.sessionId == sessionId &&
-      listEquals(other.orders, orders) &&
-      other.totalPrice == totalPrice;
+
+    return other.id == id &&
+        other.invoiceDate == invoiceDate &&
+        other.invoiceTime == invoiceTime &&
+        other.sessionId == sessionId &&
+        listEquals(other.orders, orders) &&
+        other.totalPrice == totalPrice;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      invoiceDate.hashCode ^
-      invoiceTime.hashCode ^
-      sessionId.hashCode ^
-      orders.hashCode ^
-      totalPrice.hashCode;
+        invoiceDate.hashCode ^
+        invoiceTime.hashCode ^
+        sessionId.hashCode ^
+        orders.hashCode ^
+        totalPrice.hashCode;
   }
 }
 
@@ -389,24 +389,23 @@ class Order {
   @override
   bool operator ==(covariant Order other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.productId == productId &&
-      other.productName == productName &&
-      other.quantity == quantity &&
-      other.price == price &&
-      other.buffetInvoice == buffetInvoice;
+
+    return other.id == id &&
+        other.productId == productId &&
+        other.productName == productName &&
+        other.quantity == quantity &&
+        other.price == price &&
+        other.buffetInvoice == buffetInvoice;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      productId.hashCode ^
-      productName.hashCode ^
-      quantity.hashCode ^
-      price.hashCode ^
-      buffetInvoice.hashCode;
+        productId.hashCode ^
+        productName.hashCode ^
+        quantity.hashCode ^
+        price.hashCode ^
+        buffetInvoice.hashCode;
   }
 }
 
@@ -473,21 +472,105 @@ class CreatedBy {
   @override
   bool operator ==(covariant CreatedBy other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.firstName == firstName &&
-      other.lastName == lastName &&
-      other.email == email &&
-      other.role == role;
+
+    return other.id == id &&
+        other.firstName == firstName &&
+        other.lastName == lastName &&
+        other.email == email &&
+        other.role == role;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      firstName.hashCode ^
-      lastName.hashCode ^
-      email.hashCode ^
-      role.hashCode;
+        firstName.hashCode ^
+        lastName.hashCode ^
+        email.hashCode ^
+        role.hashCode;
+  }
+}
+
+class SessionInvoice {
+  final String id;
+  final String userType;
+  final String session_id;
+  final double hoursAmount;
+  final double sessionPrice;
+  SessionInvoice({
+    required this.id,
+    required this.userType,
+    required this.session_id,
+    required this.hoursAmount,
+    required this.sessionPrice,
+  });
+
+  SessionInvoice copyWith({
+    String? id,
+    String? userType,
+    String? session_id,
+    double? hoursAmount,
+    double? sessionPrice,
+  }) {
+    return SessionInvoice(
+      id: id ?? this.id,
+      userType: userType ?? this.userType,
+      session_id: session_id ?? this.session_id,
+      hoursAmount: hoursAmount ?? this.hoursAmount,
+      sessionPrice: sessionPrice ?? this.sessionPrice,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'userType': userType,
+      'session_id': session_id,
+      'hoursAmount': hoursAmount,
+      'sessionPrice': sessionPrice,
+    };
+  }
+
+  factory SessionInvoice.fromMap(Map<String, dynamic> map) {
+    return SessionInvoice(
+      id: map['id'] as String? ?? '',
+      userType: map['userType'] as String? ?? '',
+      session_id: map['session_id'] as String? ?? '',
+      hoursAmount: (map['hoursAmount'] is double)
+          ? map['hoursAmount']
+          : (map['hoursAmount'] as num?)?.toDouble() ?? 0.0,
+      sessionPrice: (map['sessionPrice'] is double)
+          ? map['sessionPrice']
+          : (map['sessionPrice'] as num?)?.toDouble() ?? 0.0,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory SessionInvoice.fromJson(String source) =>
+      SessionInvoice.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'SessionInvoice(id: $id, userType: $userType, session_id: $session_id, hoursAmount: $hoursAmount, sessionPrice: $sessionPrice)';
+  }
+
+  @override
+  bool operator ==(covariant SessionInvoice other) {
+    if (identical(this, other)) return true;
+
+    return other.id == id &&
+        other.userType == userType &&
+        other.session_id == session_id &&
+        other.hoursAmount == hoursAmount &&
+        other.sessionPrice == sessionPrice;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        userType.hashCode ^
+        session_id.hashCode ^
+        hoursAmount.hashCode ^
+        sessionPrice.hashCode;
   }
 }

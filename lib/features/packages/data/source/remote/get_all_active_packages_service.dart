@@ -11,7 +11,7 @@ class GetAllActivePackagesService extends Service {
     try {
       // final result = await Isolate.run(() async {
       response = await dio.get(
-        "$baseUrl/api/v1/packages?page=$page&size=$size",
+        "$baseUrl/api/v1/packages/all?page=$page&size=$size",
         options: getOptions(auth: true),
       );
       print(true);

@@ -11,7 +11,7 @@ class AllAdminInfoService extends Service {
     try {
 // final result = await Isolate.run(() async {
       response = await dio.get(
-        "$baseUrl/api/v1/dashboard/admins/all-admins?page=$page&size=$size",
+        "$baseUrl/api/v1/dashboard/admins/all?page=$page&size=$size",
         options: getOptions(auth: true),
       );
 
