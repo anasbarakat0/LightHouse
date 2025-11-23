@@ -531,16 +531,48 @@ class SessionInvoice {
   }
 
   factory SessionInvoice.fromMap(Map<String, dynamic> map) {
+    // Handle hoursAmount with robust parsing
+    double hoursAmountValue = 0.0;
+    if (map['hoursAmount'] != null) {
+      if (map['hoursAmount'] is double) {
+        hoursAmountValue = map['hoursAmount'] as double;
+      } else if (map['hoursAmount'] is int) {
+        hoursAmountValue = (map['hoursAmount'] as int).toDouble();
+      } else if (map['hoursAmount'] is num) {
+        hoursAmountValue = (map['hoursAmount'] as num).toDouble();
+      } else {
+        try {
+          hoursAmountValue = double.parse(map['hoursAmount'].toString());
+        } catch (e) {
+          hoursAmountValue = 0.0;
+        }
+      }
+    }
+    
+    // Handle sessionPrice with robust parsing
+    double sessionPriceValue = 0.0;
+    if (map['sessionPrice'] != null) {
+      if (map['sessionPrice'] is double) {
+        sessionPriceValue = map['sessionPrice'] as double;
+      } else if (map['sessionPrice'] is int) {
+        sessionPriceValue = (map['sessionPrice'] as int).toDouble();
+      } else if (map['sessionPrice'] is num) {
+        sessionPriceValue = (map['sessionPrice'] as num).toDouble();
+      } else {
+        try {
+          sessionPriceValue = double.parse(map['sessionPrice'].toString());
+        } catch (e) {
+          sessionPriceValue = 0.0;
+        }
+      }
+    }
+    
     return SessionInvoice(
       id: map['id'] as String? ?? '',
       userType: map['userType'] as String? ?? '',
       session_id: map['session_id'] as String? ?? '',
-      hoursAmount: (map['hoursAmount'] is double)
-          ? map['hoursAmount']
-          : (map['hoursAmount'] as num?)?.toDouble() ?? 0.0,
-      sessionPrice: (map['sessionPrice'] is double)
-          ? map['sessionPrice']
-          : (map['sessionPrice'] as num?)?.toDouble() ?? 0.0,
+      hoursAmount: hoursAmountValue,
+      sessionPrice: sessionPriceValue,
     );
   }
 

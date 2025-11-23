@@ -75,8 +75,13 @@ class _SummaryWidgetState extends State<SummaryWidget> {
       List<Map<String, dynamic>> allTasks =
           List<Map<String, dynamic>>.from(json.decode(taskData));
 
-      taskNotifier.value =
-          allTasks.where((task) => !(task['completed'] ?? true)).toList();
+      // Use Future.microtask to defer the update until after the build phase
+      Future.microtask(() {
+        if (mounted) {
+          taskNotifier.value =
+              allTasks.where((task) => !(task['completed'] ?? true)).toList();
+        }
+      });
     }
   }
 

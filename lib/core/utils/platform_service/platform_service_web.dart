@@ -30,4 +30,10 @@ class PlatformService extends PlatformServiceInterface {
     // TODO: implement printUSB
     throw UnimplementedError();
   }
+
+  @override
+  FutureOr<List<String>> getAvailablePrinters() {
+    // Web platform doesn't support direct printer access
+    return [];
+  }
 }

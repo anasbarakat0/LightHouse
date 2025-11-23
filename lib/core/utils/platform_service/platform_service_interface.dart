@@ -12,4 +12,7 @@ abstract class PlatformServiceInterface {
 
   FutureOr<bool> printUSB(
       {required String serialNumber, required List<int> bytes});
+
+  /// Get list of available printers on the system
+  FutureOr<List<String>> getAvailablePrinters();
 }

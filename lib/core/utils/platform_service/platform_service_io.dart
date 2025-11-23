@@ -144,4 +144,61 @@ class PlatformService extends PlatformServiceInterface {
       {required String serialNumber, required List<int> bytes}) {
     return false;
   }
+
+  /// Get list of available printers on Windows
+  @override
+  Future<List<String>> getAvailablePrinters() async {
+    final printers = <String>[];
+    try {
+      final pNeeded = calloc<DWORD>();
+      final pReturned = calloc<DWORD>();
+
+      // First call to get the required buffer size
+      EnumPrinters(
+        PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS,
+        nullptr,
+        2, // PRINTER_INFO_2
+        nullptr,
+        0,
+        pNeeded,
+        pReturned,
+      );
+
+      final needed = pNeeded.value;
+      if (needed > 0) {
+        final buffer = calloc<Uint8>(needed);
+        final printerInfo = buffer.cast<PRINTER_INFO_2>();
+
+        // Second call to get the actual printer data
+        if (EnumPrinters(
+              PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS,
+              nullptr,
+              2, // PRINTER_INFO_2
+              buffer,
+              needed,
+              pNeeded,
+              pReturned,
+            ) !=
+            0) {
+          final returned = pReturned.value;
+          for (var i = 0; i < returned; i++) {
+            final info = printerInfo[i];
+            final printerName = info.pPrinterName.toDartString();
+            if (printerName.isNotEmpty) {
+              printers.add(printerName);
+            }
+          }
+        }
+
+        free(buffer);
+      }
+
+      free(pNeeded);
+      free(pReturned);
+    } catch (e) {
+      debugPrint("Error getting printers: $e");
+    }
+
+    return printers;
+  }
 }

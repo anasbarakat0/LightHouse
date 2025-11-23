@@ -32,6 +32,7 @@ class FinishExpressSessionsRepo {
           manualDiscountNote: manualDiscountNote,
         );
         var respond = FinishExpressSessionResponseModel.fromMap(data.data);
+        print(respond.toJson());
         return Right(respond);
       } on Forbidden {
        

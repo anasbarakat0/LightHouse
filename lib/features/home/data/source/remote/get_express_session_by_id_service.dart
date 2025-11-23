@@ -15,6 +15,7 @@ class GetExpressSessionByIdService extends Service {
         "$baseUrl/api/v1/sessions/express/$id",
         options: getOptions(auth: true),
       );
+      
       return response;
 // });
 //       return result;

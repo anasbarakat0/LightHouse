@@ -3,16 +3,45 @@ import 'package:flutter/material.dart';
 import 'package:lighthouse/core/resources/colors.dart';
 
 void startExpressSession(BuildContext context, Function(String) add) {
-  final TextEditingController fullNameController = TextEditingController();
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return Dialog(
+      return _ExpressSessionDialog(add: add);
+    },
+  );
+}
+
+class _ExpressSessionDialog extends StatefulWidget {
+  final Function(String) add;
+
+  const _ExpressSessionDialog({required this.add});
+
+  @override
+  State<_ExpressSessionDialog> createState() => _ExpressSessionDialogState();
+}
+
+class _ExpressSessionDialogState extends State<_ExpressSessionDialog> {
+  late final TextEditingController fullNameController;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    fullNameController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    fullNameController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          constraints: const BoxConstraints(maxWidth: 500),
+          constraints: const BoxConstraints(maxWidth: 500, maxHeight: 600),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -38,10 +67,11 @@ void startExpressSession(BuildContext context, Function(String) add) {
           ),
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
                 Form(
                   key: formKey,
                   child: Column(
@@ -107,7 +137,6 @@ void startExpressSession(BuildContext context, Function(String) add) {
                               icon: const Icon(Icons.close_rounded,
                                   color: Colors.white),
                               onPressed: () {
-                                fullNameController.dispose();
                                 Navigator.of(context).pop();
                               },
                             ),
@@ -190,8 +219,7 @@ void startExpressSession(BuildContext context, Function(String) add) {
                         },
                         onFieldSubmitted: (value) {
                           if (formKey.currentState!.validate()) {
-                            add(fullNameController.text.trim());
-                            fullNameController.dispose();
+                            widget.add(fullNameController.text.trim());
                             Navigator.of(context).pop();
                           }
                         },
@@ -205,7 +233,6 @@ void startExpressSession(BuildContext context, Function(String) add) {
                               color: Colors.transparent,
                               child: InkWell(
                                 onTap: () {
-                                  fullNameController.dispose();
                                   Navigator.of(context).pop();
                                 },
                                 borderRadius: BorderRadius.circular(14),
@@ -241,8 +268,7 @@ void startExpressSession(BuildContext context, Function(String) add) {
                               child: InkWell(
                                 onTap: () {
                                   if (formKey.currentState!.validate()) {
-                                    add(fullNameController.text.trim());
-                                    fullNameController.dispose();
+                                    widget.add(fullNameController.text.trim());
                                     Navigator.of(context).pop();
                                   }
                                 },
@@ -298,11 +324,11 @@ void startExpressSession(BuildContext context, Function(String) add) {
                     ],
                   ),
                 ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       );
-    },
-  );
+  }
 }

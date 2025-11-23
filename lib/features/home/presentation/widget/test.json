@@ -1,0 +1,88 @@
+{
+    "message": "Finished express session",
+    "status": "OK",
+    "localDateTime": "2025-11-23T18:27:26.60319338",
+    "body": {
+        "id": "2d5be38c-628c-4767-9f50-23ab8b8cc2cc",
+        "date": "2025-11-23",
+        "startTime": "18:25:37.001",
+        "qrCode": "2d5be38c-628c-4767-9f50-23ab8b8cc2cc-hRB87Ox2iX61e27hSession-b0d595c5-02d1-488e-8b5f-5f475c14d40d",
+        "createdBy": {
+            "id": "fb11f906-c017-481b-b407-83abe540af76",
+            "firstName": "Anas",
+            "lastName": "Barakat",
+            "email": "cws.lighthouse@gmail.com",
+            "role": "MANAGER"
+        },
+        "fullName": "اسم جديد",
+        "endTime": "18:27:26.584340807",
+        "sessionInvoice": {
+            "id": "f38363c8-704a-4a5d-9423-0eb1a80818ad",
+            "userType": "Express",
+            "session_id": "2d5be38c-628c-4767-9f50-23ab8b8cc2cc",
+            "hoursAmount": 0.0,
+            "sessionPrice": 18050.0,
+            "totalInvoiceBeforeDiscount": 20050.0,
+            "discountAmount": 2000.0,
+            "totalInvoiceAfterDiscount": 18050.0,
+            "manualDiscountAmount": null,
+            "manualDiscountNote": null,
+            "finalTotalAfterAllDiscounts": 18050.0
+        },
+        "buffetInvoicePrice": 0.0,
+        "buffetInvoices": [
+            {
+                "id": "184a1a7e-ce6d-402d-9bcf-23d1924c1d2a",
+                "invoiceDate": "2025-11-23",
+                "invoiceTime": "18:25:53.59",
+                "session_id": "2d5be38c-628c-4767-9f50-23ab8b8cc2cc",
+                "orders": [
+                    {
+                        "id": "ab652306-016f-40f2-bd83-7ff4d01640cb",
+                        "productId": "fcbef760-5f0e-48f0-a6d0-4b50e5342517",
+                        "productName": "اندومي",
+                        "quantity": 1,
+                        "price": 6000.0,
+                        "buffetInvoice": "184a1a7e-ce6d-402d-9bcf-23d1924c1d2a"
+                    },
+                    {
+                        "id": "fedc66bd-e14b-4c57-9c3a-0cf866e4139e",
+                        "productId": "f5455e07-8a8e-46ac-934e-bc5f41fd514a",
+                        "productName": "مياه 500 مل",
+                        "quantity": 1,
+                        "price": 4000.0,
+                        "buffetInvoice": "184a1a7e-ce6d-402d-9bcf-23d1924c1d2a"
+                    }
+                ],
+                "totalPrice": 10000.0
+            },
+            {
+                "id": "17e91396-2212-413e-a67b-861f8bba20ae",
+                "invoiceDate": "2025-11-23",
+                "invoiceTime": "18:26:01.9",
+                "session_id": "2d5be38c-628c-4767-9f50-23ab8b8cc2cc",
+                "orders": [
+                    {
+                        "id": "3c8497b7-0f90-4a0a-a5c3-aa631ced2f9b",
+                        "productId": "d109b3a2-87ec-44d4-8630-38fd7288bd98",
+                        "productName": "نسكافيه 3بـ1",
+                        "quantity": 1,
+                        "price": 5000.0,
+                        "buffetInvoice": "17e91396-2212-413e-a67b-861f8bba20ae"
+                    },
+                    {
+                        "id": "785797a3-bd62-4648-b09a-188409beeafa",
+                        "productId": "45180116-b16c-4244-bc20-279b1e45781b",
+                        "productName": "نسكافيه 2بـ1",
+                        "quantity": 1,
+                        "price": 5000.0,
+                        "buffetInvoice": "17e91396-2212-413e-a67b-861f8bba20ae"
+                    }
+                ],
+                "totalPrice": 10000.0
+            }
+        ],
+        "totalPrice": 18050.0,
+        "active": false
+    }
+}

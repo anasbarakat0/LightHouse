@@ -1,14 +1,19 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:image/image.dart' as img;
 import 'package:lighthouse/core/utils/printing_commands.dart';
 import 'package:translator/translator.dart';
+import 'package:lighthouse/core/utils/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/utils/platform_service/platform_service.dart';
 
 Future<void> printExpressQr( String printerAddress,
     String printerName, dynamic client) async {
+  // Get saved printer from settings, or use provided printerName as fallback
+  final prefs = memory.get<SharedPreferences>();
+  final savedPrinter = prefs.getString('selected_printer') ?? printerName;
+  final actualPrinterName = savedPrinter.isNotEmpty ? savedPrinter : printerName;
   final translator = GoogleTranslator();
   var clientName = await translator.translate(client.fullName, from: 'ar', to: 'en');
   PrintMode mode = PrintMode.USB;
@@ -43,7 +48,8 @@ Future<void> printExpressQr( String printerAddress,
       service.printSocket(host: printerAddress, port: 9100, bytes: bytes);
     } else {
       print("USB PRINTING");
-      service.printDirectWindows(printerName: printerName, bytes: bytes);
+      print("Using printer: $actualPrinterName");
+      service.printDirectWindows(printerName: actualPrinterName, bytes: bytes);
     }
   } catch (e) {
     debugPrint("Print Error: $e");

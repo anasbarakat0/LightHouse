@@ -19,7 +19,16 @@ class DeleteProductRepo {
     if (await networkConnection.isConnected) {
       try {
         var data = await deleteProductService.deleteProductService(id);
-        return Right(data.data['message']);
+        // Handle both Map and String response types
+        String message;
+        if (data.data is Map) {
+          message = data.data['message'] as String? ?? 'Product deleted successfully';
+        } else if (data.data is String) {
+          message = data.data as String;
+        } else {
+          message = 'Product deleted successfully';
+        }
+        return Right(message);
       } on Forbidden {
         return Left(ForbiddenFailure(message: forbiddenMessage));
       } on BAD_REQUEST catch (e) {
@@ -27,9 +36,11 @@ class DeleteProductRepo {
       } on DioException catch (e) {
         return Left(
           ServerFailure(
-            message: e.response!.data.toString(),
+            message: e.response?.data.toString() ?? "Unknown error",
           ),
         );
+      } catch (e) {
+        return Left(ServerFailure(message: e.toString()));
       }
     } else {
       return Left(OfflineFailure());

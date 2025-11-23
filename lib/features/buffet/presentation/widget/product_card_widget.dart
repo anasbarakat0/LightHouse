@@ -264,7 +264,7 @@ class ProductCardWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const Spacer(),
+                    const SizedBox(height: 8),
 
                     // Action Buttons
                     Row(

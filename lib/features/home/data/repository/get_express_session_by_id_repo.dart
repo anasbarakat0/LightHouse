@@ -19,7 +19,9 @@ class GetExpressSessionByIdRepo {
     if (await networkConnection.isConnected) {
       try {
         var data = await getExpressSessionByIdService.getExpressSessionByIdService(id);
-        return Right(GetExpressSessionResponse.fromMap(data.data));
+        var model = GetExpressSessionResponse.fromMap(data.data);
+        print(model.toJson());
+        return Right(model);
       } on Forbidden {
       
         return Left(ForbiddenFailure(message: forbiddenMessage));

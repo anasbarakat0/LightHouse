@@ -310,8 +310,27 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                   print("Body map: $bodyMap");
                   final finishBody = finish_model.Body.fromMap(bodyMap);
                   print("✅ Converted Body successfully: $finishBody");
-                  // Print invoice
-                  printInvoice(true, printerAddress, printerName, finishBody);
+                  // Print first invoice (original)
+                  print("🖨️ Starting to print first invoice...");
+                  printInvoice(true, printerAddress, printerName, finishBody)
+                      .then((_) {
+                    print("✅ First invoice printed, starting second invoice...");
+                    // Print second invoice (detailed, without discount note) after first completes
+                    Future.delayed(const Duration(milliseconds: 1000), () async {
+                      print("🖨️ Printing detailed invoice now...");
+                      try {
+                        await printDetailedInvoice(
+                            true, printerAddress, printerName, finishBody);
+                        print("✅ Detailed invoice printed successfully");
+                      } catch (e) {
+                        print("❌ Error printing detailed invoice: $e");
+                        debugPrint("Print Detailed Invoice Error: $e");
+                      }
+                    });
+                  }).catchError((error) {
+                    print("❌ Error printing first invoice: $error");
+                    debugPrint("Print First Invoice Error: $error");
+                  });
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       backgroundColor: Colors.green[800],
@@ -620,6 +639,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                                             ),
                                       ),
                                       trailing: FloatingActionButton.extended(
+                                        heroTag: 'fab_add_session_${client.uuid}',
                                         backgroundColor: lightGrey,
                                         icon: const Icon(
                                           Icons.login,
@@ -791,22 +811,25 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                                             ),
                                       ),
                                       trailing: FloatingActionButton.extended(
+                                        heroTag: 'fab_add_session_print_${bodyClient.uuid}',
                                         backgroundColor: lightGrey,
                                         icon: const Icon(
                                           Icons.login,
                                           color: orange,
                                         ),
-                                        onPressed: () {
+                                        onPressed: () async {
                                           context
                                               .read<StartPremiumSessionBloc>()
                                               .add(StartPreSession(
                                                   id: client.uuid));
-                                          if (client.qrCode != null) {
-                                            printPremiumQr(
-                                                "USB",
-                                                printerAddress,
-                                                printerName,
-                                                bodyClient);
+                                          print("🖨️ Starting to print Premium QR...");
+                                          try {
+                                            await printPremiumQr("USB", printerAddress,
+                                                printerName, bodyClient);
+                                            print("✅ Premium QR printed successfully");
+                                          } catch (e) {
+                                            print("❌ Error printing Premium QR: $e");
+                                            debugPrint("Print Premium QR Error: $e");
                                           }
                                         },
                                         label: Text(

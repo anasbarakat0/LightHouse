@@ -135,7 +135,7 @@ void endSessionDialog(BuildContext context, Body sessionData) {
               DetailRow(
                 title: "${"num_of_hours".tr()}: ",
                 value:  
-                    "${sessionData.sessionInvoice.hoursAmount.toString()} ${"hrs".tr()}",
+                    "${sessionData.sessionInvoice.hoursAmount.toStringAsFixed(2)} ${"hrs".tr()}",
               ),
               DetailRow(
                 title: "${"sessionInvoicePrice".tr()}: ",
