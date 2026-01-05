@@ -41,20 +41,7 @@ class AdminManagement extends StatelessWidget {
                 allAdminInfoService: AllAdminInfoService(
                   dio: Dio(),
                 ),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           )..add(GetAdmins(page: 1, size: 10)),
@@ -63,20 +50,7 @@ AddressCheckOption(
           create: (context) => AddNewAdminBloc(
             AddNewAdminUsecase(
               addNewAdminRepo: AddNewAdminRepo(
-                networkConnection: NetworkConnection(
-                    internetConnectionChecker:
-                        InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ]
-                  ),),
+                networkConnection: NetworkConnection.createDefault(),
                 addNewAdminService: AddNewAdminService(dio: Dio()),
               ),
             ),
@@ -89,20 +63,7 @@ AddressCheckOption(
                 DeleteAdminService(
                   dio: Dio(),
                 ),
-                NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                NetworkConnection.createDefault(),
               ),
             ),
           ),

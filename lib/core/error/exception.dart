@@ -69,3 +69,62 @@ class BAD_REQUEST implements Exception {
   int get hashCode => message.hashCode ^ status.hashCode ^ localDateTime.hashCode;
 }
 
+class TOO_MANY_ATTEMPTS implements Exception {
+  final String message;
+  final String status;
+  final String localDateTime;
+  TOO_MANY_ATTEMPTS({
+    required this.message,
+    required this.status,
+    required this.localDateTime,
+  });
+
+  TOO_MANY_ATTEMPTS copyWith({
+    String? message,
+    String? status,
+    String? localDateTime,
+  }) {
+    return TOO_MANY_ATTEMPTS(
+      message: message ?? this.message,
+      status: status ?? this.status,
+      localDateTime: localDateTime ?? this.localDateTime,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'message': message,
+      'status': status,
+      'localDateTime': localDateTime,
+    };
+  }
+
+  factory TOO_MANY_ATTEMPTS.fromMap(Map<String, dynamic> map) {
+    return TOO_MANY_ATTEMPTS(
+      message: map['message'] as String,
+      status: map['status'] as String,
+      localDateTime: map['localDateTime'] as String,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory TOO_MANY_ATTEMPTS.fromJson(String source) => TOO_MANY_ATTEMPTS.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() => 'TOO_MANY_ATTEMPTS(message: $message, status: $status, localDateTime: $localDateTime)';
+
+  @override
+  bool operator ==(covariant TOO_MANY_ATTEMPTS other) {
+    if (identical(this, other)) return true;
+  
+    return 
+      other.message == message &&
+      other.status == status &&
+      other.localDateTime == localDateTime;
+  }
+
+  @override
+  int get hashCode => message.hashCode ^ status.hashCode ^ localDateTime.hashCode;
+}
+

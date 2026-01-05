@@ -50,20 +50,7 @@ class _DashboardPageState extends State<DashboardPage> {
             getDashboardSummaryUsecase: GetDashboardSummaryUsecase(
               getDashboardSummaryRepo: GetDashboardSummaryRepo(
                 getDashboardSummaryService: GetDashboardSummaryService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),
@@ -73,20 +60,7 @@ class _DashboardPageState extends State<DashboardPage> {
             getDashboardRevenueChartUsecase: GetDashboardRevenueChartUsecase(
               getDashboardRevenueChartRepo: GetDashboardRevenueChartRepo(
                 getDashboardRevenueChartService: GetDashboardRevenueChartService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),
@@ -96,20 +70,7 @@ class _DashboardPageState extends State<DashboardPage> {
             getDashboardRecentSessionsUsecase: GetDashboardRecentSessionsUsecase(
               getDashboardRecentSessionsRepo: GetDashboardRecentSessionsRepo(
                 getDashboardRecentSessionsService: GetDashboardRecentSessionsService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),
@@ -119,20 +80,7 @@ class _DashboardPageState extends State<DashboardPage> {
             getDashboardAlertsUsecase: GetDashboardAlertsUsecase(
               getDashboardAlertsRepo: GetDashboardAlertsRepo(
                 getDashboardAlertsService: GetDashboardAlertsService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),

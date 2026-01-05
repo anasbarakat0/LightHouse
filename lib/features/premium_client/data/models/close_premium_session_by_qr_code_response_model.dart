@@ -94,6 +94,7 @@ class Body {
   final List<BuffetInvoice> buffetInvoices;
   final double totalPrice;
   final bool active;
+    final SummaryInvoiceResponse? summaryInvoice;
 
   Body({
     required this.id,
@@ -110,6 +111,7 @@ class Body {
     required this.buffetInvoices,
     required this.totalPrice,
     required this.active,
+    this.summaryInvoice,
   });
 
   Body copyWith({
@@ -127,6 +129,7 @@ class Body {
     List<BuffetInvoice>? buffetInvoices,
     double? totalPrice,
     bool? active,
+    SummaryInvoiceResponse? summaryInvoice,
   }) {
     return Body(
       id: id ?? this.id,
@@ -143,6 +146,7 @@ class Body {
       buffetInvoices: buffetInvoices ?? this.buffetInvoices,
       totalPrice: totalPrice ?? this.totalPrice,
       active: active ?? this.active,
+      summaryInvoice: summaryInvoice ?? this.summaryInvoice,
     );
   }
 
@@ -162,6 +166,7 @@ class Body {
       'buffetInvoices': buffetInvoices,
       'totalPrice': totalPrice,
       'active': active,
+      'summaryInvoice': summaryInvoice?.toMap(),
     };
   }
 
@@ -189,6 +194,9 @@ class Body {
           ? map['totalPrice']
           : (map['totalPrice'] as num?)?.toInt() ?? 0,
       active: map['active'] as bool? ?? false,
+      summaryInvoice: map['summaryInvoice'] != null
+          ? SummaryInvoiceResponse.fromMap(map['summaryInvoice'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -199,7 +207,7 @@ class Body {
 
   @override
   String toString() {
-    return 'Body(id: $id, date: $date, startTime: $startTime, qrCode: $qrCode, userId: $userId, firstName: $firstName, lastName: $lastName, endTime: $endTime, sessionInvoice: $sessionInvoice, buffetInvoicePrice: $buffetInvoicePrice, buffetInvoices: $buffetInvoices, totalPrice: $totalPrice, active: $active)';
+    return 'Body(id: $id, date: $date, startTime: $startTime, qrCode: $qrCode, userId: $userId, firstName: $firstName, lastName: $lastName, endTime: $endTime, sessionInvoice: $sessionInvoice, buffetInvoicePrice: $buffetInvoicePrice, buffetInvoices: $buffetInvoices, totalPrice: $totalPrice, active: $active, summaryInvoice: $summaryInvoice)';
   }
 
   @override
@@ -219,7 +227,8 @@ class Body {
         other.buffetInvoicePrice == buffetInvoicePrice &&
         listEquals(other.buffetInvoices, buffetInvoices) &&
         other.totalPrice == totalPrice &&
-        other.active == active;
+        other.active == active &&
+        other.summaryInvoice == summaryInvoice;
   }
 
   @override
@@ -237,7 +246,8 @@ class Body {
         buffetInvoicePrice.hashCode ^
         buffetInvoices.hashCode ^
         totalPrice.hashCode ^
-        active.hashCode;
+        active.hashCode ^
+        summaryInvoice.hashCode;
   }
 }
 
@@ -246,14 +256,14 @@ class SessionInvoice {
   final String userType;
   final String session_id;
   final double hoursAmount;
-  final double sessionPrice;
+  final double hourlyPrice;
 
   SessionInvoice({
     required this.id,
     required this.userType,
     required this.session_id,
     required this.hoursAmount,
-    required this.sessionPrice,
+    required this.hourlyPrice,
   });
 
   SessionInvoice copyWith({
@@ -261,14 +271,14 @@ class SessionInvoice {
     String? userType,
     String? session_id,
     double? hoursAmount,
-    double? sessionPrice,
+    double? hourlyPrice,
   }) {
     return SessionInvoice(
       id: id ?? this.id,
       userType: userType ?? this.userType,
       session_id: session_id ?? this.session_id,
       hoursAmount: hoursAmount ?? this.hoursAmount,
-      sessionPrice: sessionPrice ?? this.sessionPrice,
+      hourlyPrice: hourlyPrice ?? this.hourlyPrice,
     );
   }
 
@@ -278,7 +288,7 @@ class SessionInvoice {
       'userType': userType,
       'session_id': session_id,
       'hoursAmount': hoursAmount,
-      'sessionPrice': sessionPrice,
+      'hourlyPrice': hourlyPrice,
     };
   }
 
@@ -301,30 +311,30 @@ class SessionInvoice {
       }
     }
     
-    // Handle sessionPrice with robust parsing
-    double sessionPriceValue = 0.0;
-    if (map['sessionPrice'] != null) {
-      if (map['sessionPrice'] is double) {
-        sessionPriceValue = map['sessionPrice'] as double;
-      } else if (map['sessionPrice'] is int) {
-        sessionPriceValue = (map['sessionPrice'] as int).toDouble();
-      } else if (map['sessionPrice'] is num) {
-        sessionPriceValue = (map['sessionPrice'] as num).toDouble();
+    // Handle hourlyPrice with robust parsing
+    double hourlyPriceValue = 0.0;
+    if (map['hourlyPrice'] != null) {
+      if (map['hourlyPrice'] is double) {
+        hourlyPriceValue = map['hourlyPrice'] as double;
+      } else if (map['hourlyPrice'] is int) {
+        hourlyPriceValue = (map['hourlyPrice'] as int).toDouble();
+      } else if (map['hourlyPrice'] is num) {
+        hourlyPriceValue = (map['hourlyPrice'] as num).toDouble();
       } else {
         try {
-          sessionPriceValue = double.parse(map['sessionPrice'].toString());
+          hourlyPriceValue = double.parse(map['hourlyPrice'].toString());
         } catch (e) {
-          sessionPriceValue = 0.0;
+          hourlyPriceValue = 0.0;
         }
       }
     }
     
     return SessionInvoice(
-      id: map['id'] as String,
-      userType: map['userType'] as String,
-      session_id: map['session_id'] as String,
+      id: map['id'] as String? ?? '',
+      userType: map['userType'] as String? ?? '',
+      session_id: map['session_id'] as String? ?? '',
       hoursAmount: hoursAmountValue,
-      sessionPrice: sessionPriceValue,
+      hourlyPrice: hourlyPriceValue,
     );
   }
 
@@ -335,7 +345,7 @@ class SessionInvoice {
 
   @override
   String toString() {
-    return 'SessionInvoice(id: $id, userType: $userType, session_id: $session_id, hoursAmount: $hoursAmount, sessionPrice: $sessionPrice)';
+    return 'SessionInvoice(id: $id, userType: $userType, session_id: $session_id, hoursAmount: $hoursAmount, hourlyPrice: $hourlyPrice)';
   }
 
   @override
@@ -346,7 +356,7 @@ class SessionInvoice {
         other.userType == userType &&
         other.session_id == session_id &&
         other.hoursAmount == hoursAmount &&
-        other.sessionPrice == sessionPrice;
+        other.hourlyPrice == hourlyPrice;
   }
 
   @override
@@ -355,7 +365,201 @@ class SessionInvoice {
         userType.hashCode ^
         session_id.hashCode ^
         hoursAmount.hashCode ^
-        sessionPrice.hashCode;
+        hourlyPrice.hashCode;
+  }
+}
+
+class SummaryInvoiceResponse {
+  final double buffetInvoicePrice;
+  final double sessionInvoicePrice;
+  final double? sessionInvoiceBeforeDiscount;
+  final double? sessionInvoiceAfterDiscount;
+  final double? buffetInvoiceBeforeDiscount;
+  final double? buffetInvoiceAfterDiscount;
+  final double? discountAmount;
+  final String? discountCode;
+  final String? discountAppliesTo;
+  final double? totalInvoiceBeforeDiscount;
+  final double? totalInvoiceAfterDiscount;
+  final double? manualDiscountAmount;
+  final String? manualDiscountNote;
+  final double? finalTotalAfterAllDiscounts;
+
+  SummaryInvoiceResponse({
+    required this.buffetInvoicePrice,
+    required this.sessionInvoicePrice,
+    this.sessionInvoiceBeforeDiscount,
+    this.sessionInvoiceAfterDiscount,
+    this.buffetInvoiceBeforeDiscount,
+    this.buffetInvoiceAfterDiscount,
+    this.discountAmount,
+    this.discountCode,
+    this.discountAppliesTo,
+    this.totalInvoiceBeforeDiscount,
+    this.totalInvoiceAfterDiscount,
+    this.manualDiscountAmount,
+    this.manualDiscountNote,
+    this.finalTotalAfterAllDiscounts,
+  });
+
+  SummaryInvoiceResponse copyWith({
+    double? buffetInvoicePrice,
+    double? sessionInvoicePrice,
+    double? sessionInvoiceBeforeDiscount,
+    double? sessionInvoiceAfterDiscount,
+    double? buffetInvoiceBeforeDiscount,
+    double? buffetInvoiceAfterDiscount,
+    double? discountAmount,
+    String? discountCode,
+    String? discountAppliesTo,
+    double? totalInvoiceBeforeDiscount,
+    double? totalInvoiceAfterDiscount,
+    double? manualDiscountAmount,
+    String? manualDiscountNote,
+    double? finalTotalAfterAllDiscounts,
+  }) {
+    return SummaryInvoiceResponse(
+      buffetInvoicePrice: buffetInvoicePrice ?? this.buffetInvoicePrice,
+      sessionInvoicePrice: sessionInvoicePrice ?? this.sessionInvoicePrice,
+      sessionInvoiceBeforeDiscount: sessionInvoiceBeforeDiscount ?? this.sessionInvoiceBeforeDiscount,
+      sessionInvoiceAfterDiscount: sessionInvoiceAfterDiscount ?? this.sessionInvoiceAfterDiscount,
+      buffetInvoiceBeforeDiscount: buffetInvoiceBeforeDiscount ?? this.buffetInvoiceBeforeDiscount,
+      buffetInvoiceAfterDiscount: buffetInvoiceAfterDiscount ?? this.buffetInvoiceAfterDiscount,
+      discountAmount: discountAmount ?? this.discountAmount,
+      discountCode: discountCode ?? this.discountCode,
+      discountAppliesTo: discountAppliesTo ?? this.discountAppliesTo,
+      totalInvoiceBeforeDiscount: totalInvoiceBeforeDiscount ?? this.totalInvoiceBeforeDiscount,
+      totalInvoiceAfterDiscount: totalInvoiceAfterDiscount ?? this.totalInvoiceAfterDiscount,
+      manualDiscountAmount: manualDiscountAmount ?? this.manualDiscountAmount,
+      manualDiscountNote: manualDiscountNote ?? this.manualDiscountNote,
+      finalTotalAfterAllDiscounts: finalTotalAfterAllDiscounts ?? this.finalTotalAfterAllDiscounts,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'buffetInvoicePrice': buffetInvoicePrice,
+      'sessionInvoicePrice': sessionInvoicePrice,
+      'sessionInvoiceBeforeDiscount': sessionInvoiceBeforeDiscount,
+      'sessionInvoiceAfterDiscount': sessionInvoiceAfterDiscount,
+      'buffetInvoiceBeforeDiscount': buffetInvoiceBeforeDiscount,
+      'buffetInvoiceAfterDiscount': buffetInvoiceAfterDiscount,
+      'discountAmount': discountAmount,
+      'discountCode': discountCode,
+      'discountAppliesTo': discountAppliesTo,
+      'totalInvoiceBeforeDiscount': totalInvoiceBeforeDiscount,
+      'totalInvoiceAfterDiscount': totalInvoiceAfterDiscount,
+      'manualDiscountAmount': manualDiscountAmount,
+      'manualDiscountNote': manualDiscountNote,
+      'finalTotalAfterAllDiscounts': finalTotalAfterAllDiscounts,
+    };
+  }
+
+  factory SummaryInvoiceResponse.fromMap(Map<String, dynamic> map) {
+    return SummaryInvoiceResponse(
+      buffetInvoicePrice: (map['buffetInvoicePrice'] is double)
+          ? map['buffetInvoicePrice']
+          : (map['buffetInvoicePrice'] as num?)?.toDouble() ?? 0.0,
+      sessionInvoicePrice: (map['sessionInvoicePrice'] is double)
+          ? map['sessionInvoicePrice']
+          : (map['sessionInvoicePrice'] as num?)?.toDouble() ?? 0.0,
+      sessionInvoiceBeforeDiscount: map['sessionInvoiceBeforeDiscount'] != null
+          ? ((map['sessionInvoiceBeforeDiscount'] is double)
+              ? map['sessionInvoiceBeforeDiscount']
+              : (map['sessionInvoiceBeforeDiscount'] as num?)?.toDouble())
+          : null,
+      sessionInvoiceAfterDiscount: map['sessionInvoiceAfterDiscount'] != null
+          ? ((map['sessionInvoiceAfterDiscount'] is double)
+              ? map['sessionInvoiceAfterDiscount']
+              : (map['sessionInvoiceAfterDiscount'] as num?)?.toDouble())
+          : null,
+      buffetInvoiceBeforeDiscount: map['buffetInvoiceBeforeDiscount'] != null
+          ? ((map['buffetInvoiceBeforeDiscount'] is double)
+              ? map['buffetInvoiceBeforeDiscount']
+              : (map['buffetInvoiceBeforeDiscount'] as num?)?.toDouble())
+          : null,
+      buffetInvoiceAfterDiscount: map['buffetInvoiceAfterDiscount'] != null
+          ? ((map['buffetInvoiceAfterDiscount'] is double)
+              ? map['buffetInvoiceAfterDiscount']
+              : (map['buffetInvoiceAfterDiscount'] as num?)?.toDouble())
+          : null,
+      discountAmount: map['discountAmount'] != null
+          ? ((map['discountAmount'] is double)
+              ? map['discountAmount']
+              : (map['discountAmount'] as num?)?.toDouble())
+          : null,
+      discountCode: map['discountCode'] as String?,
+      discountAppliesTo: map['discountAppliesTo'] as String?,
+      totalInvoiceBeforeDiscount: map['totalInvoiceBeforeDiscount'] != null
+          ? ((map['totalInvoiceBeforeDiscount'] is double)
+              ? map['totalInvoiceBeforeDiscount']
+              : (map['totalInvoiceBeforeDiscount'] as num?)?.toDouble())
+          : null,
+      totalInvoiceAfterDiscount: map['totalInvoiceAfterDiscount'] != null
+          ? ((map['totalInvoiceAfterDiscount'] is double)
+              ? map['totalInvoiceAfterDiscount']
+              : (map['totalInvoiceAfterDiscount'] as num?)?.toDouble())
+          : null,
+      manualDiscountAmount: map['manualDiscountAmount'] != null
+          ? ((map['manualDiscountAmount'] is double)
+              ? map['manualDiscountAmount']
+              : (map['manualDiscountAmount'] as num?)?.toDouble())
+          : null,
+      manualDiscountNote: map['manualDiscountNote'] as String?,
+      finalTotalAfterAllDiscounts: map['finalTotalAfterAllDiscounts'] != null
+          ? ((map['finalTotalAfterAllDiscounts'] is double)
+              ? map['finalTotalAfterAllDiscounts']
+              : (map['finalTotalAfterAllDiscounts'] as num?)?.toDouble())
+          : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory SummaryInvoiceResponse.fromJson(String source) =>
+      SummaryInvoiceResponse.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'SummaryInvoiceResponse(buffetInvoicePrice: $buffetInvoicePrice, sessionInvoicePrice: $sessionInvoicePrice, sessionInvoiceBeforeDiscount: $sessionInvoiceBeforeDiscount, sessionInvoiceAfterDiscount: $sessionInvoiceAfterDiscount, buffetInvoiceBeforeDiscount: $buffetInvoiceBeforeDiscount, buffetInvoiceAfterDiscount: $buffetInvoiceAfterDiscount, discountAmount: $discountAmount, discountCode: $discountCode, discountAppliesTo: $discountAppliesTo, totalInvoiceBeforeDiscount: $totalInvoiceBeforeDiscount, totalInvoiceAfterDiscount: $totalInvoiceAfterDiscount, manualDiscountAmount: $manualDiscountAmount, manualDiscountNote: $manualDiscountNote, finalTotalAfterAllDiscounts: $finalTotalAfterAllDiscounts)';
+  }
+
+  @override
+  bool operator ==(covariant SummaryInvoiceResponse other) {
+    if (identical(this, other)) return true;
+
+    return other.buffetInvoicePrice == buffetInvoicePrice &&
+        other.sessionInvoicePrice == sessionInvoicePrice &&
+        other.sessionInvoiceBeforeDiscount == sessionInvoiceBeforeDiscount &&
+        other.sessionInvoiceAfterDiscount == sessionInvoiceAfterDiscount &&
+        other.buffetInvoiceBeforeDiscount == buffetInvoiceBeforeDiscount &&
+        other.buffetInvoiceAfterDiscount == buffetInvoiceAfterDiscount &&
+        other.discountAmount == discountAmount &&
+        other.discountCode == discountCode &&
+        other.discountAppliesTo == discountAppliesTo &&
+        other.totalInvoiceBeforeDiscount == totalInvoiceBeforeDiscount &&
+        other.totalInvoiceAfterDiscount == totalInvoiceAfterDiscount &&
+        other.manualDiscountAmount == manualDiscountAmount &&
+        other.manualDiscountNote == manualDiscountNote &&
+        other.finalTotalAfterAllDiscounts == finalTotalAfterAllDiscounts;
+  }
+
+  @override
+  int get hashCode {
+    return buffetInvoicePrice.hashCode ^
+        sessionInvoicePrice.hashCode ^
+        sessionInvoiceBeforeDiscount.hashCode ^
+        sessionInvoiceAfterDiscount.hashCode ^
+        buffetInvoiceBeforeDiscount.hashCode ^
+        buffetInvoiceAfterDiscount.hashCode ^
+        discountAmount.hashCode ^
+        discountCode.hashCode ^
+        discountAppliesTo.hashCode ^
+        totalInvoiceBeforeDiscount.hashCode ^
+        totalInvoiceAfterDiscount.hashCode ^
+        manualDiscountAmount.hashCode ^
+        manualDiscountNote.hashCode ^
+        finalTotalAfterAllDiscounts.hashCode;
   }
 }
 

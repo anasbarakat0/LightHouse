@@ -30,3 +30,4 @@ class OfflineFailureSessionsState extends GetSessionsByUserIdState {
   OfflineFailureSessionsState({required this.message});
 }
 
+

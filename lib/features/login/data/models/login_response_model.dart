@@ -170,11 +170,11 @@ class UserInfo {
   factory UserInfo.fromMap(Map<String, dynamic> map) {
     print("fromMap: UserInfo");
     return UserInfo(
-      id: map['id'] as String,
-      firstName: map['firstName'] as String,
-      lastName: map['lastName'] as String,
-      email: map['email'] as String,
-      role: map['role'] as String,
+      id: map['id']?.toString() ?? '',
+      firstName: map['firstName']?.toString() ?? '',
+      lastName: map['lastName']?.toString() ?? '',
+      email: map['email']?.toString() ?? '',
+      role: map['role']?.toString() ?? '',
     );
   }
 
@@ -208,3 +208,4 @@ class UserInfo {
         role.hashCode;
   }
 }
+

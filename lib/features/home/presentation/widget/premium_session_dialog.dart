@@ -143,7 +143,7 @@ void premiumSessionDialog(
                         DetailRow(
                           title: "${"sessionInvoicePrice".tr()}: ",
                           value:
-                              "${sessionData.sessionInvoice!.sessionPrice.toStringAsFixed(2)} ${"s.p".tr()}",
+                              "${(sessionData.sessionInvoice!.hoursAmount * sessionData.sessionInvoice!.hourlyPrice).toStringAsFixed(2)} ${"s.p".tr()}",
                         ),
                       ],
                       DetailRow(

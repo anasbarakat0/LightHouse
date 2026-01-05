@@ -17,7 +17,6 @@ class SessionHistoryCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isActive = session.active;
-    final bool isPremium = session.sessionType == 'premium';
     final String fullName = session.fullName ??
         '${session.firstName ?? ''} ${session.lastName ?? ''}'.trim();
     
@@ -38,7 +37,7 @@ class SessionHistoryCardWidget extends StatelessWidget {
           formattedEndTime = endParts[0];
           
           // Calculate duration if both times exist
-          if (formattedStartTime != null && formattedEndTime != null) {
+          if (formattedStartTime != null) {
             try {
               final start = DateFormat('HH:mm:ss').parse(formattedStartTime);
               final end = DateFormat('HH:mm:ss').parse(formattedEndTime);
@@ -106,8 +105,8 @@ class SessionHistoryCardWidget extends StatelessWidget {
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      (isPremium ? orange : Colors.blue).withOpacity(0.12),
-                      (isPremium ? orange : Colors.blue).withOpacity(0.02),
+                      orange.withOpacity(0.12),
+                      orange.withOpacity(0.02),
                     ],
                   ),
                 ),
@@ -175,15 +174,13 @@ class SessionHistoryCardWidget extends StatelessWidget {
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: isPremium
-                                ? [orange.withOpacity(0.2), orange.withOpacity(0.1)]
-                                : [Colors.blue.withOpacity(0.2), Colors.blue.withOpacity(0.1)],
+                            colors: [orange.withOpacity(0.2), orange.withOpacity(0.1)],
                           ),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
-                          isPremium ? Icons.stars_rounded : Icons.rocket_launch_rounded,
-                          color: isPremium ? orange : Colors.blue,
+                          Icons.stars_rounded,
+                          color: orange,
                           size: 24,
                         ),
                       ),
@@ -193,9 +190,9 @@ class SessionHistoryCardWidget extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              isPremium ? 'Premium Session'.tr() : 'Express Session'.tr(),
+                              'Premium Session'.tr(),
                               style: TextStyle(
-                                color: isPremium ? orange : Colors.blue,
+                                color: orange,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 0.3,
@@ -254,7 +251,7 @@ class SessionHistoryCardWidget extends StatelessWidget {
                                 child: _buildInfoRow(
                                   icon: Icons.stop_rounded,
                                   label: "End".tr(),
-                                  value: formattedEndTime!,
+                                  value: formattedEndTime,
                                   iconColor: Colors.red,
                                   compact: true,
                                 ),
@@ -267,7 +264,7 @@ class SessionHistoryCardWidget extends StatelessWidget {
                           _buildInfoRow(
                             icon: Icons.access_time_rounded,
                             label: "Duration".tr(),
-                            value: duration!,
+                            value: duration,
                             iconColor: orange,
                           ),
                         ],
@@ -281,8 +278,8 @@ class SessionHistoryCardWidget extends StatelessWidget {
                   if (session.buffetInvoicePrice > 0 || 
                       (session.sessionInvoice != null && 
                        session.sessionInvoice is Map &&
-                       (session.sessionInvoice as Map)['sessionPrice'] != null &&
-                       (session.sessionInvoice as Map)['sessionPrice'] > 0))
+                       (session.sessionInvoice as Map)['hoursAmount'] != null &&
+                       (session.sessionInvoice as Map)['hourlyPrice'] != null))
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
@@ -319,8 +316,10 @@ class SessionHistoryCardWidget extends StatelessWidget {
                                 Text(
                                   "${(session.buffetInvoicePrice + 
                                     ((session.sessionInvoice is Map && 
-                                      (session.sessionInvoice as Map)['sessionPrice'] != null)
-                                        ? ((session.sessionInvoice as Map)['sessionPrice'] as num).toDouble()
+                                      (session.sessionInvoice as Map)['hoursAmount'] != null &&
+                                      (session.sessionInvoice as Map)['hourlyPrice'] != null)
+                                        ? (((session.sessionInvoice as Map)['hoursAmount'] as num).toDouble() *
+                                           ((session.sessionInvoice as Map)['hourlyPrice'] as num).toDouble())
                                         : 0.0)).toStringAsFixed(0)} ${"SAR".tr()}",
                                   style: TextStyle(
                                     color: navy,

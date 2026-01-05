@@ -28,23 +28,36 @@ class LoginRepo {
         print("loginRepo.try");
         var data = await loginService.loginService(user);
         LoginResponseModel response = LoginResponseModel.fromMap(data.data);
-        if (response.body.userInfo.role == "MANAGER") {
+        
+        // Save user role
+        final role = response.body.userInfo.role;
+        memory.get<SharedPreferences>().setString("userRole", role);
+        
+        // Set MANAGER flag for backward compatibility
+        if (role == "MANAGER" || role == "SuperAdmin") {
           memory.get<SharedPreferences>().setBool("MANAGER", true);
         } else {
           memory.get<SharedPreferences>().setBool("MANAGER", false);
         }
+        
         memory.get<SharedPreferences>().setBool("auth", true);
         memory.get<SharedPreferences>().setString("userId", response.body.userInfo.id);
         memory.get<SharedPreferences>().setString("token", response.body.token);
         return Right(response);
+      } on TOO_MANY_ATTEMPTS catch (e) {
+        print("loginRepo.TOO_MANY_ATTEMPTS");
+        return Left(LoginFailure(message: e.message));
       } on BAD_REQUEST catch (e) {
         print("loginRepo.BAD_REQUEST");
         return Left(LoginFailure(message: e.message));
       } on DioException catch (e) {
         print("loginRepo.DioException");
-        print(e.response!.data);
-
-        return Left(ServerFailure(message: e.response!.data.toString()));
+        if (e.response != null && e.response!.data != null) {
+          print(e.response!.data);
+          return Left(ServerFailure(message: e.response!.data.toString()));
+        } else {
+          return Left(ServerFailure(message: e.message ?? "Unknown error"));
+        }
       }
     } else {
       print("loginRepo.isNotConnected");

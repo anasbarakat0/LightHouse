@@ -18,18 +18,29 @@ class MenuEntry extends StatelessWidget {
     required this.onTap,
   });
 
+  // Helper function to check if user has access to a specific page
+  bool _hasAccessToPage(int index) {
+    final role = memory.get<SharedPreferences>().getString("userRole") ?? "USER";
+    
+    // Pages accessible only to SuperAdmin and MANAGER
+    final restrictedPages = [0, 2, 4, 5, 8]; // Dashboard, Statistics, Packages, Coupons, Admin Management
+    
+    if (restrictedPages.contains(index)) {
+      return role == "SuperAdmin" || role == "MANAGER";
+    }
+    
+    // Pages accessible to SuperAdmin, MANAGER, and ADMIN
+    return role == "SuperAdmin" || role == "MANAGER" || role == "ADMIN";
+  }
+
   @override
   Widget build(BuildContext context) {
     // Check if this is Sign Out (index 10, not 11!)
     final isSignOut = index == 10;
+    final hasAccess = _hasAccessToPage(index);
 
     return Opacity(
-      opacity: ((memory.get<SharedPreferences>().getBool("MANAGER") ?? true)
-                  ? false
-                  : true) &&
-              [2, 4, 5, 7, 8, 9].contains(index)
-          ? 0.5
-          : 1,
+      opacity: hasAccess ? 1 : 0.5,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 5),
         decoration: BoxDecoration(

@@ -48,20 +48,7 @@ class _PackagesPageState extends State<PackagesPage> {
               getAllActivePackagesRepo: GetAllActivePackagesRepo(
                 getAllActivePackagesService:
                     GetAllActivePackagesService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           )..add(GetAllActivePackages(page: currentPage, size: perPage)),
@@ -73,20 +60,7 @@ class _PackagesPageState extends State<PackagesPage> {
                 editPackageInfoService: EditPackageInfoService(
                   dio: Dio(),
                 ),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),
@@ -96,20 +70,7 @@ class _PackagesPageState extends State<PackagesPage> {
             AddNewPackageUsecase(
               addNewPackageRepo: AddNewPackageRepo(
                 addNewPackageService: AddNewPackageService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker: InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),
@@ -173,9 +134,8 @@ class _PackagesPageState extends State<PackagesPage> {
           BlocListener<AddNewPackageBloc, AddNewPackageState>(
             listener: (BuildContext context, state) {
               if (state is PackageAdded) {
-                context
-                    .read<GetAllActivePackagesBloc>()
-                    .add(GetAllActivePackages(page: currentPage, size: perPage));
+                context.read<GetAllActivePackagesBloc>().add(
+                    GetAllActivePackages(page: currentPage, size: perPage));
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -351,7 +311,8 @@ class _PackagesPageState extends State<PackagesPage> {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      "Add your first package to get started".tr(),
+                                      "Add your first package to get started"
+                                          .tr(),
                                       style: TextStyle(
                                         color: Colors.white.withOpacity(0.5),
                                         fontSize: 14,
@@ -368,17 +329,21 @@ class _PackagesPageState extends State<PackagesPage> {
                                   state.activePackages.body.length,
                                   (index) {
                                     PackageModel package = PackageModel.fromMap(
-                                        state.activePackages.body[index].toMap());
+                                        state.activePackages.body[index]
+                                            .toMap());
 
                                     return Padding(
-                                      padding: const EdgeInsets.only(bottom: 12),
+                                      padding:
+                                          const EdgeInsets.only(bottom: 12),
                                       child: PackageCard(
                                         onTap: () {
-                                          bool type = state
-                                                  .activePackages.body[index].active
+                                          bool type = state.activePackages
+                                                  .body[index].active
                                               ? false
                                               : true;
-                                          context.read<EditPackageInfoBloc>().add(
+                                          context
+                                              .read<EditPackageInfoBloc>()
+                                              .add(
                                                 EditPackageInfo(
                                                   id: state.activePackages
                                                       .body[index].id,
@@ -388,17 +353,16 @@ class _PackagesPageState extends State<PackagesPage> {
                                                     price: package.price,
                                                     description:
                                                         package.description,
-                                                    packageDurationInDays:
-                                                        package
-                                                            .packageDurationInDays,
+                                                    packageDurationInDays: package
+                                                        .packageDurationInDays,
                                                     active: type,
                                                   ),
                                                 ),
                                               );
                                         },
                                         onPressed: () {
-                                          editPackageDialog(
-                                              context, package, (package) {
+                                          editPackageDialog(context, package,
+                                              (package) {
                                             context
                                                 .read<EditPackageInfoBloc>()
                                                 .add(EditPackageInfo(

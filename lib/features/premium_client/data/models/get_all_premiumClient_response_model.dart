@@ -97,26 +97,28 @@ class Body {
   final String uuid;
   final String firstName;
   final String lastName;
-  final String email;
-  final String phoneNumber;
+  final String? email;
+  final String? phoneNumber;
   final String gender;
-  final String study;
+  final String? study;
   final dynamic birthDate;
   final String addingDateTime;
   final String addedBy;
   final QrCode qrCode;
+  final String generatedPassword;
   Body({
     required this.uuid,
     required this.firstName,
     required this.lastName,
-    required this.email,
-    required this.phoneNumber,
+    this.email,
+    this.phoneNumber,
     required this.gender,
-    required this.study,
-    required this.birthDate,
+    this.study,
+    this.birthDate,
     required this.addingDateTime,
     required this.addedBy,
     required this.qrCode,
+    required this.generatedPassword,
   });
 
   Body copyWith({
@@ -131,6 +133,7 @@ class Body {
     String? addingDateTime,
     String? addedBy,
     QrCode? qrCode,
+    String? generatedPassword,
   }) {
     return Body(
       uuid: uuid ?? this.uuid,
@@ -144,6 +147,7 @@ class Body {
       addingDateTime: addingDateTime ?? this.addingDateTime,
       addedBy: addedBy ?? this.addedBy,
       qrCode: qrCode ?? this.qrCode,
+      generatedPassword: generatedPassword ?? this.generatedPassword,
     );
   }
 
@@ -160,6 +164,7 @@ class Body {
       'addingDateTime': addingDateTime,
       'addedBy': addedBy,
       'qrCode': qrCode.toMap(),
+      'generatedPassword': generatedPassword,
     };
   }
 
@@ -169,14 +174,15 @@ class Body {
       uuid: map['uuid'] as String,
       firstName: map['firstName'] as String,
       lastName: map['lastName'] as String,
-      email: map['email'] as String,
-      phoneNumber: map['phoneNumber'] as String,
+      email: map['email'] as String?,
+      phoneNumber: map['phoneNumber'] as String?,
       gender: map['gender'] as String,
-      study: map['study'] as String,
+      study: map['study'] as String?,
       birthDate: map['birthDate'] as dynamic,
       addingDateTime: map['addingDateTime'] as String,
       addedBy: map['addedBy'] as String,
       qrCode: QrCode.fromMap(map['qrCode'] as Map<String, dynamic>),
+      generatedPassword: map['generatedPassword'] as String? ?? '',
     );
   }
 
@@ -187,7 +193,7 @@ class Body {
 
   @override
   String toString() {
-    return 'Body(uuid: $uuid, firstName: $firstName, lastName: $lastName, email: $email, phoneNumber: $phoneNumber, gender: $gender, study: $study, birthDate: $birthDate, addingDateTime: $addingDateTime, addedBy: $addedBy, qrCode: $qrCode)';
+    return 'Body(uuid: $uuid, firstName: $firstName, lastName: $lastName, email: $email, phoneNumber: $phoneNumber, gender: $gender, study: $study, birthDate: $birthDate, addingDateTime: $addingDateTime, addedBy: $addedBy, qrCode: $qrCode, generatedPassword: $generatedPassword)';
   }
 
   @override
@@ -204,7 +210,8 @@ class Body {
         other.birthDate == birthDate &&
         other.addingDateTime == addingDateTime &&
         other.addedBy == addedBy &&
-        other.qrCode == qrCode;
+        other.qrCode == qrCode &&
+        other.generatedPassword == generatedPassword;
   }
 
   @override
@@ -212,14 +219,15 @@ class Body {
     return uuid.hashCode ^
         firstName.hashCode ^
         lastName.hashCode ^
-        email.hashCode ^
-        phoneNumber.hashCode ^
+        (email?.hashCode ?? 0) ^
+        (phoneNumber?.hashCode ?? 0) ^
         gender.hashCode ^
-        study.hashCode ^
-        birthDate.hashCode ^
+        (study?.hashCode ?? 0) ^
+        (birthDate?.hashCode ?? 0) ^
         addingDateTime.hashCode ^
         addedBy.hashCode ^
-        qrCode.hashCode;
+        qrCode.hashCode ^
+        generatedPassword.hashCode;
   }
 }
 
@@ -326,7 +334,7 @@ class Pageable {
   final int perPage;
   final int total;
 
-  Pageable( {
+  Pageable({
     required this.page,
     required this.perPage,
     required this.total,
@@ -368,13 +376,16 @@ class Pageable {
       Pageable.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'Pageable(page: $page, perPage: $perPage, total: $total)';
+  String toString() =>
+      'Pageable(page: $page, perPage: $perPage, total: $total)';
 
   @override
   bool operator ==(covariant Pageable other) {
     if (identical(this, other)) return true;
 
-    return other.page == page && other.perPage == perPage && other.total == total;
+    return other.page == page &&
+        other.perPage == perPage &&
+        other.total == total;
   }
 
   @override

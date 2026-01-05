@@ -5,6 +5,33 @@ import 'package:lighthouse/features/home/data/models/finish_premium_session_resp
 import 'package:lighthouse/features/home/presentation/widget/detail_row.dart';
 import 'package:lighthouse/features/home/presentation/widget/product_detail_row.dart';
 
+/// Format hours to display with proper precision (removes trailing zeros)
+String _formatHours(double hours) {
+  // Use toStringAsFixed(4) to ensure we capture all decimal places
+  // Then remove trailing zeros properly
+  String formatted = hours.toStringAsFixed(4);
+  
+  // Remove trailing zeros only from the decimal part
+  if (formatted.contains('.')) {
+    // Find the position of the decimal point
+    int dotIndex = formatted.indexOf('.');
+    String integerPart = formatted.substring(0, dotIndex);
+    String decimalPart = formatted.substring(dotIndex + 1);
+    
+    // Remove trailing zeros from decimal part
+    decimalPart = decimalPart.replaceAll(RegExp(r'0+$'), '');
+    
+    // Reconstruct the number
+    if (decimalPart.isEmpty) {
+      formatted = integerPart;
+    } else {
+      formatted = '$integerPart.$decimalPart';
+    }
+  }
+  
+  return "$formatted ${"hrs".tr()}";
+}
+
 void endSessionDialog(BuildContext context, Body sessionData) {
   showDialog(
     context: context,
@@ -134,13 +161,12 @@ void endSessionDialog(BuildContext context, Body sessionData) {
               // ),
               DetailRow(
                 title: "${"num_of_hours".tr()}: ",
-                value:  
-                    "${sessionData.sessionInvoice.hoursAmount.toStringAsFixed(2)} ${"hrs".tr()}",
+                value: _formatHours(sessionData.sessionInvoice.hoursAmount),
               ),
               DetailRow(
                 title: "${"sessionInvoicePrice".tr()}: ",
                 value:  
-                    "${sessionData.sessionInvoice.sessionPrice.toString()} ${"s.p".tr()}",
+                    "${(sessionData.summaryInvoice?.sessionInvoicePrice ?? (sessionData.sessionInvoice.hoursAmount * sessionData.sessionInvoice.hourlyPrice)).toStringAsFixed(2)} ${"s.p".tr()}",
               ),
               DetailRow(
                 title: "${"buffetInvoicePrice".tr()}: ",
@@ -275,21 +301,22 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                         ),
                       const SizedBox(height: 24),
                       // Discount Details Section
-                      if (sessionData.sessionInvoice.totalInvoiceBeforeDiscount != null ||
-                          sessionData.sessionInvoice.discountAmount != null ||
-                          sessionData.sessionInvoice.manualDiscountAmount != null)
+                      if (sessionData.summaryInvoice != null &&
+                          (sessionData.summaryInvoice!.totalInvoiceBeforeDiscount != null ||
+                          sessionData.summaryInvoice!.discountAmount != null ||
+                          sessionData.summaryInvoice!.manualDiscountAmount != null))
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Text(
                               "Discount Details".tr(),
                               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    color: darkNavy,
+                                    color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
                             ),
                             const SizedBox(height: 12),
-                            if (sessionData.sessionInvoice.totalInvoiceBeforeDiscount != null)
+                            if (sessionData.summaryInvoice!.totalInvoiceBeforeDiscount != null)
                               Container(
                                 padding: const EdgeInsets.all(14),
                                 decoration: BoxDecoration(
@@ -311,7 +338,7 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                       ),
                                     ),
                                     Text(
-                                      "${sessionData.sessionInvoice.totalInvoiceBeforeDiscount} ${"s.p".tr()}",
+                                      "${sessionData.summaryInvoice!.totalInvoiceBeforeDiscount} ${"s.p".tr()}",
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 14,
@@ -321,7 +348,7 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                   ],
                                 ),
                               ),
-                            if (sessionData.sessionInvoice.discountAmount != null) ...[
+                            if (sessionData.summaryInvoice!.discountAmount != null) ...[
                               const SizedBox(height: 8),
                               Container(
                                 padding: const EdgeInsets.all(14),
@@ -360,7 +387,7 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                       ],
                                     ),
                                     Text(
-                                      "-${sessionData.sessionInvoice.discountAmount} ${"s.p".tr()}",
+                                      "-${sessionData.summaryInvoice!.discountAmount} ${"s.p".tr()}",
                                       style: TextStyle(
                                         color: Colors.green.shade300,
                                         fontSize: 15,
@@ -371,8 +398,8 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                 ),
                               ),
                             ],
-                            if (sessionData.sessionInvoice.totalInvoiceAfterDiscount != null &&
-                                sessionData.sessionInvoice.discountAmount != null) ...[
+                            if (sessionData.summaryInvoice!.totalInvoiceAfterDiscount != null &&
+                                sessionData.summaryInvoice!.discountAmount != null) ...[
                               const SizedBox(height: 8),
                               Container(
                                 padding: const EdgeInsets.all(14),
@@ -395,7 +422,7 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                       ),
                                     ),
                                     Text(
-                                      "${sessionData.sessionInvoice.totalInvoiceAfterDiscount} ${"s.p".tr()}",
+                                      "${sessionData.summaryInvoice!.totalInvoiceAfterDiscount} ${"s.p".tr()}",
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 14,
@@ -406,7 +433,7 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                 ),
                               ),
                             ],
-                            if (sessionData.sessionInvoice.manualDiscountAmount != null) ...[
+                            if (sessionData.summaryInvoice!.manualDiscountAmount != null) ...[
                               const SizedBox(height: 8),
                               Container(
                                 padding: const EdgeInsets.all(14),
@@ -448,7 +475,7 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                           ],
                                         ),
                                         Text(
-                                          "-${sessionData.sessionInvoice.manualDiscountAmount} ${"s.p".tr()}",
+                                          "-${sessionData.summaryInvoice!.manualDiscountAmount} ${"s.p".tr()}",
                                           style: TextStyle(
                                             color: Colors.blue.shade300,
                                             fontSize: 15,
@@ -457,8 +484,8 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                         ),
                                       ],
                                     ),
-                                    if (sessionData.sessionInvoice.manualDiscountNote != null &&
-                                        sessionData.sessionInvoice.manualDiscountNote!.isNotEmpty) ...[
+                                    if (sessionData.summaryInvoice!.manualDiscountNote != null &&
+                                        sessionData.summaryInvoice!.manualDiscountNote!.isNotEmpty) ...[
                                       const SizedBox(height: 8),
                                       Container(
                                         padding: const EdgeInsets.all(10),
@@ -467,7 +494,7 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                           borderRadius: BorderRadius.circular(8),
                                         ),
                                         child: Text(
-                                          sessionData.sessionInvoice.manualDiscountNote!,
+                                          sessionData.summaryInvoice!.manualDiscountNote!,
                                           style: TextStyle(
                                             color: Colors.blue.shade200,
                                             fontSize: 12,
@@ -520,7 +547,7 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                               ),
                             ),
                             Text(
-                              "${sessionData.sessionInvoice.finalTotalAfterAllDiscounts ?? sessionData.totalPrice} ${"s.p".tr()}",
+                              "${sessionData.summaryInvoice?.finalTotalAfterAllDiscounts ?? sessionData.totalPrice} ${"s.p".tr()}",
                               style: const TextStyle(
                                 color: orange,
                                 fontSize: 24,

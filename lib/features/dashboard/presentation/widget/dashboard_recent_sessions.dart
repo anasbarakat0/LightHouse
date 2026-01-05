@@ -110,14 +110,9 @@ class DashboardRecentSessions extends StatelessWidget {
   }
 
   Widget _buildSessionCard(BuildContext context, dynamic session) {
-    // Use case-insensitive comparison
-    final sessionTypeUpper = (session.sessionType ?? "").toUpperCase();
-    final isPremium = sessionTypeUpper == "PREMIUM";
     // Premium: Gold/Amber color
     final premiumColor = Colors.amber.shade600;
-    // Express: Blue color
-    final expressColor = Colors.blue.shade400;
-    final sessionColor = isPremium ? premiumColor : expressColor;
+    final sessionColor = premiumColor;
     
     // Active sessions get green border and dot
     final borderColor = session.isActive
@@ -229,14 +224,9 @@ class DashboardRecentSessions extends StatelessWidget {
   }
 
   void _showSessionDetailsDialog(BuildContext context, dynamic session) {
-    // Use case-insensitive comparison
-    final sessionTypeUpper = (session.sessionType ?? "").toUpperCase();
-    final isPremium = sessionTypeUpper == "PREMIUM";
     // Premium: Gold/Amber color
     final premiumColor = Colors.amber.shade600;
-    // Express: Blue color
-    final expressColor = Colors.blue.shade400;
-    final sessionColor = isPremium ? premiumColor : expressColor;
+    final sessionColor = premiumColor;
 
     showDialog(
       context: context,
@@ -297,7 +287,7 @@ class DashboardRecentSessions extends StatelessWidget {
                           ),
                         ),
                         child: Icon(
-                          isPremium ? Icons.star : Icons.flash_on,
+                          Icons.star,
                           color: sessionColor,
                           size: 24,
                         ),

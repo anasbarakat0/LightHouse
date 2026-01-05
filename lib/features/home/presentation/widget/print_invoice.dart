@@ -54,7 +54,7 @@ Future<void> printInvoice(
 
     // Invoice Details
     bytes += generator.text(
-      isPremium ? 'Premium Client' : "Express Client",
+      'Premium Client',
       styles: PosStyles(
           bold: true,
           fontType: PosFontType.fontA,
@@ -78,7 +78,7 @@ Future<void> printInvoice(
           width: 5,
           styles: PosStyles(bold: true)),
       PosColumn(
-          text: 'Session Price: ${invoice.sessionInvoice.sessionPrice.toStringAsFixed(0)} S.P',
+          text: 'Session Price: ${(invoice.sessionInvoice.hoursAmount * invoice.sessionInvoice.hourlyPrice).toStringAsFixed(0)} S.P',
           width: 7,
           styles: PosStyles(bold: true, align: PosAlign.right)),
     ]);
@@ -250,8 +250,7 @@ Future<void> printDetailedInvoice(
     bytes += generator.feed(1);
 
     // ========== INVOICE TYPE HEADER ==========
-    final clientTypeText = isPremium ? 'PREMIUM CLIENT INVOICE' : 'EXPRESS CLIENT INVOICE';
-    bytes += generator.text(clientTypeText,
+    bytes += generator.text('PREMIUM CLIENT INVOICE',
         styles: PosStyles(
             bold: true,
             fontType: PosFontType.fontB,
@@ -310,41 +309,45 @@ Future<void> printDetailedInvoice(
           width: 6,
           styles: PosStyles(bold: true, height: PosTextSize.size1, width: PosTextSize.size1)),
       PosColumn(
-          text: '${invoice.sessionInvoice.sessionPrice.toString()} S.P',
+          text: '${(invoice.sessionInvoice.hoursAmount * invoice.sessionInvoice.hourlyPrice).toString()} S.P',
           width: 6,
           styles: PosStyles(bold: true, align: PosAlign.right, height: PosTextSize.size1, width: PosTextSize.size1)),
     ]);
     bytes += generator.feed(1);
     
-    // تحديد نوع الحسم
-    final hasCouponDiscount = invoice.sessionInvoice.discountAmount != null && 
-                              invoice.sessionInvoice.discountAmount! > 0;
-    final hasManualDiscount = invoice.sessionInvoice.manualDiscountAmount != null && 
-                              invoice.sessionInvoice.manualDiscountAmount! > 0;
+    // تحديد نوع الحسم من summaryInvoice
+    final summaryInvoice = invoice.summaryInvoice;
+    final hasCouponDiscount = summaryInvoice?.discountAmount != null && 
+                              summaryInvoice!.discountAmount! > 0;
+    final hasManualDiscount = summaryInvoice?.manualDiscountAmount != null && 
+                              summaryInvoice!.manualDiscountAmount! > 0;
+    
+    // حساب sessionPrice
+    final sessionPrice = invoice.sessionInvoice.hoursAmount * invoice.sessionInvoice.hourlyPrice;
     
     // الحالة 1: لا يوجد حسم إطلاقاً
     if (!hasCouponDiscount && !hasManualDiscount) {
       // فقط السعر النهائي
       bytes += generator.text(
-        'Session Price: ${invoice.sessionInvoice.sessionPrice.toStringAsFixed(0)} S.P',
+        'Session Price: ${sessionPrice.toStringAsFixed(0)} S.P',
         styles: PosStyles(bold: true, align: PosAlign.right, height: PosTextSize.size1, width: PosTextSize.size1),
       );
     }
     // الحالة 2: حسم كوبون فقط
     else if (hasCouponDiscount && !hasManualDiscount) {
-      if (invoice.sessionInvoice.totalInvoiceBeforeDiscount != null) {
+      if (summaryInvoice?.totalInvoiceBeforeDiscount != null) {
         bytes += generator.text(
-          'Before Discount: ${invoice.sessionInvoice.totalInvoiceBeforeDiscount!.toString()} S.P',
+          'Before Discount: ${summaryInvoice!.totalInvoiceBeforeDiscount!.toString()} S.P',
           styles: PosStyles(align: PosAlign.right, height: PosTextSize.size1, width: PosTextSize.size1),
         );
       }
       bytes += generator.text(
-        'Coupon Discount: -${invoice.sessionInvoice.discountAmount!.toString()} S.P',
+        'Coupon Discount: -${summaryInvoice!.discountAmount!.toString()} S.P',
         styles: PosStyles(align: PosAlign.right, height: PosTextSize.size1, width: PosTextSize.size1),
       );
-      if (invoice.sessionInvoice.totalInvoiceAfterDiscount != null) {
+      if (summaryInvoice.totalInvoiceAfterDiscount != null) {
         bytes += generator.text(
-          'After Discount: ${invoice.sessionInvoice.totalInvoiceAfterDiscount!.toString()} S.P',
+          'After Discount: ${summaryInvoice.totalInvoiceAfterDiscount!.toString()} S.P',
           styles: PosStyles(bold: true, align: PosAlign.right, height: PosTextSize.size1, width: PosTextSize.size1),
         );
       }
@@ -352,48 +355,47 @@ Future<void> printDetailedInvoice(
     // الحالة 3: حسم يدوي فقط
     else if (!hasCouponDiscount && hasManualDiscount) {
       // السعر قبل الحسم اليدوي (قد يكون sessionPrice أو totalInvoiceAfterDiscount)
-      final priceBeforeManual = invoice.sessionInvoice.totalInvoiceAfterDiscount ?? 
-                                invoice.sessionInvoice.sessionPrice;
+      final priceBeforeManual = summaryInvoice?.totalInvoiceAfterDiscount ?? sessionPrice;
       bytes += generator.text(
         'Session Price: ${priceBeforeManual.toString()} S.P',
         styles: PosStyles(align: PosAlign.right, height: PosTextSize.size1, width: PosTextSize.size1),
       );
       bytes += generator.text(
-        'Manual Discount: -${invoice.sessionInvoice.manualDiscountAmount!.toString()} S.P',
+        'Manual Discount: -${summaryInvoice!.manualDiscountAmount!.toString()} S.P',
         styles: PosStyles(align: PosAlign.right, height: PosTextSize.size1, width: PosTextSize.size1),
       );
-      if (invoice.sessionInvoice.finalTotalAfterAllDiscounts != null) {
+      if (summaryInvoice.finalTotalAfterAllDiscounts != null) {
         bytes += generator.text(
-          'Final Price: ${invoice.sessionInvoice.finalTotalAfterAllDiscounts!.toString()} S.P',
+          'Final Price: ${summaryInvoice.finalTotalAfterAllDiscounts!.toString()} S.P',
           styles: PosStyles(bold: true, align: PosAlign.right, height: PosTextSize.size1, width: PosTextSize.size1),
         );
       }
     }
     // الحالة 4: حسم كوبون ويدوي معاً
     else if (hasCouponDiscount && hasManualDiscount) {
-      if (invoice.sessionInvoice.totalInvoiceBeforeDiscount != null) {
+      if (summaryInvoice?.totalInvoiceBeforeDiscount != null) {
         bytes += generator.text(
-          'Before Discount: ${invoice.sessionInvoice.totalInvoiceBeforeDiscount!.toString()} S.P',
+          'Before Discount: ${summaryInvoice!.totalInvoiceBeforeDiscount!.toString()} S.P',
           styles: PosStyles(align: PosAlign.right, height: PosTextSize.size1, width: PosTextSize.size1),
         );
       }
       bytes += generator.text(
-        'Coupon Discount: -${invoice.sessionInvoice.discountAmount!.toString()} S.P',
+        'Coupon Discount: -${summaryInvoice!.discountAmount!.toString()} S.P',
         styles: PosStyles(align: PosAlign.right, height: PosTextSize.size1, width: PosTextSize.size1),
       );
-      if (invoice.sessionInvoice.totalInvoiceAfterDiscount != null) {
+      if (summaryInvoice.totalInvoiceAfterDiscount != null) {
         bytes += generator.text(
-          'After Coupon: ${invoice.sessionInvoice.totalInvoiceAfterDiscount!.toString()} S.P',
+          'After Coupon: ${summaryInvoice.totalInvoiceAfterDiscount!.toString()} S.P',
           styles: PosStyles(align: PosAlign.right, height: PosTextSize.size1, width: PosTextSize.size1),
         );
       }
       bytes += generator.text(
-        'Manual Discount: -${invoice.sessionInvoice.manualDiscountAmount!.toString()} S.P',
+        'Manual Discount: -${summaryInvoice.manualDiscountAmount!.toString()} S.P',
         styles: PosStyles(align: PosAlign.right, height: PosTextSize.size1, width: PosTextSize.size1),
       );
-      if (invoice.sessionInvoice.finalTotalAfterAllDiscounts != null) {
+      if (summaryInvoice.finalTotalAfterAllDiscounts != null) {
         bytes += generator.text(
-          'Final Price: ${invoice.sessionInvoice.finalTotalAfterAllDiscounts!.toString()} S.P',
+          'Final Price: ${summaryInvoice.finalTotalAfterAllDiscounts!.toString()} S.P',
           styles: PosStyles(bold: true, align: PosAlign.right, height: PosTextSize.size1, width: PosTextSize.size1),
         );
       }

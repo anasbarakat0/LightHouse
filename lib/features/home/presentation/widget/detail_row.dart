@@ -19,11 +19,14 @@ class DetailRow extends StatelessWidget {
         children: [
           Text(
             "$title ",
-            style: Theme.of(context).textTheme.bodySmall,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white),
           ),
           Expanded(
             child: Text(value,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
             ),
           ),
         ],

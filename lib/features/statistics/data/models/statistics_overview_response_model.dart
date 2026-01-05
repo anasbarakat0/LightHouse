@@ -92,7 +92,6 @@ class RevenueStatistics {
   final double manualDiscounts;
   final double netRevenue;
   final double premiumRevenue;
-  final double expressRevenue;
 
   RevenueStatistics({
     required this.totalRevenue,
@@ -104,7 +103,6 @@ class RevenueStatistics {
     required this.manualDiscounts,
     required this.netRevenue,
     required this.premiumRevenue,
-    required this.expressRevenue,
   });
 
   factory RevenueStatistics.fromMap(Map<String, dynamic> map) {
@@ -118,7 +116,6 @@ class RevenueStatistics {
       manualDiscounts: (map['manualDiscounts'] as num?)?.toDouble() ?? 0.0,
       netRevenue: (map['netRevenue'] as num?)?.toDouble() ?? 0.0,
       premiumRevenue: (map['premiumRevenue'] as num?)?.toDouble() ?? 0.0,
-      expressRevenue: (map['expressRevenue'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -133,7 +130,6 @@ class RevenueStatistics {
       'manualDiscounts': manualDiscounts,
       'netRevenue': netRevenue,
       'premiumRevenue': premiumRevenue,
-      'expressRevenue': expressRevenue,
     };
   }
 }
@@ -141,22 +137,18 @@ class RevenueStatistics {
 class SessionsStatistics {
   final int totalSessions;
   final int premiumSessions;
-  final int expressSessions;
   final int activeSessions;
   final int completedSessions;
   final double averagePremiumDuration;
-  final double averageExpressDuration;
   final double averageOverallDuration;
   final double totalHours;
 
   SessionsStatistics({
     required this.totalSessions,
     required this.premiumSessions,
-    required this.expressSessions,
     required this.activeSessions,
     required this.completedSessions,
     required this.averagePremiumDuration,
-    required this.averageExpressDuration,
     required this.averageOverallDuration,
     required this.totalHours,
   });
@@ -165,11 +157,9 @@ class SessionsStatistics {
     return SessionsStatistics(
       totalSessions: map['totalSessions'] as int? ?? 0,
       premiumSessions: map['premiumSessions'] as int? ?? 0,
-      expressSessions: map['expressSessions'] as int? ?? 0,
       activeSessions: map['activeSessions'] as int? ?? 0,
       completedSessions: map['completedSessions'] as int? ?? 0,
       averagePremiumDuration: (map['averagePremiumDuration'] as num?)?.toDouble() ?? 0.0,
-      averageExpressDuration: (map['averageExpressDuration'] as num?)?.toDouble() ?? 0.0,
       averageOverallDuration: (map['averageOverallDuration'] as num?)?.toDouble() ?? 0.0,
       totalHours: (map['totalHours'] as num?)?.toDouble() ?? 0.0,
     );
@@ -179,11 +169,9 @@ class SessionsStatistics {
     return {
       'totalSessions': totalSessions,
       'premiumSessions': premiumSessions,
-      'expressSessions': expressSessions,
       'activeSessions': activeSessions,
       'completedSessions': completedSessions,
       'averagePremiumDuration': averagePremiumDuration,
-      'averageExpressDuration': averageExpressDuration,
       'averageOverallDuration': averageOverallDuration,
       'totalHours': totalHours,
     };
@@ -517,7 +505,6 @@ class RealTimeStatistics {
   final double currentHourRevenue;
   final List<String> peakHours;
   final int activePremiumSessions;
-  final int activeExpressSessions;
 
   RealTimeStatistics({
     required this.activeSessions,
@@ -526,7 +513,6 @@ class RealTimeStatistics {
     required this.currentHourRevenue,
     required this.peakHours,
     required this.activePremiumSessions,
-    required this.activeExpressSessions,
   });
 
   factory RealTimeStatistics.fromMap(Map<String, dynamic> map) {
@@ -537,7 +523,6 @@ class RealTimeStatistics {
       currentHourRevenue: (map['currentHourRevenue'] as num?)?.toDouble() ?? 0.0,
       peakHours: (map['peakHours'] as List<dynamic>?)?.map((x) => x.toString()).toList() ?? [],
       activePremiumSessions: map['activePremiumSessions'] as int? ?? 0,
-      activeExpressSessions: map['activeExpressSessions'] as int? ?? 0,
     );
   }
 
@@ -549,7 +534,6 @@ class RealTimeStatistics {
       'currentHourRevenue': currentHourRevenue,
       'peakHours': peakHours,
       'activePremiumSessions': activePremiumSessions,
-      'activeExpressSessions': activeExpressSessions,
     };
   }
 }

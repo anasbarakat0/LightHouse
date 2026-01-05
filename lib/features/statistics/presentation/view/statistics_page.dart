@@ -67,21 +67,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
               getStatisticsOverviewRepo: GetStatisticsOverviewRepo(
                 getStatisticsOverviewService:
                     GetStatisticsOverviewService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),
@@ -92,21 +78,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
               getStatisticsRealTimeRepo: GetStatisticsRealTimeRepo(
                 getStatisticsRealTimeService:
                     GetStatisticsRealTimeService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),
@@ -117,21 +89,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
               getStatisticsBuffetRepo: GetStatisticsBuffetRepo(
                 getStatisticsBuffetService:
                     GetStatisticsBuffetService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),
@@ -142,21 +100,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
               getStatisticsPackagesRepo: GetStatisticsPackagesRepo(
                 getStatisticsPackagesService:
                     GetStatisticsPackagesService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),
@@ -167,21 +111,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
               getStatisticsCouponsRepo: GetStatisticsCouponsRepo(
                 getStatisticsCouponsService:
                     GetStatisticsCouponsService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),
@@ -192,21 +122,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
               getStatisticsComparisonRepo: GetStatisticsComparisonRepo(
                 getStatisticsComparisonService:
                     GetStatisticsComparisonService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: const Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),
@@ -696,12 +612,6 @@ class _StatisticsPageState extends State<StatisticsPage> {
                     "${realTime.activePremiumSessions}",
                     Icons.stars,
                     Colors.amber),
-                const SizedBox(height: 16),
-                _buildRealTimeCard(
-                    "Active Express Sessions".tr(),
-                    "${realTime.activeExpressSessions}",
-                    Icons.rocket_launch,
-                    Colors.purple),
                 if (realTime.peakHours.isNotEmpty) ...[
                   const SizedBox(height: 16),
                   _buildPeakHoursSection(realTime.peakHours, isMobile),
@@ -725,14 +635,6 @@ class _StatisticsPageState extends State<StatisticsPage> {
                       "${realTime.activePremiumSessions}",
                       Icons.stars,
                       Colors.amber),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildRealTimeCard(
-                      "Active Express Sessions".tr(),
-                      "${realTime.activeExpressSessions}",
-                      Icons.rocket_launch,
-                      Colors.purple),
                 ),
               ],
             ),
@@ -924,15 +826,6 @@ class _StatisticsPageState extends State<StatisticsPage> {
               ),
               const SizedBox(height: 16),
               StatisticsCardWidget(
-                title: "Express Revenue".tr(),
-                value:
-                    "${overview.revenue.expressRevenue.toStringAsFixed(0)} S.P",
-                icon: Icons.rocket_launch,
-                iconColor: Colors.purple,
-                isMobile: true,
-              ),
-              const SizedBox(height: 16),
-              StatisticsCardWidget(
                 title: "Coupon Discounts".tr(),
                 value:
                     "${overview.revenue.couponDiscounts.toStringAsFixed(0)} S.P",
@@ -1037,16 +930,6 @@ class _StatisticsPageState extends State<StatisticsPage> {
                       iconColor: Colors.amber,
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: StatisticsCardWidget(
-                      title: "Express Revenue".tr(),
-                      value:
-                          "${overview.revenue.expressRevenue.toStringAsFixed(0)} S.P",
-                      icon: Icons.rocket_launch,
-                      iconColor: Colors.purple,
-                    ),
-                  ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -1124,14 +1007,6 @@ class _StatisticsPageState extends State<StatisticsPage> {
               ),
               const SizedBox(height: 16),
               StatisticsCardWidget(
-                title: "Express Sessions".tr(),
-                value: "${overview.sessions.expressSessions}",
-                icon: Icons.rocket_launch,
-                iconColor: Colors.purple,
-                isMobile: true,
-              ),
-              const SizedBox(height: 16),
-              StatisticsCardWidget(
                 title: "Total Hours".tr(),
                 value: "${overview.sessions.totalHours.toStringAsFixed(1)} hrs",
                 icon: Icons.access_time,
@@ -1145,15 +1020,6 @@ class _StatisticsPageState extends State<StatisticsPage> {
                     "${overview.sessions.averagePremiumDuration.toStringAsFixed(1)} hrs",
                 icon: Icons.timer,
                 iconColor: Colors.amber,
-                isMobile: true,
-              ),
-              const SizedBox(height: 16),
-              StatisticsCardWidget(
-                title: "Avg Express Duration".tr(),
-                value:
-                    "${overview.sessions.averageExpressDuration.toStringAsFixed(1)} hrs",
-                icon: Icons.timer_outlined,
-                iconColor: Colors.purple,
                 isMobile: true,
               ),
               const SizedBox(height: 16),
@@ -1224,30 +1090,11 @@ class _StatisticsPageState extends State<StatisticsPage> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: StatisticsCardWidget(
-                      title: "Express Sessions".tr(),
-                      value: "${overview.sessions.expressSessions}",
-                      icon: Icons.rocket_launch,
-                      iconColor: Colors.purple,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: StatisticsCardWidget(
                       title: "Avg Premium Duration".tr(),
                       value:
                           "${overview.sessions.averagePremiumDuration.toStringAsFixed(1)} hrs",
                       icon: Icons.timer,
                       iconColor: Colors.amber,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: StatisticsCardWidget(
-                      title: "Avg Express Duration".tr(),
-                      value:
-                          "${overview.sessions.averageExpressDuration.toStringAsFixed(1)} hrs",
-                      icon: Icons.timer_outlined,
-                      iconColor: Colors.purple,
                     ),
                   ),
                 ],

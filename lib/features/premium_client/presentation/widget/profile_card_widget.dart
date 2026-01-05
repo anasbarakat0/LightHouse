@@ -261,12 +261,14 @@ class ProfileCardWidget extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 20),
-        _buildInfoRow(Icons.email_outlined, "email".tr(), client.email),
-        _buildInfoRow(Icons.phone_outlined, "phone".tr(), client.phoneNumber),
-        _buildInfoRow(Icons.school_outlined, "study".tr(), client.study),
+        _buildInfoRow(Icons.email_outlined, "email".tr(), client.email ?? 'N/A'),
+        _buildInfoRow(Icons.phone_outlined, "phone".tr(), client.phoneNumber ?? 'N/A'),
+        _buildInfoRow(Icons.school_outlined, "study".tr(), client.study ?? 'N/A'),
         _buildInfoRow(Icons.person_outline, "gender".tr(), client.gender),
         _buildInfoRow(Icons.cake_outlined, "birth_date".tr(), 
             client.birthDate is String ? client.birthDate : client.birthDate.toString()),
+        if (client.generatedPassword.isNotEmpty)
+          _buildInfoRow(Icons.lock_outline, "password".tr(), client.generatedPassword),
       ],
     );
   }

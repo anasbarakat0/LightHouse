@@ -31,6 +31,7 @@ class FinishPremiumSessionRepo {
           manualDiscountAmount: manualDiscountAmount,
           manualDiscountNote: manualDiscountNote,
         );
+        
         var response = FinishPremiumSessionResponseModel.fromMap(data.data);
         return Right(response);
       } on Forbidden {

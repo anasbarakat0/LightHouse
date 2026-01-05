@@ -2,22 +2,24 @@
 import 'dart:convert';
 
 class UpdatePremiumClientModel {
-  final String firstName;
-  final String lastName;
-  final String email;
-  final String phoneNumber;
-  final String gender;
-  final String study;
-  final String birthDate;
+  final String? firstName;
+  final String? lastName;
+  final String? email;
+  final String? phoneNumber;
+  final String? gender;
+  final String? study;
+  final String? birthDate;
+  final String? password;
 
   UpdatePremiumClientModel({
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.phoneNumber,
-    required this.gender,
-    required this.study,
-    required this.birthDate,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.phoneNumber,
+    this.gender,
+    this.study,
+    this.birthDate,
+    this.password,
   });
 
   UpdatePremiumClientModel copyWith({
@@ -28,6 +30,7 @@ class UpdatePremiumClientModel {
     String? gender,
     String? study,
     String? birthDate,
+    String? password,
   }) {
     return UpdatePremiumClientModel(
       firstName: firstName ?? this.firstName,
@@ -37,6 +40,7 @@ class UpdatePremiumClientModel {
       gender: gender ?? this.gender,
       study: study ?? this.study,
       birthDate: birthDate ?? this.birthDate,
+      password: password ?? this.password,
     );
   }
 
@@ -49,18 +53,20 @@ class UpdatePremiumClientModel {
       'gender': gender,
       'study': study,
       'birthDate': birthDate,
-    };
+      'password': password,
+    }..removeWhere((key, value) => value == null);
   }
 
   factory UpdatePremiumClientModel.fromMap(Map<String, dynamic> map) {
     return UpdatePremiumClientModel(
-      firstName: map['firstName'] as String,
-      lastName: map['lastName'] as String,
-      email: map['email'] as String,
-      phoneNumber: map['phoneNumber'] as String,
-      gender: map['gender'] as String,
-      study: map['study'] as String,
-      birthDate: map['birthDate'] as String,
+      firstName: map['firstName'] as String?,
+      lastName: map['lastName'] as String?,
+      email: map['email'] as String?,
+      phoneNumber: map['phoneNumber'] as String?,
+      gender: map['gender'] as String?,
+      study: map['study'] as String?,
+      birthDate: map['birthDate'] as String?,
+      password: map['password'] as String?,
     );
   }
 
@@ -72,7 +78,7 @@ class UpdatePremiumClientModel {
 
   @override
   String toString() {
-    return 'UpdatePremiumClientModel(firstName: $firstName, lastName: $lastName, email: $email, phoneNumber: $phoneNumber, gender: $gender, study: $study, birthDate: $birthDate)';
+    return 'UpdatePremiumClientModel(firstName: $firstName, lastName: $lastName, email: $email, phoneNumber: $phoneNumber, gender: $gender, study: $study, birthDate: $birthDate, password: $password)';
   }
 
   @override
@@ -85,18 +91,19 @@ class UpdatePremiumClientModel {
         other.phoneNumber == phoneNumber &&
         other.gender == gender &&
         other.study == study &&
-        other.birthDate == birthDate;
+        other.birthDate == birthDate &&
+        other.password == password;
   }
 
   @override
   int get hashCode {
-    return firstName.hashCode ^
-        lastName.hashCode ^
-        email.hashCode ^
-        phoneNumber.hashCode ^
-        gender.hashCode ^
-        study.hashCode ^
-        birthDate.hashCode;
+    return (firstName?.hashCode ?? 0) ^
+        (lastName?.hashCode ?? 0) ^
+        (email?.hashCode ?? 0) ^
+        (phoneNumber?.hashCode ?? 0) ^
+        (gender?.hashCode ?? 0) ^
+        (study?.hashCode ?? 0) ^
+        (birthDate?.hashCode ?? 0) ^
+        (password?.hashCode ?? 0);
   }
 }
-

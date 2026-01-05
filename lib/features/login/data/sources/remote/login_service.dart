@@ -22,11 +22,15 @@ class LoginService extends Service {
 // });
 //       return result;
     } on DioException catch (e) {
-      if (e.response!.data["status"] == "BAD_REQUEST") {
-        throw BAD_REQUEST.fromMap(e.response!.data);
-      } else {
-        rethrow;
+      if (e.response != null && e.response!.data != null) {
+        if (e.response!.statusCode == 431 || 
+            (e.response!.data["status"] != null && e.response!.data["status"] == "100 CONTINUE")) {
+          throw TOO_MANY_ATTEMPTS.fromMap(e.response!.data);
+        } else if (e.response!.data["status"] == "BAD_REQUEST") {
+          throw BAD_REQUEST.fromMap(e.response!.data);
+        }
       }
+      rethrow;
     }
   }
 }

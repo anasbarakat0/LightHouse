@@ -214,7 +214,7 @@ class SessionItem {
   final List<BuffetInvoice> buffetInvoices;
   final dynamic totalPrice;
   final bool active;
-  final String? sessionType; // 'premium' or 'express'
+  final String? sessionType; // 'premium'
   SessionItem({
     required this.id,
     required this.date,
@@ -294,13 +294,8 @@ class SessionItem {
   }
 
   factory SessionItem.fromMap(Map<String, dynamic> map) {
-    // Determine session type based on available fields
-    String? sessionType;
-    if (map.containsKey('fullName') && map['fullName'] != null) {
-      sessionType = 'express';
-    } else if (map.containsKey('firstName') || map.containsKey('lastName')) {
-      sessionType = 'premium';
-    }
+    // All sessions are premium now
+    String? sessionType = 'premium';
 
     return SessionItem(
       id: map['id'] as String? ?? '',
@@ -385,13 +380,13 @@ class CreatedBy {
   final String id;
   final String firstName;
   final String lastName;
-  final String email;
+  final String? email;
   final String role;
   CreatedBy({
     required this.id,
     required this.firstName,
     required this.lastName,
-    required this.email,
+    this.email,
     required this.role,
   });
 
@@ -426,7 +421,7 @@ class CreatedBy {
       id: map['id'] as String? ?? '',
       firstName: map['firstName'] as String? ?? '',
       lastName: map['lastName'] as String? ?? '',
-      email: map['email'] as String? ?? '',
+      email: map['email'] as String?,
       role: map['role'] as String? ?? '',
     );
   }
@@ -457,7 +452,7 @@ class CreatedBy {
     return id.hashCode ^
         firstName.hashCode ^
         lastName.hashCode ^
-        email.hashCode ^
+        (email?.hashCode ?? 0) ^
         role.hashCode;
   }
 }

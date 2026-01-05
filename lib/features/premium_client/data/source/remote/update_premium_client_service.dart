@@ -10,10 +10,13 @@ class UpdatePremiumClientService extends Service {
   Future<Response> updatePremiumClientService(
       String userId, UpdatePremiumClientModel client) async {
     try {
+      final requestData = client.toMap();
+      print("🔹 Update Client Request Data: $requestData");
+      print("🔹 Password in request: ${requestData['password']}");
       response = await dio.put(
         "$baseUrl/api/v1/dashboard/users/$userId",
         options: getOptions(auth: true),
-        data: client.toMap(),
+        data: requestData,
       );
       return response;
     } on DioException catch (e) {

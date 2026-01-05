@@ -12,7 +12,6 @@ import 'package:lighthouse/features/packages/presentation/view/packages_page.dar
 import 'package:lighthouse/features/premium_client/presentation/view/premium_clients_page.dart';
 import 'package:lighthouse/features/admin_management/presentation/view/admin_management.dart';
 import 'package:lighthouse/features/login/presentation/view/login.dart';
-import 'package:lighthouse/features/main_window/presentation/view/empty_screen.dart';
 import 'package:lighthouse/features/main_window/presentation/widget/side_menu_bar.dart';
 import 'package:lighthouse/features/main_window/presentation/widget/summary.dart';
 import 'package:lighthouse/features/setting/presentation/view/settings_page.dart';
@@ -60,43 +59,54 @@ class _MainScreenState extends State<MainScreen> {
     onMenuItemSelected(index);
   }
 
+  // Helper function to check if user has access to a specific page
+  bool _hasAccessToPage(int index) {
+    final role = memory.get<SharedPreferences>().getString("userRole") ?? "USER";
+    
+    // Pages accessible only to SuperAdmin and MANAGER
+    final restrictedPages = [0, 2, 4, 5, 8]; // Dashboard, Statistics, Packages, Coupons, Admin Management
+    
+    if (restrictedPages.contains(index)) {
+      return role == "SuperAdmin" || role == "MANAGER";
+    }
+    
+    // Pages accessible to SuperAdmin, MANAGER, and ADMIN
+    return role == "SuperAdmin" || role == "MANAGER" || role == "ADMIN";
+  }
+
   void onMenuItemSelected(int index) {
     if (index == 10) {
       // Show confirmation dialog before signing out
       _showSignOutConfirmationDialog();
       return;
     }
-    if (memory.get<SharedPreferences>().getBool("MANAGER") ?? true) {
-      memory.get<SharedPreferences>().setInt("index", index);
-      setState(() {
-        selectedIndex = index;
-      });
-    } else {
-      if ([0, 2, 4, 5, 6, 8, 9].contains(index)) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.redAccent[700],
-            content: Text(
-              "Only Manager Allowed",
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(color: Colors.white),
-            ),
-          ),
-        );
-        memory.get<SharedPreferences>().setInt("index", selectedIndex);
+    
+    if (!_hasAccessToPage(index)) {
+      String message;
+      if ([0, 2, 4, 5, 8].contains(index)) {
+        message = "Only SuperAdmin and Manager Allowed";
       } else {
-        memory.get<SharedPreferences>().setInt("index", index);
-        setState(() {
-          selectedIndex = index;
-        });
+        message = "Only SuperAdmin, Manager, and Admin Allowed";
       }
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.redAccent[700],
+          content: Text(
+            message,
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: Colors.white),
+          ),
+        ),
+      );
+      return;
     }
-    print("memory.get<SharedPreferences>().getInt('index')");
-    print(memory.get<SharedPreferences>().getInt("index"));
+    
+    memory.get<SharedPreferences>().setInt("index", index);
     setState(() {
-      selectedIndex = memory.get<SharedPreferences>().getInt("index") ?? 1;
+      selectedIndex = index;
     });
   }
 

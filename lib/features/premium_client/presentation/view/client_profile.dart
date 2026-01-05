@@ -114,21 +114,7 @@ class _ClientProfileState extends State<ClientProfile>
             AdminByIdUsecase(
               adminByIdRepo: AdminByIdRepo(
                 adminByIdService: AdminByIdService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           )..add(GetAdminById(id: widget.client.addedBy)),
@@ -138,21 +124,7 @@ class _ClientProfileState extends State<ClientProfile>
             GetAllPackagesByUserIdRepo(
               getAllPackagesByUserIdService:
                   GetAllPackagesByUserIdService(dio: Dio()),
-              networkConnection: NetworkConnection(
-                internetConnectionChecker:
-                    InternetConnectionChecker.createInstance(
-                  addresses: [
-                    AddressCheckOption(
-                      uri: Uri.parse("https://www.google.com"),
-                      timeout: Duration(seconds: 3),
-                    ),
-                    AddressCheckOption(
-                      uri: Uri.parse("https://1.1.1.1"),
-                      timeout: Duration(seconds: 3),
-                    ),
-                  ],
-                ),
-              ),
+              networkConnection: NetworkConnection.createDefault(),
             ),
           )..add(GetAllPackagesByUserId(
               userId: widget.client.uuid,
@@ -164,21 +136,7 @@ class _ClientProfileState extends State<ClientProfile>
             GetAllActivePackagesRepo(
               getAllActivePackagesService:
                   GetAllActivePackagesService(dio: Dio()),
-              networkConnection: NetworkConnection(
-                internetConnectionChecker:
-                    InternetConnectionChecker.createInstance(
-                  addresses: [
-                    AddressCheckOption(
-                      uri: Uri.parse("https://www.google.com"),
-                      timeout: Duration(seconds: 3),
-                    ),
-                    AddressCheckOption(
-                      uri: Uri.parse("https://1.1.1.1"),
-                      timeout: Duration(seconds: 3),
-                    ),
-                  ],
-                ),
-              ),
+              networkConnection: NetworkConnection.createDefault(),
             ),
           )..add(GetAllActivePackages(page: 1, size: 20)),
         ),
@@ -187,21 +145,7 @@ class _ClientProfileState extends State<ClientProfile>
             SubscribeUserToPackageRepo(
               subscribeUserToPackageService:
                   SubscribeUserToPackageService(dio: Dio()),
-              networkConnection: NetworkConnection(
-                internetConnectionChecker:
-                    InternetConnectionChecker.createInstance(
-                  addresses: [
-                    AddressCheckOption(
-                      uri: Uri.parse("https://www.google.com"),
-                      timeout: Duration(seconds: 3),
-                    ),
-                    AddressCheckOption(
-                      uri: Uri.parse("https://1.1.1.1"),
-                      timeout: Duration(seconds: 3),
-                    ),
-                  ],
-                ),
-              ),
+              networkConnection: NetworkConnection.createDefault(),
             ),
           ),
         ),
@@ -210,21 +154,7 @@ class _ClientProfileState extends State<ClientProfile>
             GetSessionsByUserIdRepo(
               getSessionsByUserIdService:
                   GetSessionsByUserIdService(dio: Dio()),
-              networkConnection: NetworkConnection(
-                internetConnectionChecker:
-                    InternetConnectionChecker.createInstance(
-                  addresses: [
-                    AddressCheckOption(
-                      uri: Uri.parse("https://www.google.com"),
-                      timeout: Duration(seconds: 3),
-                    ),
-                    AddressCheckOption(
-                      uri: Uri.parse("https://1.1.1.1"),
-                      timeout: Duration(seconds: 3),
-                    ),
-                  ],
-                ),
-              ),
+              networkConnection: NetworkConnection.createDefault(),
             ),
           )..add(GetSessionsByUserId(
               userId: widget.client.uuid,
@@ -237,21 +167,7 @@ class _ClientProfileState extends State<ClientProfile>
               updatePremiumClientRepo: UpdatePremiumClientRepo(
                 updatePremiumClientService:
                     UpdatePremiumClientService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),
@@ -262,21 +178,7 @@ class _ClientProfileState extends State<ClientProfile>
               deletePremiumClientRepo: DeletePremiumClientRepo(
                 deletePremiumClientService:
                     DeletePremiumClientService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),

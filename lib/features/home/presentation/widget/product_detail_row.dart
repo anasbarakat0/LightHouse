@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lighthouse/core/resources/colors.dart'; 
-
 
 class ProductDetailRow extends StatelessWidget {
   final String productName;
@@ -24,7 +22,10 @@ class ProductDetailRow extends StatelessWidget {
             flex: 2,
             child: Text(
               productName,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
             ),
           ),
           Expanded(
@@ -35,7 +36,7 @@ class ProductDetailRow extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .bodySmall
-                  ?.copyWith(color: grey),
+                  ?.copyWith(color: Colors.white),
             ),
           ),
           Expanded(
@@ -46,7 +47,7 @@ class ProductDetailRow extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .bodySmall
-                  ?.copyWith(color: Colors.green),
+                  ?.copyWith(color: Colors.white),
             ),
           ),
         ],

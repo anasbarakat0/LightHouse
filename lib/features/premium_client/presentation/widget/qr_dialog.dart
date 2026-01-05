@@ -67,15 +67,15 @@ void premiumClientInfo(BuildContext context, Body client) {
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
-                      client.email,
+                      client.email ?? 'N/A',
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
-                      client.phoneNumber,
+                      client.phoneNumber ?? 'N/A',
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
-                      client.study,
+                      client.study ?? 'N/A',
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
@@ -86,6 +86,11 @@ void premiumClientInfo(BuildContext context, Body client) {
                       client.birthDate.toString(),
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
+                    if (client.generatedPassword.isNotEmpty)
+                      Text(
+                        "${"password".tr()}: ${client.generatedPassword}",
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
                   ],
                 ),
               ],

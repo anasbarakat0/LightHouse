@@ -3,7 +3,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:lighthouse/core/network/network_connection.dart';
 import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/core/utils/responsive.dart';
@@ -59,21 +58,7 @@ class _LoginWindowsState extends State<LoginWindows>
         LoginUsecase(
           loginRepo: LoginRepo(
             LoginService(dio: Dio()),
-            NetworkConnection(
-              internetConnectionChecker:
-                  InternetConnectionChecker.createInstance(
-                addresses: [
-                  AddressCheckOption(
-                    uri: Uri.parse("https://www.google.com"),
-                    timeout: Duration(seconds: 3),
-                  ),
-                  AddressCheckOption(
-                    uri: Uri.parse("https://1.1.1.1"),
-                    timeout: Duration(seconds: 3),
-                  ),
-                ],
-              ),
-            ),
+            NetworkConnection.createDefault(timeout: Duration(seconds: 10)),
           ),
         ),
       ),
@@ -186,15 +171,15 @@ class _LoginWindowsState extends State<LoginWindows>
                 physics: const BouncingScrollPhysics(),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: isSmallDesktop
-                        ? 60
-                        : (screenWidth > 1366 ? 120 : 80),
+                    horizontal:
+                        isSmallDesktop ? 60 : (screenWidth > 1366 ? 120 : 80),
                     vertical: isSmallDesktop ? 20 : 40,
                   ),
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
                       maxWidth: isSmallDesktop ? 450 : 500,
-                      maxHeight: isSmallDesktop ? screenHeight - 40 : double.infinity,
+                      maxHeight:
+                          isSmallDesktop ? screenHeight - 40 : double.infinity,
                     ),
                     child: FadeTransition(
                       opacity: _fadeAnimation,
@@ -298,9 +283,7 @@ class _LoginWindowsState extends State<LoginWindows>
 
     return Container(
       padding: EdgeInsets.all(
-        isMobile
-            ? 28
-            : (isSmallDesktop ? 32 : 40),
+        isMobile ? 28 : (isSmallDesktop ? 32 : 40),
       ),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -330,9 +313,7 @@ class _LoginWindowsState extends State<LoginWindows>
             Text(
               "log_in".tr(),
               style: TextStyle(
-                fontSize: isMobile
-                    ? 32
-                    : (isSmallDesktop ? 32 : 36),
+                fontSize: isMobile ? 32 : (isSmallDesktop ? 32 : 36),
                 fontWeight: FontWeight.w800,
                 color: darkNavy,
                 letterSpacing: -0.5,
@@ -350,8 +331,7 @@ class _LoginWindowsState extends State<LoginWindows>
                   letterSpacing: 0.2,
                 ),
               ),
-            if (!isMobile)
-              SizedBox(height: isSmallDesktop ? 32 : 40),
+            if (!isMobile) SizedBox(height: isSmallDesktop ? 32 : 40),
             if (isMobile) const SizedBox(height: 32),
             // Email Field
             _buildModernInputField(
@@ -370,7 +350,7 @@ class _LoginWindowsState extends State<LoginWindows>
               "Password",
               Icons.lock_outline,
               isPassword: true,
-              onSubmitted: _performLogin,
+              onSubmitted: () => _performLogin(context),
             ),
             SizedBox(height: isSmallDesktop ? 24 : 32),
             // Login Button
@@ -418,10 +398,10 @@ class _LoginWindowsState extends State<LoginWindows>
           child: TextField(
             controller: controller,
             obscureText: isPassword ? _obscurePassword : false,
-            textInputAction: isPassword ? TextInputAction.done : TextInputAction.next,
-            onSubmitted: isPassword && onSubmitted != null
-                ? (_) => onSubmitted()
-                : null,
+            textInputAction:
+                isPassword ? TextInputAction.done : TextInputAction.next,
+            onSubmitted:
+                isPassword && onSubmitted != null ? (_) => onSubmitted() : null,
             style: TextStyle(
               fontSize: 16,
               color: darkNavy,
@@ -489,7 +469,7 @@ class _LoginWindowsState extends State<LoginWindows>
   }
 
   /// **🔹 Perform Login Action**
-  void _performLogin() {
+  void _performLogin(BuildContext context) {
     if (_formKey.currentState?.validate() ?? true) {
       context.read<LoginBloc>().add(
             Login(
@@ -576,9 +556,7 @@ class _LoginWindowsState extends State<LoginWindows>
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: isLoading
-                    ? null
-                    : _performLogin,
+                onTap: isLoading ? null : () => _performLogin(context),
                 borderRadius: BorderRadius.circular(16),
                 child: Container(
                   alignment: Alignment.center,

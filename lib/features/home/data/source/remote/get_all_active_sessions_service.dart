@@ -23,8 +23,7 @@ class GetAllActiveSessionsService extends Service {
       final prefs = memory.get<SharedPreferences>();
       
       int onGround =
-          (response.data["body"]["activePremiumSessions"].length ?? 0) +
-              (response.data["body"]["activeExpressSessions"].length ?? 0);
+          (response.data["body"]["activePremiumSessions"].length ?? 0);
       prefs.setInt("onGround", onGround);
       activeSessionsNotifier.value = onGround;
 

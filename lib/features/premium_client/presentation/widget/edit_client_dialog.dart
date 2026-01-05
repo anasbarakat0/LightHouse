@@ -8,15 +8,19 @@ import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/features/premium_client/data/models/get_all_premiumClient_response_model.dart';
 import 'package:lighthouse/features/premium_client/data/models/update_premium_client_model.dart';
 
-void showEditClientDialog(
-    BuildContext context, Body client, Function(UpdatePremiumClientModel) onUpdate) {
-  TextEditingController firstName = TextEditingController(text: client.firstName);
+void showEditClientDialog(BuildContext context, Body client,
+    Function(UpdatePremiumClientModel) onUpdate) {
+  TextEditingController firstName =
+      TextEditingController(text: client.firstName);
   TextEditingController lastName = TextEditingController(text: client.lastName);
-  TextEditingController email = TextEditingController(text: client.email);
-  TextEditingController phoneNumber = TextEditingController(text: client.phoneNumber);
-  TextEditingController study = TextEditingController(text: client.study);
+  TextEditingController email = TextEditingController(text: client.email ?? '');
+  TextEditingController phoneNumber =
+      TextEditingController(text: client.phoneNumber ?? '');
+  TextEditingController study = TextEditingController(text: client.study ?? '');
   TextEditingController birthDate = TextEditingController(
       text: client.birthDate is String ? client.birthDate : '');
+  TextEditingController password =
+      TextEditingController(text: client.generatedPassword);
   String selectedGender = client.gender;
   DateTime? selectedDate;
 
@@ -152,6 +156,12 @@ void showEditClientDialog(
                         setState(() {});
                       },
                     ),
+                    const SizedBox(height: 12),
+                    MyTextFieldDialog(
+                      controller: password,
+                      labelText: "password".tr(),
+                      isPassword: false,
+                    ),
                   ],
                 ),
               ),
@@ -168,31 +178,51 @@ void showEditClientDialog(
               ),
               MyButton(
                 onPressed: () {
-                  if (firstName.text.isEmpty ||
-                      lastName.text.isEmpty ||
-                      email.text.isEmpty ||
-                      phoneNumber.text.isEmpty ||
-                      study.text.isEmpty ||
-                      birthDate.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Please fill all fields".tr()),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                    return;
+                  // Validate email format if provided
+                  if (email.text.trim().isNotEmpty) {
+                    final emailRegex = RegExp(
+                        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                    if (!emailRegex.hasMatch(email.text.trim())) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("invalid_email_format".tr()),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
                   }
-                  onUpdate(
-                    UpdatePremiumClientModel(
-                      firstName: firstName.text,
-                      lastName: lastName.text,
-                      email: email.text,
-                      phoneNumber: phoneNumber.text,
-                      gender: selectedGender,
-                      study: study.text,
-                      birthDate: birthDate.text,
-                    ),
+
+                  final passwordValue = password.text.trim().isEmpty
+                      ? null
+                      : password.text.trim();
+                  print("🔹 Password from dialog: '$passwordValue'");
+                  print("🔹 Password text field value: '${password.text}'");
+
+                  final updateModel = UpdatePremiumClientModel(
+                    firstName: firstName.text.trim().isEmpty
+                        ? null
+                        : firstName.text.trim(),
+                    lastName: lastName.text.trim().isEmpty
+                        ? null
+                        : lastName.text.trim(),
+                    email: email.text.trim().isEmpty ? null : email.text.trim(),
+                    phoneNumber: phoneNumber.text.trim().isEmpty
+                        ? null
+                        : phoneNumber.text.trim(),
+                    gender: selectedGender.isEmpty ? null : selectedGender,
+                    study: study.text.trim().isEmpty ? null : study.text.trim(),
+                    birthDate: birthDate.text.trim().isEmpty
+                        ? null
+                        : birthDate.text.trim(),
+                    password: passwordValue,
                   );
+
+                  print(
+                      "🔹 Update Model password field: ${updateModel.password}");
+                  print("🔹 Update Model toMap: ${updateModel.toMap()}");
+
+                  onUpdate(updateModel);
                   Navigator.of(context).pop();
                 },
                 child: Text(
@@ -207,4 +237,3 @@ void showEditClientDialog(
     },
   );
 }
-

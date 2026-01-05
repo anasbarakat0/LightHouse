@@ -41,13 +41,15 @@ class Newpremiumclientresponseentity {
       message: map['message'] as String,
       status: map['status'] as String,
       localDateTime: map['localDateTime'] as String,
-      body: Body.fromMap(map['body'] as Map<String,dynamic>),
+      body: Body.fromMap(map['body'] as Map<String, dynamic>),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Newpremiumclientresponseentity.fromJson(String source) => Newpremiumclientresponseentity.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Newpremiumclientresponseentity.fromJson(String source) =>
+      Newpremiumclientresponseentity.fromMap(
+          json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -57,20 +59,19 @@ class Newpremiumclientresponseentity {
   @override
   bool operator ==(covariant Newpremiumclientresponseentity other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.message == message &&
-      other.status == status &&
-      other.localDateTime == localDateTime &&
-      other.body == body;
+
+    return other.message == message &&
+        other.status == status &&
+        other.localDateTime == localDateTime &&
+        other.body == body;
   }
 
   @override
   int get hashCode {
     return message.hashCode ^
-      status.hashCode ^
-      localDateTime.hashCode ^
-      body.hashCode;
+        status.hashCode ^
+        localDateTime.hashCode ^
+        body.hashCode;
   }
 }
 
@@ -78,20 +79,20 @@ class Body {
   final String uuid;
   final String firstName;
   final String lastName;
-  final String email;
-  final String phoneNumber;
+  final String? email;
+  final String? phoneNumber;
   final String gender;
-  final String study;
+  final String? study;
   final String? birthDate;
   final QrCode qrCode;
   Body({
     required this.uuid,
     required this.firstName,
     required this.lastName,
-    required this.email,
-    required this.phoneNumber,
+    this.email,
+    this.phoneNumber,
     required this.gender,
-    required this.study,
+    this.study,
     this.birthDate,
     required this.qrCode,
   });
@@ -139,18 +140,19 @@ class Body {
       uuid: map['uuid'] as String,
       firstName: map['firstName'] as String,
       lastName: map['lastName'] as String,
-      email: map['email'] as String,
-      phoneNumber: map['phoneNumber'] as String,
+      email: map['email'] as String?,
+      phoneNumber: map['phoneNumber'] as String?,
       gender: map['gender'] as String,
-      study: map['study'] as String,
+      study: map['study'] as String?,
       birthDate: map['birthDate'] != null ? map['birthDate'] as String : null,
-      qrCode: QrCode.fromMap(map['qrCode'] as Map<String,dynamic>),
+      qrCode: QrCode.fromMap(map['qrCode'] as Map<String, dynamic>),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Body.fromJson(String source) => Body.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Body.fromJson(String source) =>
+      Body.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -160,30 +162,29 @@ class Body {
   @override
   bool operator ==(covariant Body other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.uuid == uuid &&
-      other.firstName == firstName &&
-      other.lastName == lastName &&
-      other.email == email &&
-      other.phoneNumber == phoneNumber &&
-      other.gender == gender &&
-      other.study == study &&
-      other.birthDate == birthDate &&
-      other.qrCode == qrCode;
+
+    return other.uuid == uuid &&
+        other.firstName == firstName &&
+        other.lastName == lastName &&
+        other.email == email &&
+        other.phoneNumber == phoneNumber &&
+        other.gender == gender &&
+        other.study == study &&
+        other.birthDate == birthDate &&
+        other.qrCode == qrCode;
   }
 
   @override
   int get hashCode {
     return uuid.hashCode ^
-      firstName.hashCode ^
-      lastName.hashCode ^
-      email.hashCode ^
-      phoneNumber.hashCode ^
-      gender.hashCode ^
-      study.hashCode ^
-      birthDate.hashCode ^
-      qrCode.hashCode;
+        firstName.hashCode ^
+        lastName.hashCode ^
+        (email?.hashCode ?? 0) ^
+        (phoneNumber?.hashCode ?? 0) ^
+        gender.hashCode ^
+        (study?.hashCode ?? 0) ^
+        (birthDate?.hashCode ?? 0) ^
+        qrCode.hashCode;
   }
 }
 
@@ -252,7 +253,8 @@ class QrCode {
 
   String toJson() => json.encode(toMap());
 
-  factory QrCode.fromJson(String source) => QrCode.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory QrCode.fromJson(String source) =>
+      QrCode.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -262,25 +264,24 @@ class QrCode {
   @override
   bool operator ==(covariant QrCode other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.createdAt == createdAt &&
-      other.updatedAt == updatedAt &&
-      other.createdBy == createdBy &&
-      other.lastModifiedBy == lastModifiedBy &&
-      other.id == id &&
-      other.qrCodeType == qrCodeType &&
-      other.qrCode == qrCode;
+
+    return other.createdAt == createdAt &&
+        other.updatedAt == updatedAt &&
+        other.createdBy == createdBy &&
+        other.lastModifiedBy == lastModifiedBy &&
+        other.id == id &&
+        other.qrCodeType == qrCodeType &&
+        other.qrCode == qrCode;
   }
 
   @override
   int get hashCode {
     return createdAt.hashCode ^
-      updatedAt.hashCode ^
-      createdBy.hashCode ^
-      lastModifiedBy.hashCode ^
-      id.hashCode ^
-      qrCodeType.hashCode ^
-      qrCode.hashCode;
+        updatedAt.hashCode ^
+        createdBy.hashCode ^
+        lastModifiedBy.hashCode ^
+        id.hashCode ^
+        qrCodeType.hashCode ^
+        qrCode.hashCode;
   }
 }

@@ -96,27 +96,29 @@ class UserByName {
   final String uuid;
   final String firstName;
   final String lastName;
-  final String email;
-  final String phoneNumber;
+  final String? email;
+  final String? phoneNumber;
   final String gender;
-  final String study;
+  final String? study;
   final dynamic birthDate;
   final String addingDateTime;
   final String addedBy;
   final QrCodeData? qrCode;
+  final String generatedPassword;
 
   UserByName({
     required this.uuid,
     required this.firstName,
     required this.lastName,
-    required this.email,
-    required this.phoneNumber,
+    this.email,
+    this.phoneNumber,
     required this.gender,
-    required this.study,
+    this.study,
     this.birthDate,
     required this.addingDateTime,
     required this.addedBy,
     this.qrCode,
+    required this.generatedPassword,
   });
 
   UserByName copyWith({
@@ -131,6 +133,7 @@ class UserByName {
     String? addingDateTime,
     String? addedBy,
     QrCodeData? qrCode,
+    String? generatedPassword,
   }) {
     return UserByName(
       uuid: uuid ?? this.uuid,
@@ -144,6 +147,7 @@ class UserByName {
       addingDateTime: addingDateTime ?? this.addingDateTime,
       addedBy: addedBy ?? this.addedBy,
       qrCode: qrCode ?? this.qrCode,
+      generatedPassword: generatedPassword ?? this.generatedPassword,
     );
   }
 
@@ -160,6 +164,7 @@ class UserByName {
       'addingDateTime': addingDateTime,
       'addedBy': addedBy,
       'qrCode': qrCode?.toMap(),
+      'generatedPassword': generatedPassword,
     };
   }
 
@@ -168,16 +173,17 @@ class UserByName {
       uuid: (map['uuid'] ?? '').toString(),
       firstName: (map['firstName'] ?? '').toString(),
       lastName: (map['lastName'] ?? '').toString(),
-      email: (map['email'] ?? '').toString(),
-      phoneNumber: (map['phoneNumber'] ?? '').toString(),
+      email: map['email'] as String?,
+      phoneNumber: map['phoneNumber'] as String?,
       gender: (map['gender'] ?? '').toString(),
-      study: (map['study'] ?? '').toString(),
+      study: map['study'] as String?,
       birthDate: map['birthDate'],
       addingDateTime: (map['addingDateTime'] ?? '').toString(),
       addedBy: (map['addedBy'] ?? '').toString(),
       qrCode: map['qrCode'] != null
           ? QrCodeData.fromMap(map['qrCode'] as Map<String, dynamic>)
           : null,
+      generatedPassword: map['generatedPassword'] as String? ?? '',
     );
   }
 
@@ -188,7 +194,7 @@ class UserByName {
 
   @override
   String toString() {
-    return 'UserByName(uuid: $uuid, firstName: $firstName, lastName: $lastName, email: $email, phoneNumber: $phoneNumber, gender: $gender, study: $study, birthDate: $birthDate, addingDateTime: $addingDateTime, addedBy: $addedBy, qrCode: $qrCode)';
+    return 'UserByName(uuid: $uuid, firstName: $firstName, lastName: $lastName, email: $email, phoneNumber: $phoneNumber, gender: $gender, study: $study, birthDate: $birthDate, addingDateTime: $addingDateTime, addedBy: $addedBy, qrCode: $qrCode, generatedPassword: $generatedPassword)';
   }
 
   @override
@@ -213,14 +219,15 @@ class UserByName {
     return uuid.hashCode ^
         firstName.hashCode ^
         lastName.hashCode ^
-        email.hashCode ^
-        phoneNumber.hashCode ^
+        (email?.hashCode ?? 0) ^
+        (phoneNumber?.hashCode ?? 0) ^
         gender.hashCode ^
-        study.hashCode ^
-        birthDate.hashCode ^
+        (study?.hashCode ?? 0) ^
+        (birthDate?.hashCode ?? 0) ^
         addingDateTime.hashCode ^
         addedBy.hashCode ^
-        qrCode.hashCode;
+        (qrCode?.hashCode ?? 0) ^
+        generatedPassword.hashCode;
   }
 }
 

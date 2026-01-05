@@ -37,7 +37,7 @@ class BuffetPage extends StatefulWidget {
 }
 
 class _BuffetPageState extends State<BuffetPage> {
-  int perPage = 16;
+  int perPage = 18;
   int currentPage = 1;
 
   @override
@@ -49,21 +49,7 @@ class _BuffetPageState extends State<BuffetPage> {
             GetAllProductsUsecase(
               getAllProductsRepo: GetAllProductsRepo(
                 getAllProductsService: GetAllProductsService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           )..add(GetAllProducts(page: currentPage - 1, size: perPage)),
@@ -73,21 +59,7 @@ class _BuffetPageState extends State<BuffetPage> {
             DeleteProductUsecase(
               deleteProductRepo: DeleteProductRepo(
                 deleteProductService: DeleteProductService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),
@@ -97,21 +69,7 @@ class _BuffetPageState extends State<BuffetPage> {
             EditProductUsecase(
               editProductRepo: EditProductRepo(
                 editProductService: EditProductService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),
@@ -121,21 +79,7 @@ class _BuffetPageState extends State<BuffetPage> {
             AddProductUsecase(
               addProductRepo: AddProductRepo(
                 addProductService: AddProductService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),

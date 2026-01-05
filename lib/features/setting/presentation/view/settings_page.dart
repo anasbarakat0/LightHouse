@@ -3,7 +3,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:lighthouse/core/network/network_connection.dart';
 import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/core/utils/responsive.dart';
@@ -26,6 +25,14 @@ import 'package:lighthouse/features/setting/data/repository/change_password_repo
 import 'package:lighthouse/features/setting/data/source/change_password_service.dart';
 import 'package:lighthouse/features/setting/domain/usecase/change_password_usecase.dart';
 import 'package:lighthouse/features/setting/presentation/bloc/change_password_bloc.dart';
+import 'package:lighthouse/features/statistics/data/repository/get_occupancy_repo.dart';
+import 'package:lighthouse/features/statistics/data/repository/update_capacity_repo.dart';
+import 'package:lighthouse/features/statistics/data/source/remote/get_occupancy_service.dart';
+import 'package:lighthouse/features/statistics/data/source/remote/update_capacity_service.dart';
+import 'package:lighthouse/features/statistics/domain/usecase/get_occupancy_usecase.dart';
+import 'package:lighthouse/features/statistics/domain/usecase/update_capacity_usecase.dart';
+import 'package:lighthouse/features/statistics/presentation/bloc/get_occupancy_bloc.dart';
+import 'package:lighthouse/features/statistics/presentation/bloc/update_capacity_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lighthouse/core/utils/platform_service/platform_service.dart';
 
@@ -44,6 +51,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
+    // قراءة القيمة من SharedPreferences كـ fallback
     capacity.text =
         "${memory.get<SharedPreferences>().getInt("capacity") ?? 50}";
   }
@@ -59,21 +67,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 getHourlyPriceService: GetHourlyPriceService(
                   dio: Dio(),
                 ),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           )..add(GetHourlyPrice()),
@@ -85,21 +79,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 editHourlyPriceService: EditHourlyPriceService(
                   dio: Dio(),
                 ),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),
@@ -109,21 +89,27 @@ class _SettingsPageState extends State<SettingsPage> {
             ChangePasswordUsecase(
               changePasswordRepo: ChangePasswordRepo(
                 changePasswordService: ChangePasswordService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
+              ),
+            ),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => GetOccupancyBloc(
+            getOccupancyUsecase: GetOccupancyUsecase(
+              getOccupancyRepo: GetOccupancyRepo(
+                getOccupancyService: GetOccupancyService(dio: Dio()),
+                networkConnection: NetworkConnection.createDefault(),
+              ),
+            ),
+          )..add(GetOccupancy()),
+        ),
+        BlocProvider(
+          create: (context) => UpdateCapacityBloc(
+            updateCapacityUsecase: UpdateCapacityUsecase(
+              updateCapacityRepo: UpdateCapacityRepo(
+                updateCapacityService: UpdateCapacityService(dio: Dio()),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),
@@ -211,6 +197,79 @@ class _SettingsPageState extends State<SettingsPage> {
                 hourlyPrice.text = state.message;
                 readOnly = true;
               } else if (state is Forbidden) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.redAccent[700],
+                    content: Text(state.message,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(color: Colors.white)),
+                  ),
+                );
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginWindows(),
+                  ),
+                );
+              }
+            },
+          ),
+          BlocListener<GetOccupancyBloc, GetOccupancyState>(
+            listener: (BuildContext context, state) {
+              if (state is SuccessOccupancy) {
+                // تحديث text field بالقيمة من API
+                capacity.text = state.capacity.toString();
+                // حفظ في SharedPreferences
+                memory.get<SharedPreferences>().setInt("capacity", state.capacity);
+                capacityNotifier.value = state.capacity;
+              }
+            },
+          ),
+          BlocListener<UpdateCapacityBloc, UpdateCapacityState>(
+            listener: (BuildContext context, state) {
+              if (state is SuccessCapacity) {
+                // حفظ في SharedPreferences
+                memory.get<SharedPreferences>().setInt("capacity", state.capacity);
+                capacityNotifier.value = state.capacity;
+                
+                // إعادة جلب البيانات المحدثة
+                context.read<GetOccupancyBloc>().add(GetOccupancy());
+                
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.green[800],
+                    content: Text(state.message,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(color: Colors.white)),
+                  ),
+                );
+              } else if (state is ErrorCapacity) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.redAccent[700],
+                    content: Text(state.message,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(color: Colors.white)),
+                  ),
+                );
+              } else if (state is OfflineCapacity) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.redAccent[700],
+                    content: Text(state.message,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(color: Colors.white)),
+                  ),
+                );
+              } else if (state is ForbiddenCapacity) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     backgroundColor: Colors.redAccent[700],
@@ -346,10 +405,36 @@ class _SettingsPageState extends State<SettingsPage> {
                             color: orange,
                           ),
                           onSubmitted: (p0) {
-                            memory
-                                .get<SharedPreferences>()
-                                .setInt("capacity", int.parse(p0));
-                            capacityNotifier.value = int.parse(p0);
+                            // التحقق من أن القيمة رقم صحيح
+                            final capacityValue = int.tryParse(p0);
+                            if (capacityValue == null || capacityValue <= 0) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: Colors.redAccent[700],
+                                  content: Text(
+                                    "Please enter a valid positive number".tr(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.copyWith(color: Colors.white),
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
+                            
+                            submitEditingDialog(
+                              context,
+                              () {
+                                context.read<UpdateCapacityBloc>().add(
+                                      UpdateCapacity(capacity: capacityValue),
+                                    );
+                              },
+                              () {
+                                // إعادة جلب القيمة الحالية من API
+                                context.read<GetOccupancyBloc>().add(GetOccupancy());
+                              },
+                            );
                           },
                         ),
                         isMobile,

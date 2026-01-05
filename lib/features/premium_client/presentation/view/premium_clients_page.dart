@@ -84,21 +84,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                 AddPremiumClientService(
                   dio: Dio(),
                 ),
-                NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                NetworkConnection.createDefault(),
               ),
             ),
           ),
@@ -110,21 +96,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                 getAllPremiumClientsService: GetAllPremiumClientsService(
                   dio: Dio(),
                 ),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           )..add(GetPremiumClients(page: 1, size: 20)),
@@ -135,21 +107,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
               startPremiumSessionRepo: StartPremiumSessionRepo(
                 startPremiumSessionService:
                     StartPremiumSessionService(dio: Dio()),
-                networkConnection: NetworkConnection(
-                  internetConnectionChecker:
-                      InternetConnectionChecker.createInstance(
-                    addresses: [
-                      AddressCheckOption(
-                        uri: Uri.parse("https://www.google.com"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                      AddressCheckOption(
-                        uri: Uri.parse("https://1.1.1.1"),
-                        timeout: Duration(seconds: 3),
-                      ),
-                    ],
-                  ),
-                ),
+                networkConnection: NetworkConnection.createDefault(),
               ),
             ),
           ),
@@ -158,21 +116,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
           create: (context) => GetUsersByNameBloc(
             GetUsersByNameRepo(
               getUsersByNameService: GetUsersByNameService(dio: Dio()),
-              networkConnection: NetworkConnection(
-                internetConnectionChecker:
-                    InternetConnectionChecker.createInstance(
-                  addresses: [
-                    AddressCheckOption(
-                      uri: Uri.parse("https://www.google.com"),
-                      timeout: Duration(seconds: 3),
-                    ),
-                    AddressCheckOption(
-                      uri: Uri.parse("https://1.1.1.1"),
-                      timeout: Duration(seconds: 3),
-                    ),
-                  ],
-                ),
-              ),
+              networkConnection: NetworkConnection.createDefault(),
             ),
           ),
         ),
@@ -181,21 +125,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
             ClosePremiumSessionByQrCodeRepo(
               closePremiumSessionByQrCodeService:
                   ClosePremiumSessionByQrCodeService(dio: Dio()),
-              networkConnection: NetworkConnection(
-                internetConnectionChecker:
-                    InternetConnectionChecker.createInstance(
-                  addresses: [
-                    AddressCheckOption(
-                      uri: Uri.parse("https://www.google.com"),
-                      timeout: Duration(seconds: 3),
-                    ),
-                    AddressCheckOption(
-                      uri: Uri.parse("https://1.1.1.1"),
-                      timeout: Duration(seconds: 3),
-                    ),
-                  ],
-                ),
-              ),
+              networkConnection: NetworkConnection.createDefault(),
             ),
           ),
         ),
@@ -630,7 +560,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                                             ?.copyWith(color: Colors.white),
                                       ),
                                       subtitle: Text(
-                                        client.phoneNumber,
+                                        client.phoneNumber ?? 'N/A',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall
@@ -766,6 +696,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                                           qrCodeType: '',
                                           qrCode: '',
                                         ),
+                                  generatedPassword: client.generatedPassword,
                                 );
                                 return Column(
                                   children: [
@@ -802,7 +733,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                                             ?.copyWith(color: lightGrey),
                                       ),
                                       subtitle: Text(
-                                        client.phoneNumber,
+                                        bodyClient.phoneNumber ?? 'N/A',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall
