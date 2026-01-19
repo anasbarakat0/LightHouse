@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:lighthouse/common/widget/gradient_scaffold.dart';
 import 'package:lighthouse/core/network/network_connection.dart';
 import 'package:lighthouse/core/resources/colors.dart';
@@ -298,6 +297,7 @@ class _ClientProfileState extends State<ClientProfile>
                   study: state.response.body.study,
                   birthDate:
                       state.response.body.birthDate ?? widget.client.birthDate,
+                      generatedPassword: widget.client.generatedPassword,
                 );
 
                 // Navigate back and then forward with updated data
@@ -410,7 +410,7 @@ class _ClientProfileState extends State<ClientProfile>
                         ),
                       ],
                     ),
-                  ),
+                  ),  
                 );
               } else if (state is OfflineFailureDeletePremiumClient) {
                 ScaffoldMessenger.of(context).showSnackBar(

@@ -8,20 +8,25 @@ import 'package:lighthouse/core/utils/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/utils/platform_service/platform_service.dart';
 
-Future<void> printPremiumQr(String? value, String printerAddress, String printerName, dynamic client) async {
+Future<void> printPremiumQr(String? value, String printerAddress,
+    String printerName, dynamic client) async {
   debugPrint("🖨️ printPremiumQr called - Starting Premium QR printing...");
-  
+
   // Get saved printer from settings, or use provided printerName as fallback
   final prefs = memory.get<SharedPreferences>();
   final savedPrinter = prefs.getString('selected_printer') ?? printerName;
-  final actualPrinterName = savedPrinter.isNotEmpty ? savedPrinter : printerName;
-  
+  final actualPrinterName =
+      savedPrinter.isNotEmpty ? savedPrinter : printerName;
+
   debugPrint("🖨️ Using printer: $actualPrinterName");
   debugPrint("🖨️ Client: ${client.firstName} ${client.lastName}");
   debugPrint("🖨️ QR Code: ${client.qrCode?.qrCode ?? 'NULL'}");
-  
+
   final translator = GoogleTranslator();
-  var name = await translator.translate("${client.firstName} ${client.lastName}", from: 'ar', to: 'en');
+  var name = await translator.translate(
+      "${client.firstName} ${client.lastName}",
+      from: 'ar',
+      to: 'en');
   PrintMode mode = value == "USB" ? PrintMode.USB : PrintMode.NETWORK;
 
   try {
@@ -42,21 +47,34 @@ Future<void> printPremiumQr(String? value, String printerAddress, String printer
     bytes += generator.feed(1);
     bytes += generator.text(
       'Premium Client',
-      styles: PosStyles(bold: true, fontType: PosFontType.fontA, underline: true),
+      styles:
+          PosStyles(bold: true, fontType: PosFontType.fontA, underline: true),
     );
     bytes += generator.text('Id: ${client.uuid}');
     bytes += generator.row([
-  PosColumn(
-    text: 'Name: ',
-    width: 2,
-    styles: PosStyles(bold: false),
-  ),
-  PosColumn(
-    text: name.text,
-    width: 10,
-    styles: PosStyles(bold: true),
-  ),
-]);
+      PosColumn(
+        text: 'Name: ',
+        width: 3,
+        styles: PosStyles(bold: false),
+      ),
+      PosColumn(
+        text: name.text,
+        width: 9,
+        styles: PosStyles(bold: true),
+      ),
+    ]);
+    bytes += generator.row([
+      PosColumn(
+        text: 'Password:',
+        width: 3,
+        styles: PosStyles(bold: false),
+      ),
+      PosColumn(
+        text: client.generatedPassword,
+        width: 9  ,
+        styles: PosStyles(bold: true),
+      ),
+    ]);
 
     bytes += generator.feed(1);
     bytes += generator.qrcode(client.qrCode.qrCode, size: QRSize.size8);
@@ -72,7 +90,8 @@ Future<void> printPremiumQr(String? value, String printerAddress, String printer
     } else {
       debugPrint("USB PRINTING - Premium QR");
       debugPrint("Using printer: $actualPrinterName");
-      await service.printDirectWindows(printerName: actualPrinterName, bytes: bytes);
+      await service.printDirectWindows(
+          printerName: actualPrinterName, bytes: bytes);
     }
     debugPrint("✅ Premium QR printed successfully!");
   } catch (e) {

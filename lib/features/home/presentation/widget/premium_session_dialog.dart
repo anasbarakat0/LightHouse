@@ -316,7 +316,7 @@ void premiumSessionDialog(
                               ),
                             ),
                             Text(
-                              "${sessionData.buffetInvoicePrice} ${"s.p".tr()}",
+                              "${sessionData.totalPrice} ${"s.p".tr()}",
                               style: const TextStyle(
                                 color: orange,
                                 fontSize: 24,

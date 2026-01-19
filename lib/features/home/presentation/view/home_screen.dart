@@ -228,27 +228,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 print(state.response);
                 // Print first invoice (original)
                 print("🖨️ Starting to print first invoice...");
-                printInvoice(
-                        true, printerAddress, printerName, state.response.body)
-                    .then((_) {
-                  print(
-                      "✅ First invoice printed, starting detailed invoice...");
-                  // Print second invoice (detailed, without discount note) after first completes
-                  Future.delayed(const Duration(milliseconds: 1000), () async {
-                    print("🖨️ Printing detailed invoice now...");
-                    try {
-                      await printDetailedInvoice(true, printerAddress,
-                          printerName, state.response.body);
-                      print("✅ Detailed invoice printed successfully");
-                    } catch (e) {
-                      print("❌ Error printing detailed invoice: $e");
-                      debugPrint("Print Detailed Invoice Error: $e");
-                    }
-                  });
-                }).catchError((error) {
-                  print("❌ Error printing first invoice: $error");
-                  debugPrint("Print First Invoice Error: $error");
-                });
+                printDetailedInvoice(
+                            true, printerAddress, printerName, state.response.body);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     backgroundColor: Colors.green[800],
@@ -360,29 +341,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   final bodyMap = state.response.body.toMap();
                   final finishBody = finish_model.Body.fromMap(bodyMap);
                   // Print first invoice (original)
-                  print(
-                      "🖨️ Starting to print first invoice (QR Code close)...");
-                  printInvoice(true, printerAddress, printerName, finishBody)
-                      .then((_) {
-                    print(
-                        "✅ First invoice printed, starting detailed invoice...");
-                    // Print second invoice (detailed, without discount note) after first completes
-                    Future.delayed(const Duration(milliseconds: 1000),
-                        () async {
-                      print("🖨️ Printing detailed invoice now...");
-                      try {
-                        await printDetailedInvoice(
+                  printDetailedInvoice(
                             true, printerAddress, printerName, finishBody);
-                        print("✅ Detailed invoice printed successfully");
-                      } catch (e) {
-                        print("❌ Error printing detailed invoice: $e");
-                        debugPrint("Print Detailed Invoice Error: $e");
-                      }
-                    });
-                  }).catchError((error) {
-                    print("❌ Error printing first invoice: $error");
-                    debugPrint("Print First Invoice Error: $error");
-                  });
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       backgroundColor: Colors.green[800],

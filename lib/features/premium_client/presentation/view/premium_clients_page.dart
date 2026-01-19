@@ -242,25 +242,8 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                   print("✅ Converted Body successfully: $finishBody");
                   // Print first invoice (original)
                   print("🖨️ Starting to print first invoice...");
-                  printInvoice(true, printerAddress, printerName, finishBody)
-                      .then((_) {
-                    print("✅ First invoice printed, starting second invoice...");
-                    // Print second invoice (detailed, without discount note) after first completes
-                    Future.delayed(const Duration(milliseconds: 1000), () async {
-                      print("🖨️ Printing detailed invoice now...");
-                      try {
-                        await printDetailedInvoice(
-                            true, printerAddress, printerName, finishBody);
-                        print("✅ Detailed invoice printed successfully");
-                      } catch (e) {
-                        print("❌ Error printing detailed invoice: $e");
-                        debugPrint("Print Detailed Invoice Error: $e");
-                      }
-                    });
-                  }).catchError((error) {
-                    print("❌ Error printing first invoice: $error");
-                    debugPrint("Print First Invoice Error: $error");
-                  });
+                    printDetailedInvoice(
+                              true, printerAddress, printerName, finishBody);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       backgroundColor: Colors.green[800],
