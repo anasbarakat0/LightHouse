@@ -1,5 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:lighthouse/core/resources/colors.dart';
@@ -34,8 +33,8 @@ class PremiumClientCardWidget extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  const Color(0xFF1A2F4A),
-                  const Color(0xFF0F1E2E),
+                  Colors.white,
+                  lightGrey,
                 ],
               ),
               borderRadius: BorderRadius.circular(16),
@@ -43,14 +42,14 @@ class PremiumClientCardWidget extends StatelessWidget {
                 color: yellow.withOpacity(0.3),
                 width: 1.5,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8),
-                  spreadRadius: 0,
-                ),
-              ],
+              // boxShadow: [
+              //   BoxShadow(
+              //     color: Colors.black.withOpacity(0.3),
+              //     blurRadius: 20,
+              //     offset: const Offset(0, 8),
+              //     spreadRadius: 0,
+              //   ),
+              // ],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,7 +87,7 @@ class PremiumClientCardWidget extends StatelessWidget {
                           Text(
                             "${premiumSession.firstName} ${premiumSession.lastName}",
                             style: const TextStyle(
-                              color: Colors.white,
+                              color: navy,
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
                             ),
@@ -101,13 +100,13 @@ class PremiumClientCardWidget extends StatelessWidget {
                               Icon(
                                 Icons.access_time,
                                 size: 12,
-                                color: Colors.white.withOpacity(0.6),
+                                color: grey,
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 premiumSession.startTime,
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.7),
+                                  color: grey,
                                   fontSize: 12,
                                 ),
                               ),
@@ -118,40 +117,41 @@ class PremiumClientCardWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
-                Divider(
-                  color: Colors.white.withOpacity(0.1),
-                  thickness: 1,
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.person_outline,
-                      size: 14,
-                      color: Colors.white.withOpacity(0.6),
-                    ),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        '${'created_by'.tr()}: ${premiumSession.createdBy.firstName} ${premiumSession.createdBy.lastName}',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
-                          fontSize: 11,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
+                // const SizedBox(height: 12),
+                // Divider(
+                //   color: Colors.white.withOpacity(0.1),
+                //   thickness: 1,
+                // ),
+                // const SizedBox(height: 8),
+                // Row(
+                //   children: [
+                //     Icon(
+                //       Icons.person_outline,
+                //       size: 14,
+                //       color: Colors.white.withOpacity(0.6),
+                //     ),
+                //     const SizedBox(width: 6),
+                //     Expanded(
+                //       child: Text(
+                //         '${'created_by'.tr()}: ${premiumSession.createdBy.firstName} ${premiumSession.createdBy.lastName}',
+                //         style: TextStyle(
+                //           color: Colors.white.withOpacity(0.7),
+                //           fontSize: 11,
+                //         ),
+                //         maxLines: 1,
+                //         overflow: TextOverflow.ellipsis,
+                //       ),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ),
         ),
-        Positioned(
-          top: 8,
-          right: 8,
+        Positioned.directional(
+          top: 18,
+          end: 8,
+          textDirection: Directionality.of(context),
           child: InkWell(
             onTap: onPressed,
             borderRadius: BorderRadius.circular(10),

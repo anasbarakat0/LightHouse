@@ -49,6 +49,9 @@ class _MainScreenState extends State<MainScreen> {
 
   int selectedIndex = 1;
 
+  /// على الديسكتوب: هل لوحة الملخص مفتوحة (قابلة للفتح والإغلاق)
+  bool _isSummaryOpen = true;
+
   @override
   void initState() {
     memory.get<SharedPreferences>().setInt("index", 1);
@@ -61,15 +64,22 @@ class _MainScreenState extends State<MainScreen> {
 
   // Helper function to check if user has access to a specific page
   bool _hasAccessToPage(int index) {
-    final role = memory.get<SharedPreferences>().getString("userRole") ?? "USER";
-    
+    final role =
+        memory.get<SharedPreferences>().getString("userRole") ?? "USER";
+
     // Pages accessible only to SuperAdmin and MANAGER
-    final restrictedPages = [0, 2, 4, 5, 8]; // Dashboard, Statistics, Packages, Coupons, Admin Management
-    
+    final restrictedPages = [
+      0,
+      2,
+      4,
+      5,
+      8
+    ]; // Dashboard, Statistics, Packages, Coupons, Admin Management
+
     if (restrictedPages.contains(index)) {
       return role == "SuperAdmin" || role == "MANAGER";
     }
-    
+
     // Pages accessible to SuperAdmin, MANAGER, and ADMIN
     return role == "SuperAdmin" || role == "MANAGER" || role == "ADMIN";
   }
@@ -80,7 +90,7 @@ class _MainScreenState extends State<MainScreen> {
       _showSignOutConfirmationDialog();
       return;
     }
-    
+
     if (!_hasAccessToPage(index)) {
       String message;
       if ([0, 2, 4, 5, 8].contains(index)) {
@@ -88,7 +98,7 @@ class _MainScreenState extends State<MainScreen> {
       } else {
         message = "Only SuperAdmin, Manager, and Admin Allowed";
       }
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.redAccent[700],
@@ -103,7 +113,7 @@ class _MainScreenState extends State<MainScreen> {
       );
       return;
     }
-    
+
     memory.get<SharedPreferences>().setInt("index", index);
     setState(() {
       selectedIndex = index;
@@ -328,6 +338,7 @@ class _MainScreenState extends State<MainScreen> {
           child: Focus(
             autofocus: true,
             child: Scaffold(
+              backgroundColor: lightGrey,
               drawer: !isDesktop
                   ? SizedBox(
                       width: 250,
@@ -353,9 +364,76 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                     Expanded(
                       flex: 7,
-                      child: selectedContentList[selectedIndex],
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          selectedContentList[selectedIndex],
+                          if (isDesktop)
+                            Positioned(
+                              top: 12,
+                              right: 12,
+                              child: Tooltip(
+                                textStyle: Theme.of(context).textTheme.bodySmall?.copyWith(color: navy),
+                                decoration: BoxDecoration(
+                                  color: lightGrey,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                message: _isSummaryOpen
+                                    ? "close_summary".tr()
+                                    : "open_summary".tr(),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                  foregroundColor: lightGrey,
+                                    backgroundColor: lightGrey,
+                                    
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    elevation: 0,
+                                  ),
+                                  onPressed: () {
+                                    setState(
+                                        () => _isSummaryOpen = !_isSummaryOpen);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Icon(
+                                      _isSummaryOpen
+                                          ? Icons.chevron_right
+                                          : Icons.chevron_left,
+                                      color: navy,
+                                      size: 24,
+                                    ),
+                                  ),
+                                ),
+                                // Material(
+                                //   color: Colors.white,
+                                //   borderRadius: BorderRadius.circular(10),
+                                //   elevation: 2,
+                                //   child: InkWell(
+                                //     onTap: () {
+                                //       setState(() =>
+                                //           _isSummaryOpen = !_isSummaryOpen);
+                                //     },
+                                //     borderRadius: BorderRadius.circular(10),
+                                //     child: Padding(
+                                //       padding: const EdgeInsets.all(10),
+                                //       child: Icon(
+                                //         _isSummaryOpen
+                                //             ? Icons.chevron_right
+                                //             : Icons.chevron_left,
+                                //         color: navy,
+                                //         size: 24,
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
-                    if (isDesktop)
+                    if (isDesktop && _isSummaryOpen)
                       const Expanded(
                         flex: 3,
                         child: SummaryWidget(),

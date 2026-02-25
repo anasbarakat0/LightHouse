@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class NetworkConnection {
@@ -54,6 +55,9 @@ class NetworkConnection {
 
   /// تحسين isConnected مع retry و caching
   Future<bool> get isConnected async {
+    // على الويب: تجنب طلبات CORS واعتبر الاتصال متاحاً (الطلبات الفعلية ستكشف انقطاع الشبكة)
+    if (kIsWeb) return true;
+
     // استخدام cache إذا كانت النتيجة حديثة
     if (_cachedResult != null &&
         _lastCheckTime != null &&
@@ -73,6 +77,8 @@ class NetworkConnection {
 
   /// فحص الاتصال مع retry و exponential backoff
   Future<bool> _checkConnectionWithRetry() async {
+    if (kIsWeb) return true;
+
     for (int attempt = 0; attempt < _maxRetries; attempt++) {
       try {
         // حساب timeout مع exponential backoff
@@ -108,6 +114,8 @@ class NetworkConnection {
 
   /// فحص جودة الاتصال (سرعة الاستجابة)
   Future<ConnectionQuality> getConnectionQuality() async {
+    if (kIsWeb) return ConnectionQuality.excellent;
+
     try {
       final stopwatch = Stopwatch()..start();
       final isConnected = await this.isConnected;
@@ -135,6 +143,7 @@ class NetworkConnection {
 
   /// Stream للاستماع لتغييرات الاتصال
   Stream<bool> get connectionStream {
+    if (kIsWeb) return Stream.value(true).asBroadcastStream();
     return internetConnectionChecker.onStatusChange.map(
       (status) => status == InternetConnectionStatus.connected,
     );
@@ -148,6 +157,7 @@ class NetworkConnection {
 
   /// فحص الاتصال بدون cache (للاستخدام في حالات خاصة)
   Future<bool> checkConnectionWithoutCache() async {
+    if (kIsWeb) return true;
     return await _checkConnectionWithRetry();
   }
 }

@@ -135,7 +135,7 @@ class _ChartState extends State<Chart> {
                       style: Theme.of(context)
                           .textTheme
                           .bodySmall
-                          ?.copyWith(color: lightGrey),
+                          ?.copyWith(color: navy),
                     )
                   ],
                 ),

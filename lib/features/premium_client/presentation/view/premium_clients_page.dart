@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:lighthouse/common/widget/main_button.dart';
 import 'package:lighthouse/core/network/network_connection.dart';
 import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/common/widget/header.dart';
@@ -51,7 +50,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
   TextEditingController search = TextEditingController();
   TextEditingController qrScannerController = TextEditingController();
   final FocusNode searchFocusNode = FocusNode();
-  bool searchTest = true;
+  String searchQuery = '';
   late String printerName = "XP-80C (copy 1)";
   late String printerAddress = "192.168.123.100";
   List<Body> clients = [];
@@ -99,7 +98,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                 networkConnection: NetworkConnection.createDefault(),
               ),
             ),
-          )..add(GetPremiumClients(page: 1, size: 20)),
+          )..add(GetPremiumClients(page: 1, size: 10000)),
         ),
         BlocProvider(
           create: (context) => StartPremiumSessionBloc(
@@ -328,158 +327,168 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                 if (Responsive.isDesktop(context))
                   Text(
                     "clients".tr(),
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: navy),
                   ),
                 if (Responsive.isDesktop(context)) const SizedBox(height: 40),
                 // QR Scanner Field for closing premium sessions
+                // SizedBox(
+                //   height: 65,
+                //   child: TextField(
+                //     controller: qrScannerController,
+                //     textAlignVertical: TextAlignVertical.top,
+                //     autofocus: false,
+                //     decoration: InputDecoration(
+                //       suffixIcon: Icon(
+                //         Icons.qr_code_scanner,
+                //         color: orange,
+                //       ),
+                //       filled: true,
+                //       fillColor: navy,
+                //       labelText: "Scan QR Code to Close Session",
+                //       labelStyle: Theme.of(context)
+                //           .textTheme
+                //           .labelMedium
+                //           ?.copyWith(color: Colors.white),
+                //       contentPadding: const EdgeInsets.symmetric(
+                //           vertical: 30.0, horizontal: 20),
+                //       focusedBorder: OutlineInputBorder(
+                //         borderSide: const BorderSide(color: orange, width: 1.0),
+                //         borderRadius: BorderRadius.circular(12.0),
+                //       ),
+                //       focusColor: darkNavy,
+                //       disabledBorder: OutlineInputBorder(
+                //         borderSide: const BorderSide(color: Colors.grey),
+                //         borderRadius: BorderRadius.circular(12.0),
+                //       ),
+                //       enabledBorder: OutlineInputBorder(
+                //         borderSide: const BorderSide(color: darkNavy),
+                //         borderRadius: BorderRadius.circular(12.0),
+                //       ),
+                //       floatingLabelBehavior: FloatingLabelBehavior.never,
+                //     ),
+                //     style: Theme.of(context)
+                //         .textTheme
+                //         .bodyMedium
+                //         ?.copyWith(color: Colors.white),
+                //     onSubmitted: (qrCode) {
+                //       if (qrCode.isNotEmpty) {
+                //         // Trim whitespace and newlines that QR scanner might add
+                //         final cleanedQrCode = qrCode.trim();
+                //         print(
+                //             "🔹 Scanned QR Code: '$cleanedQrCode' (length: ${cleanedQrCode.length})");
+                //         context.read<ClosePremiumSessionByQrCodeBloc>().add(
+                //             ClosePremiumSessionByQrCode(qrCode: cleanedQrCode));
+                //       }
+                //     },
+                //   ),
+                // ),
+                // const SizedBox(height: 20),
                 Container(
-                  height: 65,
-                  child: TextField(
-                    controller: qrScannerController,
-                    textAlignVertical: TextAlignVertical.top,
-                    autofocus: false,
-                    decoration: InputDecoration(
-                      suffixIcon: Icon(
-                        Icons.qr_code_scanner,
-                        color: orange,
-                      ),
-                      filled: true,
-                      fillColor: navy,
-                      labelText: "Scan QR Code to Close Session",
-                      labelStyle: Theme.of(context)
-                          .textTheme
-                          .labelMedium
-                          ?.copyWith(color: Colors.white),
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 30.0, horizontal: 20),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: orange, width: 1.0),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      focusColor: darkNavy,
-                      disabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: darkNavy),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14),
+                    color: Colors.white,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: SearchField(
+                            controller: search,
+                            focusNode: searchFocusNode,
+                            onChanged: (value) =>
+                                setState(() => searchQuery = value),
+                            onSubmitted: (value) =>
+                                setState(() => searchQuery = value),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        BlocConsumer<AddPremiumClientBloc, AddPremiumClientState>(
+                          listener: (context, state) {
+                            if (state is ExceptionAddedClient) {
+                              print(state.message);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: Colors.redAccent[700],
+                                  content: Text(state.message,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(color: Colors.white)),
+                                ),
+                              );
+                            } else if (state is ClientAdded) {
+                              print(state.response);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: Colors.green,
+                                  content: Text(state.response.message,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(color: Colors.white)),
+                                ),
+                              );
+                              context
+                                  .read<GetPremiumClientsBloc>()
+                                  .add(GetPremiumClients(page: 1, size: 20));
+                            } else if (state is ForbiddenAdded) {
+                              print(state.message);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: Colors.redAccent[700],
+                                  content: Text(state.message,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(color: Colors.white)),
+                                ),
+                              );
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const LoginWindows()));
+                            } else {
+                              print(state.runtimeType);
+                            }
+                          },
+                          builder: (context, state) {
+                            return ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: 1,
+                                backgroundColor: yellow,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                              ),
+                              onPressed: () {
+                                void client(PremiumClient client) {
+                                    print('client');
+                                    print(client.toMap());
+                                    context
+                                        .read<AddPremiumClientBloc>()
+                                        .add(AddPremiumClient(client: client));
+                                  }
+                                  AddPremiumClientDialog(context, client);
+                              },
+                              child: const Padding(
+                                  padding: EdgeInsets.all(14),
+                                  child: Icon(
+                                    Icons.person_add_sharp,
+                                    color: navy,
+                                    size: 24,
+                                  ),
+                                ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: Colors.white),
-                    onSubmitted: (qrCode) {
-                      if (qrCode.isNotEmpty) {
-                        // Trim whitespace and newlines that QR scanner might add
-                        final cleanedQrCode = qrCode.trim();
-                        print(
-                            "🔹 Scanned QR Code: '$cleanedQrCode' (length: ${cleanedQrCode.length})");
-                        context.read<ClosePremiumSessionByQrCodeBloc>().add(
-                            ClosePremiumSessionByQrCode(qrCode: cleanedQrCode));
-                      }
-                    },
                   ),
                 ),
                 const SizedBox(height: 20),
-                BlocConsumer<AddPremiumClientBloc, AddPremiumClientState>(
-                  listener: (context, state) {
-                    if (state is ExceptionAddedClient) {
-                      print(state.message);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: Colors.redAccent[700],
-                          content: Text(state.message,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(color: Colors.white)),
-                        ),
-                      );
-                    } else if (state is ClientAdded) {
-                      print(state.response);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: Colors.green,
-                          content: Text(state.response.message,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(color: Colors.white)),
-                        ),
-                      );
-                      context
-                          .read<GetPremiumClientsBloc>()
-                          .add(GetPremiumClients(page: 1, size: 20));
-                    } else if (state is ForbiddenAdded) {
-                      print(state.message);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: Colors.redAccent[700],
-                          content: Text(state.message,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(color: Colors.white)),
-                        ),
-                      );
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginWindows()));
-                    } else {
-                      print(state.runtimeType);
-                    }
-                  },
-                  builder: (context, state) {
-                    return MainButton(
-                        onTap: () {
-                          void client(PremiumClient client) {
-                            print('client');
-                            print(client.toMap());
-                            context
-                                .read<AddPremiumClientBloc>()
-                                .add(AddPremiumClient(client: client));
-                          }
-
-                          AddPremiumClientDialog(context, client);
-                        },
-                        title: "add_client".tr(),
-                        icon: const Icon(
-                          Icons.person_add_sharp,
-                          color: orange,
-                        ));
-                  },
-                ),
-                const SizedBox(height: 20),
-                SearchField(
-                    controller: search,
-                    focusNode: searchFocusNode,
-                    onChanged: (name) {
-                      setState(() {
-                        if (search.text.isEmpty) {
-                          searchTest = true;
-                          // Reset bloc to initial state when search is cleared
-                          context
-                              .read<GetUsersByNameBloc>()
-                              .add(ResetUsersByNameSearch());
-                        } else {
-                          searchTest = false;
-                        }
-                      });
-                    },
-                    onSubmitted: (name) {
-                      if (name.isNotEmpty) {
-                        context
-                            .read<GetUsersByNameBloc>()
-                            .add(GetUsersByName(name: name));
-                      }
-                    }),
-                const SizedBox(height: 20),
-                if (searchTest)
-                  BlocBuilder<GetPremiumClientsBloc, GetPremiumClientsState>(
+                BlocBuilder<GetPremiumClientsBloc, GetPremiumClientsState>(
                     builder: (context, state) {
                       if (state is ExceptionFetchingClients) {
                         return Center(
@@ -502,13 +511,48 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                           ),
                         );
                       } else if (state is SuccessFetchingClients) {
+                        final query = searchQuery.trim().toLowerCase();
+                        final filteredList = query.isEmpty
+                            ? state.responseModel.body
+                            : state.responseModel.body.where((c) {
+                                final fullName =
+                                    '${c.firstName} ${c.lastName}'.toLowerCase();
+                                final matchesName = c.firstName
+                                        .toLowerCase()
+                                        .contains(query) ||
+                                    c.lastName.toLowerCase().contains(query) ||
+                                    fullName.contains(query);
+                                final matchesPhone = (c.phoneNumber ?? '')
+                                    .toLowerCase()
+                                    .contains(query);
+                                return matchesName || matchesPhone;
+                              }).toList();
                         return Expanded(
-                          child: ListView.builder(
-                              itemCount: state.responseModel.body.length,
-                              itemBuilder: (context, index) {
-                                final client = state.responseModel.body[index];
-                                clients.add(client);
-                                return Column(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 0),
+                                child: Text(
+                                  query.isEmpty
+                                      ? '${state.responseModel.pageable.total} clients'
+                                      : '${filteredList.length} / ${state.responseModel.pageable.total} clients',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                        color: grey,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                ),
+                              ),
+                              Expanded(
+                                child: ListView.builder(
+                                  itemCount: filteredList.length,
+                                  itemBuilder: (context, index) {
+                                    final client = filteredList[index];
+                                    return Column(
                                   children: [
                                     ListTile(
                                       onTap: () {
@@ -522,7 +566,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                                       minTileHeight: 56,
                                       leading: CircleAvatar(
                                         radius: 25,
-                                        backgroundColor: navy,
+                                        backgroundColor: grey,
                                         child: client.gender == "MALE"
                                             ? const Icon(
                                                 Icons.person,
@@ -540,7 +584,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                                         style: Theme.of(context)
                                             .textTheme
                                             .labelMedium
-                                            ?.copyWith(color: Colors.white),
+                                            ?.copyWith(color: navy),
                                       ),
                                       subtitle: Text(
                                         client.phoneNumber ?? 'N/A',
@@ -551,27 +595,67 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                                               color: grey,
                                             ),
                                       ),
-                                      trailing: FloatingActionButton.extended(
-                                        heroTag: 'fab_add_session_${client.uuid}',
-                                        backgroundColor: lightGrey,
-                                        icon: const Icon(
-                                          Icons.login,
-                                          color: orange,
-                                        ),
-                                        onPressed: () {
-                                          context
-                                              .read<StartPremiumSessionBloc>()
-                                              .add(StartPreSession(
-                                                  id: client.uuid));
-                                          // printPremiumQr("USB", printerAddress,
-                                          //     printerName, client);
-                                        },
-                                        label: Text(
-                                          "add_session".tr(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelMedium,
-                                        ),
+                                      trailing: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Tooltip(
+                                            message: 'no_invoice'.tr(),
+                                            decoration: BoxDecoration(
+                                              color: lightGrey,
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                            child: SizedBox(
+                                              width: 60,
+                                              height: 60,
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  context
+                                                      .read<StartPremiumSessionBloc>()
+                                                      .add(StartPreSession(
+                                                          id: client.uuid));
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  elevation: 0,
+                                                  backgroundColor: lightGrey,
+                                                  foregroundColor: lightGrey,
+                                                  padding: const EdgeInsets.symmetric(
+                                                      horizontal: 12, vertical: 12),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(12),
+                                                  ),
+                                                ),
+                                                child: Icon(
+                                                  Icons.print_disabled,
+                                                  size: 22,
+                                                  color: grey,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          FloatingActionButton.extended(
+                                            heroTag: 'fab_add_session_${client.uuid}',
+                                            elevation: 1,
+                                            backgroundColor: yellow,
+                                            icon: const Icon(
+                                              Icons.login,
+                                              color: navy,
+                                            ),
+                                            onPressed: () {
+                                              context
+                                                  .read<StartPremiumSessionBloc>()
+                                                  .add(StartPreSession(
+                                                      id: client.uuid));
+                                            },
+                                            label: Text(
+                                              "add_session".tr(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .labelMedium,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       contentPadding:
                                           const EdgeInsets.symmetric(
@@ -580,202 +664,25 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                                         borderRadius: BorderRadius.circular(50),
                                       ),
                                     ),
-                                    if (index !=
-                                        state.responseModel.body.length - 1)
-                                      const Padding(
-                                        padding: EdgeInsets.symmetric(
+                                    if (index != filteredList.length - 1)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
                                             horizontal: 10),
-                                        child: Divider(thickness: 0.1),
+                                        child: Divider(
+                                            thickness: 0.1, color: navy),
                                       ),
                                   ],
                                 );
                               }),
+                              ),
+                            ],
+                          ),
                         );
                       } else if (state is OfflineFailureState) {
                         return Center(
                           child: Text(
                             state.message,
                             style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        );
-                      } else {
-                        return const CircularProgressIndicator();
-                      }
-                    },
-                  ),
-                if (!searchTest)
-                  BlocBuilder<GetUsersByNameBloc, GetUsersByNameState>(
-                    builder: (context, state) {
-                      if (state is GetUsersByNameInitial) {
-                        // Show empty list when in initial state
-                        return const SizedBox.shrink();
-                      } else if (state is ExceptionGettingUsersByName) {
-                        return Center(
-                          child: Text(
-                            state.message,
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Colors.white,
-                                    ),
-                          ),
-                        );
-                      } else if (state is NoUsersFound) {
-                        return Center(
-                          child: Text(
-                            state.message,
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Colors.white,
-                                    ),
-                          ),
-                        );
-                      } else if (state is SuccessGettingUsersByName) {
-                        if (state.response.body == null ||
-                            state.response.body!.isEmpty) {
-                          return Center(
-                            child: Text(
-                              "No users found",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(color: Colors.white),
-                            ),
-                          );
-                        }
-                        return Expanded(
-                          child: ListView.builder(
-                              itemCount: state.response.body!.length,
-                              itemBuilder: (context, index) {
-                                final client = state.response.body![index];
-                                // Convert UserByName to Body for ClientProfile
-                                final bodyClient = Body(
-                                  uuid: client.uuid,
-                                  firstName: client.firstName,
-                                  lastName: client.lastName,
-                                  email: client.email,
-                                  phoneNumber: client.phoneNumber,
-                                  gender: client.gender,
-                                  study: client.study,
-                                  birthDate: client.birthDate,
-                                  addingDateTime: client.addingDateTime,
-                                  addedBy: client.addedBy,
-                                  qrCode: client.qrCode != null
-                                      ? QrCode(
-                                          createdAt: client.qrCode!.createdAt,
-                                          updatedAt: client.qrCode!.updatedAt,
-                                          createdBy: client.qrCode!.createdBy,
-                                          lastModifiedBy:
-                                              client.qrCode!.lastModifiedBy,
-                                          id: client.qrCode!.id,
-                                          qrCodeType: client.qrCode!.qrCodeType,
-                                          qrCode: client.qrCode!.qrCode,
-                                        )
-                                      : QrCode(
-                                          createdAt: '',
-                                          updatedAt: '',
-                                          createdBy: '',
-                                          lastModifiedBy: null,
-                                          id: '',
-                                          qrCodeType: '',
-                                          qrCode: '',
-                                        ),
-                                  generatedPassword: client.generatedPassword,
-                                );
-                                return Column(
-                                  children: [
-                                    ListTile(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ClientProfile(
-                                                        client: bodyClient)));
-                                      },
-                                      minTileHeight: 56,
-                                      leading: CircleAvatar(
-                                        radius: 25,
-                                        backgroundColor: navy,
-                                        child: client.gender == "MALE"
-                                            ? const Icon(
-                                                Icons.person,
-                                                color: lightGrey,
-                                                size: 35,
-                                              )
-                                            : SvgPicture.asset(
-                                                "assets/svg/woman.svg",
-                                                width: 25,
-                                                color: lightGrey,
-                                              ),
-                                      ),
-                                      title: Text(
-                                        "${client.firstName.replaceFirst(client.firstName[0], client.firstName[0].toUpperCase())} ${client.lastName.replaceFirst(client.lastName[0], client.lastName[0].toUpperCase())}",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(color: lightGrey),
-                                      ),
-                                      subtitle: Text(
-                                        bodyClient.phoneNumber ?? 'N/A',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall
-                                            ?.copyWith(
-                                              color: grey,
-                                            ),
-                                      ),
-                                      trailing: FloatingActionButton.extended(
-                                        heroTag: 'fab_add_session_print_${bodyClient.uuid}',
-                                        backgroundColor: lightGrey,
-                                        icon: const Icon(
-                                          Icons.login,
-                                          color: orange,
-                                        ),
-                                        onPressed: () async {
-                                          context
-                                              .read<StartPremiumSessionBloc>()
-                                              .add(StartPreSession(
-                                                  id: client.uuid));
-                                          print("🖨️ Starting to print Premium QR...");
-                                          try {
-                                            await printPremiumQr("USB", printerAddress,
-                                                printerName, bodyClient);
-                                            print("✅ Premium QR printed successfully");
-                                          } catch (e) {
-                                            print("❌ Error printing Premium QR: $e");
-                                            debugPrint("Print Premium QR Error: $e");
-                                          }
-                                        },
-                                        label: Text(
-                                          "add_session".tr(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelLarge,
-                                        ),
-                                      ),
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 8),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                    ),
-                                    if (index !=
-                                        state.response.body!.length - 1)
-                                      const Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        child: Divider(thickness: 0.1),
-                                      ),
-                                  ],
-                                );
-                              }),
-                        );
-                      } else if (state is ForbiddenGettingUsersByName) {
-                        return Center(
-                          child: Text(
-                            state.message,
-                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         );
                       } else {

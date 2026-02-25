@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
+/// Responsive: موبايل فقط أو PC (بدون وضع تابلت منفصل).
 class Responsive {
-  static bool isMobile(BuildContext context) =>
-      MediaQuery.of(context).size.width < 850;
+  static const double _breakpoint = 850;
 
-  static bool isTablet(BuildContext context) =>
-      MediaQuery.of(context).size.width < 1230 &&
-      MediaQuery.of(context).size.width >= 850;
+  static bool isMobile(BuildContext context) =>
+      MediaQuery.of(context).size.width < _breakpoint;
+
+  /// لا يُستخدم وضع تابلت؛ التابلت يعامل كـ PC.
+  static bool isTablet(BuildContext context) => false;
 
   static bool isDesktop(BuildContext context) =>
-      MediaQuery.of(context).size.width >= 1230;
+      MediaQuery.of(context).size.width >= _breakpoint;
 }

@@ -28,19 +28,19 @@ class SearchField extends StatelessWidget {
         decoration: InputDecoration(
           suffixIcon: Icon(
             Icons.search,
-            color: darkNavy,
+            color: grey,
           ),
           filled: true,
-          fillColor: navy,
+          fillColor: lightGrey,
           labelText: "Search",
           labelStyle: Theme.of(context)
               .textTheme
               .labelMedium
-              ?.copyWith(color: Colors.white),
+              ?.copyWith(color: navy),
           contentPadding:
               const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: orange, width: 1.0),
+            borderSide: const BorderSide(color: yellow, width: 1.0),
             borderRadius: BorderRadius.circular(12.0),
           ),
           focusColor: darkNavy,
@@ -49,7 +49,7 @@ class SearchField extends StatelessWidget {
             borderRadius: BorderRadius.circular(12.0),
           ),
           enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: darkNavy),
+            borderSide: BorderSide(color: Colors.white.withOpacity(0.15), width: 1.0),
             borderRadius: BorderRadius.circular(12.0),
           ),
           floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -57,7 +57,7 @@ class SearchField extends StatelessWidget {
         style: Theme.of(context)
             .textTheme
             .bodyMedium
-            ?.copyWith(color: Colors.white),
+            ?.copyWith(color: navy),
         onChanged: onChanged,
         onSubmitted: onSubmitted,
       ),

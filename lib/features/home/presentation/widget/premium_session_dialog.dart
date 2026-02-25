@@ -5,8 +5,14 @@ import 'package:lighthouse/features/home/data/models/get_premium_session_respons
 import 'package:lighthouse/features/home/presentation/widget/detail_row.dart';
 import 'package:lighthouse/features/home/presentation/widget/product_detail_row.dart';
 
+/// [onEndSession] انهاء الجلسة بدون طباعة فاتورة
+/// [onEndSessionWithPrint] انهاء الجلسة مع طباعة فاتورة
 void premiumSessionDialog(
-    BuildContext context, Body sessionData, void Function() onTap) {
+  BuildContext context,
+  Body sessionData,
+  void Function() onEndSession,
+  void Function() onEndSessionWithPrint,
+) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -342,60 +348,94 @@ void premiumSessionDialog(
                     ),
                   ),
                 ),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: onTap,
-                      borderRadius: BorderRadius.circular(14),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              orange.withOpacity(0.3),
-                              orange.withOpacity(0.2),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(
-                            color: orange.withOpacity(0.5),
-                            width: 1.5,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: orange.withOpacity(0.3),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.stop_circle_rounded,
-                              color: orange,
-                              size: 22,
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              "end_session".tr(),
-                              style: const TextStyle(
-                                color: orange,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 0.5,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 52,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: onEndSession,
+                            borderRadius: BorderRadius.circular(14),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    orange.withOpacity(0.3),
+                                    orange.withOpacity(0.2),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                  color: orange.withOpacity(0.5),
+                                  width: 1.5,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: orange.withOpacity(0.3),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.stop_circle_rounded,
+                                    color: orange,
+                                    size: 22,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    "end_session".tr(),
+                                    style: const TextStyle(
+                                      color: orange,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                    const SizedBox(width: 10),
+                    Tooltip(
+                      message: "end_session_with_invoice".tr(),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: onEndSessionWithPrint,
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            width: 52,
+                            height: 52,
+                            decoration: BoxDecoration(
+                              color: orange.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: orange.withOpacity(0.5),
+                                width: 1.5,
+                              ),
+                            ),
+                            child: const Icon(
+                              Icons.receipt_long_rounded,
+                              color: orange,
+                              size: 24,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

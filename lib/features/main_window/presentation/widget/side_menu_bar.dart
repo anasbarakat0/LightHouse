@@ -30,7 +30,7 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
     final data = SideMenuData();
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [navy, darkNavy],
@@ -49,20 +49,23 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
                 : "assets/svg/ar-logo.svg",
           ),
           SizedBox(
-            height: Responsive.isDesktop(context) ? 50 : 30,
+            height: Responsive.isDesktop(context) ? 25 : 30,
           ),
           Expanded(
             child: ListView.builder(
-              
               itemCount: data.menu.length,
               itemBuilder: (context, index) => MenuEntry(
                 data: data,
                 index: index,
-                isSelected: (memory.get<SharedPreferences>().getInt("index") ?? 1) == index,
-                onTap: () => setState(() {
-                  widget.changeindex(index);
-                  selectedIndex = index;
-                }),
+                isSelected:
+                    (memory.get<SharedPreferences>().getInt("index") ?? 1) ==
+                        index,
+                onTap: () => setState(
+                  () {
+                    widget.changeindex(index);
+                    selectedIndex = index;
+                  },
+                ),
               ),
             ),
           ),

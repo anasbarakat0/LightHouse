@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:lighthouse/common/widget/header.dart';
 import 'package:lighthouse/features/home/presentation/widget/end_session_with_coupon_dialog.dart';
 import 'package:lighthouse/core/network/network_connection.dart';
@@ -56,7 +55,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   final contentController = TextEditingController();
   final qrScannerController = TextEditingController();
+  final _searchController = TextEditingController();
   final FocusNode _qrFocusNode = FocusNode();
+  String _searchQuery = '';
+
+  /// عند إنهاء الجلسة من ديالوج الجلسة: true = طباعة فاتورة، false = بدون طباعة
+  bool _printInvoiceAfterEndSession = true;
 
   // ignore: unused_field
   final bool _isConnected = false;
@@ -79,6 +83,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     contentController.dispose();
     qrScannerController.dispose();
+    _searchController.dispose();
     _qrFocusNode.dispose();
     super.dispose();
   }
@@ -226,10 +231,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             listener: (context, state) {
               if (state is SuccessFinishPremiumSession) {
                 print(state.response);
-                // Print first invoice (original)
-                print("🖨️ Starting to print first invoice...");
-                printDetailedInvoice(
-                            true, printerAddress, printerName, state.response.body);
+                if (_printInvoiceAfterEndSession) {
+                  print("🖨️ Starting to print first invoice...");
+                  printDetailedInvoice(
+                      true, printerAddress, printerName, state.response.body);
+                }
+                _printInvoiceAfterEndSession = true;
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     backgroundColor: Colors.green[800],
@@ -283,23 +290,46 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           BlocListener<GetPremiumSessionBloc, GetPremiumSessionState>(
             listener: (context, state) {
               if (state is SuccessGettingSessionById) {
-                premiumSessionDialog(context, state.response.body, () {
-                  showEndSessionWithCouponDialog(
-                    context,
-                    state.response.body.id,
-                    (sessionId, discountCode, manualDiscountAmount,
-                        manualDiscountNote) {
-                      context.read<FinishPremiumSessionBloc>().add(
-                            FinishPreSession(
-                              id: sessionId,
-                              discountCode: discountCode,
-                              manualDiscountAmount: manualDiscountAmount,
-                              manualDiscountNote: manualDiscountNote,
-                            ),
-                          );
-                    },
-                  );
-                });
+                premiumSessionDialog(
+                  context,
+                  state.response.body,
+                  () {
+                    _printInvoiceAfterEndSession = false;
+                    showEndSessionWithCouponDialog(
+                      context,
+                      state.response.body.id,
+                      (sessionId, discountCode, manualDiscountAmount,
+                          manualDiscountNote) {
+                        context.read<FinishPremiumSessionBloc>().add(
+                              FinishPreSession(
+                                id: sessionId,
+                                discountCode: discountCode,
+                                manualDiscountAmount: manualDiscountAmount,
+                                manualDiscountNote: manualDiscountNote,
+                              ),
+                            );
+                      },
+                    );
+                  },
+                  () {
+                    _printInvoiceAfterEndSession = true;
+                    showEndSessionWithCouponDialog(
+                      context,
+                      state.response.body.id,
+                      (sessionId, discountCode, manualDiscountAmount,
+                          manualDiscountNote) {
+                        context.read<FinishPremiumSessionBloc>().add(
+                              FinishPreSession(
+                                id: sessionId,
+                                discountCode: discountCode,
+                                manualDiscountAmount: manualDiscountAmount,
+                                manualDiscountNote: manualDiscountNote,
+                              ),
+                            );
+                      },
+                    );
+                  },
+                );
               } else if (state is ExceptionGettingSessionById) {
                 print("if (state is ExceptionGettingSessionById) {");
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -342,7 +372,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   final finishBody = finish_model.Body.fromMap(bodyMap);
                   // Print first invoice (original)
                   printDetailedInvoice(
-                            true, printerAddress, printerName, finishBody);
+                      true, printerAddress, printerName, finishBody);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       backgroundColor: Colors.green[800],
@@ -628,7 +658,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                     Text(
                                       "home".tr(),
                                       style: const TextStyle(
-                                        color: Colors.white,
+                                        color: navy,
                                         fontSize: 32,
                                         fontWeight: FontWeight.w800,
                                         letterSpacing: 0.5,
@@ -642,6 +672,134 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                               HeaderWidget(title: "home".tr()),
                             if (Responsive.isMobile(context))
                               const SizedBox(height: 24),
+                            // بحث بالاسم
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                color: Colors.white,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(14),
+                                    // boxShadow: [
+                                    //   BoxShadow(
+                                    //     color: Colors.black.withOpacity(0.15),
+                                    //     blurRadius: 12,
+                                    //     offset: const Offset(0, 4),
+                                    //   ),
+                                    //   BoxShadow(
+                                    //     color: orange.withOpacity(0.08),
+                                    //     blurRadius: 20,
+                                    //     offset: const Offset(0, 2),
+                                    //   ),
+                                    // ],
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          controller: _searchController,
+                                          onChanged: (value) => setState(() =>
+                                              _searchQuery = value.trim()),
+                                          decoration: InputDecoration(
+                                            hintText:
+                                                'search_by_name_or_qr'.tr(),
+                                            hintStyle: TextStyle(
+                                              color: grey,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                            prefixIcon: Icon(
+                                              Icons.search_rounded,
+                                              color: grey,
+                                              size: 22,
+                                            ),
+                                            suffixIcon: _searchQuery.isNotEmpty
+                                                ? IconButton(
+                                                    icon: Icon(
+                                                      Icons.close_rounded,
+                                                      color: grey,
+                                                      size: 20,
+                                                    ),
+                                                    onPressed: () {
+                                                      _searchController.clear();
+                                                      setState(() =>
+                                                          _searchQuery = '');
+                                                    },
+                                                    splashRadius: 20,
+                                                  )
+                                                : null,
+                                            filled: true,
+                                            fillColor: lightGrey,
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              borderSide: BorderSide(
+                                                color: yellow,
+                                                width: 1,
+                                              ),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              borderSide: BorderSide(
+                                                color: Colors.white
+                                                    .withOpacity(0.15),
+                                                width: 1,
+                                              ),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              borderSide: const BorderSide(
+                                                color: yellow,
+                                                width: 1,
+                                              ),
+                                            ),
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                              horizontal: 18,
+                                              vertical: 16,
+                                            ),
+                                          ),
+                                          style: const TextStyle(
+                                            color: navy,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          elevation: 0,
+                                          foregroundColor: Colors.white,
+                                          backgroundColor: lightGrey,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          context
+                                              .read<GetAllActiveSessionsBloc>()
+                                              .add(GetActiveSessions());
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(14),
+                                          child: Icon(
+                                            Icons.refresh_rounded,
+                                            color: navy,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
                             Expanded(
                               child: BlocConsumer<GetAllActiveSessionsBloc,
                                   GetAllActiveSessionsState>(
@@ -682,13 +840,28 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                 },
                                 builder: (context, state) {
                                   if (state is SuccessGettingSessions) {
+                                    final sessions = state
+                                        .response.body.activePremiumSessions;
+                                    final q = _searchQuery.toLowerCase();
+                                    final filtered = _searchQuery.isEmpty
+                                        ? sessions
+                                        : sessions
+                                            .where(
+                                              (s) =>
+                                                  '${s.firstName} ${s.lastName}'
+                                                      .toLowerCase()
+                                                      .contains(q) ||
+                                                  (s.qrCode
+                                                      .toLowerCase()
+                                                      .contains(q)),
+                                            )
+                                            .toList();
                                     return Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         const SizedBox(height: 24),
                                         Expanded(
-                                          child: state.response.body
-                                                  .activePremiumSessions.isEmpty
+                                          child: filtered.isEmpty
                                               ? Center(
                                                   child: Column(
                                                     mainAxisAlignment:
@@ -704,8 +877,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                       const SizedBox(
                                                           height: 16),
                                                       Text(
-                                                        "No premium sessions"
-                                                            .tr(),
+                                                        _searchQuery.isEmpty
+                                                            ? "No premium sessions"
+                                                                .tr()
+                                                            : "no_results_for_search"
+                                                                .tr(),
                                                         style: TextStyle(
                                                           color: Colors.white
                                                               .withOpacity(0.6),
@@ -724,14 +900,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                         context)
                                                                     .size
                                                                     .width >
-                                                                1806
+                                                                1383
                                                             ? 4
-                                                            : MediaQuery.of(context)
-                                                                        .size
-                                                                        .width >
-                                                                    1383
-                                                                ? 3
-                                                                : 2)
+                                                            : 3)
                                                         : (MediaQuery.of(
                                                                         context)
                                                                     .size
@@ -751,21 +922,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                     : 1),
                                                     crossAxisSpacing: 16.0,
                                                     mainAxisSpacing: 16.0,
-                                                    mainAxisExtent: 160,
+                                                    mainAxisExtent: 80,
                                                   ),
-                                                  itemCount: state
-                                                      .response
-                                                      .body
-                                                      .activePremiumSessions
-                                                      .length,
+                                                  itemCount: filtered.length,
                                                   itemBuilder:
                                                       (context, index) {
                                                     ActivePremiumSession
-                                                        premiumSession = state
-                                                                .response
-                                                                .body
-                                                                .activePremiumSessions[
-                                                            index];
+                                                        premiumSession =
+                                                        filtered[index];
                                                     return PremiumClientCardWidget(
                                                       context: context,
                                                       premiumSession:

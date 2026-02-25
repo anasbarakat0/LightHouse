@@ -85,9 +85,7 @@ class _LoginWindowsState extends State<LoginWindows>
               child: SafeArea(
                 child: Responsive.isMobile(context)
                     ? _buildMobileView(context)
-                    : Responsive.isTablet(context)
-                        ? _buildTabletView(context)
-                        : _buildDesktopView(context),
+                    : _buildDesktopView(context),
               ),
             ),
           );
@@ -111,32 +109,6 @@ class _LoginWindowsState extends State<LoginWindows>
               const SizedBox(height: 48),
               _buildLoginCard(context, isMobile: true),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// **🔹 Tablet Layout**
-  Widget _buildTabletView(BuildContext context) {
-    return Center(
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.all(40),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 600),
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildLogo(context, 280),
-                  const SizedBox(height: 48),
-                  _buildLoginCard(context),
-                ],
-              ),
-            ),
           ),
         ),
       ),
@@ -590,14 +562,18 @@ class _LoginWindowsState extends State<LoginWindows>
   }
 
   /// **🔹 Logo Widget**
+  /// Uses a local [languageCode] to avoid Flutter web passing a JS interop object
+  /// into the widget inspector (LegacyJavaScriptObject vs DiagnosticsNode).
   Widget _buildLogo(BuildContext context, double width) {
+    final languageCode = context.locale.languageCode;
+    final assetPath = languageCode == "en"
+        ? "assets/svg/dark-en-logo.svg"
+        : "assets/svg/dark-ar-logo.svg";
     return Hero(
       tag: 'logo',
       child: SvgPicture.asset(
         width: width,
-        context.locale.languageCode == "en"
-            ? "assets/svg/dark-en-logo.svg"
-            : "assets/svg/dark-ar-logo.svg",
+        assetPath,
       ),
     );
   }

@@ -42,7 +42,7 @@ class _SummaryDetailsState extends State<SummaryDetails> {
         }
         
         return CustomCard(
-          color: lightGrey,
+          color: Colors.white,
           child: isDesktop && !row
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,

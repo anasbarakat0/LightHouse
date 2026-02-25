@@ -155,7 +155,7 @@ class _SummaryWidgetState extends State<SummaryWidget> {
               height: double.infinity,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [navy, darkNavy],
+                  colors: [lightGrey, Colors.white],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -175,7 +175,7 @@ class _SummaryWidgetState extends State<SummaryWidget> {
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
-                              ?.copyWith(color: Colors.white),
+                              ?.copyWith(color: navy),
                         ),
                         const SizedBox(height: 16),
                         SummaryDetails(
