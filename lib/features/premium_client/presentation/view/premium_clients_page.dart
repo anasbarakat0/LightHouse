@@ -635,18 +635,36 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                                           ),
                                           const SizedBox(width: 8),
                                           FloatingActionButton.extended(
-                                            heroTag: 'fab_add_session_${client.uuid}',
+                                            heroTag:
+                                                'fab_add_session_${client.uuid}',
                                             elevation: 1,
-                                            backgroundColor: yellow,
+                                            backgroundColor: Colors.white,
+                                            foregroundColor: lightGrey,
+
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(12),
+                                              side: BorderSide(color: yellow, width: 1),
+                                            ),
                                             icon: const Icon(
                                               Icons.login,
                                               color: navy,
                                             ),
-                                            onPressed: () {
+                                            onPressed: () async {
                                               context
                                                   .read<StartPremiumSessionBloc>()
                                                   .add(StartPreSession(
                                                       id: client.uuid));
+                                              try {
+                                                await printPremiumQr(
+                                                  "USB",
+                                                  printerAddress,
+                                                  printerName,
+                                                  client,
+                                                );
+                                              } catch (e) {
+                                                debugPrint(
+                                                    "Error printing Premium QR: $e");
+                                              }
                                             },
                                             label: Text(
                                               "add_session".tr(),

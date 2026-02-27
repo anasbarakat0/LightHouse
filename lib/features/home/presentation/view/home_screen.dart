@@ -900,7 +900,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                         context)
                                                                     .size
                                                                     .width >
-                                                                1383
+                                                                1183
                                                             ? 4
                                                             : 3)
                                                         : (MediaQuery.of(

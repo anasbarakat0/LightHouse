@@ -369,9 +369,9 @@ class _MainScreenState extends State<MainScreen> {
                         children: [
                           selectedContentList[selectedIndex],
                           if (isDesktop)
-                            Positioned(
+                            PositionedDirectional(
                               top: 12,
-                              right: 12,
+                              end: 12,
                               child: Tooltip(
                                 textStyle: Theme.of(context).textTheme.bodySmall?.copyWith(color: navy),
                                 decoration: BoxDecoration(
