@@ -2,8 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:lighthouse/common/widget/pagination.dart';
 import 'package:lighthouse/core/network/network_connection.dart';
 import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/core/utils/responsive.dart';
@@ -39,6 +37,14 @@ class BuffetPage extends StatefulWidget {
 class _BuffetPageState extends State<BuffetPage> {
   int perPage = 18;
   int currentPage = 1;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +58,7 @@ class _BuffetPageState extends State<BuffetPage> {
                 networkConnection: NetworkConnection.createDefault(),
               ),
             ),
-          )..add(GetAllProducts(page: currentPage - 1, size: perPage)),
+          )..add(GetAllProducts(page: 0, size: 10000)),
         ),
         BlocProvider(
           create: (context) => DeleteProductBloc(
@@ -236,6 +242,117 @@ class _BuffetPageState extends State<BuffetPage> {
                         ),
                       const SizedBox(height: 16),
 
+                      // Search bar + Add product button
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          color: navy,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: _searchController,
+                                  onChanged: (value) => setState(
+                                      () => _searchQuery = value.trim()),
+                                  decoration: InputDecoration(
+                                    hintText: 'search_by_name_or_qr'.tr(),
+                                    hintStyle: TextStyle(
+                                      color: lightGrey,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    prefixIcon: Icon(
+                                      Icons.search_rounded,
+                                      color: lightGrey,
+                                      size: 22,
+                                    ),
+                                    suffixIcon: _searchQuery.isNotEmpty
+                                        ? IconButton(
+                                            icon: Icon(
+                                              Icons.close_rounded,
+                                              color: lightGrey,
+                                              size: 20,
+                                            ),
+                                            onPressed: () {
+                                              _searchController.clear();
+                                              setState(() => _searchQuery = '');
+                                            },
+                                            splashRadius: 20,
+                                          )
+                                        : null,
+                                    filled: true,
+                                    fillColor: darkNavy,
+                                    border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(14),
+                                      borderSide: BorderSide(
+                                        color: orange,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(14),
+                                      borderSide: BorderSide(
+                                        color: Colors.white.withOpacity(0.15),
+                                        width: 1,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(14),
+                                      borderSide: const BorderSide(
+                                        color: orange,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    contentPadding:
+                                        const EdgeInsets.symmetric(
+                                      horizontal: 18,
+                                      vertical: 16,
+                                    ),
+                                  ),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  foregroundColor: orange,
+                                  backgroundColor: yellow,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(14),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  addProductDialog(context, (product) {
+                                    context.read<AddProductBloc>().add(
+                                        AddProduct(product: product));
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(14),
+                                  child: Icon(
+                                    Icons.add_rounded,
+                                    color: navy,
+                                    size: 24,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
                       // Products Grid
                       BlocConsumer<GetAllProductsBloc, GetAllProductsState>(
                         listener: (context, state) {
@@ -252,7 +369,19 @@ class _BuffetPageState extends State<BuffetPage> {
                         },
                         builder: (context, state) {
                           if (state case SuccessGettingProducts()) {
-                            if (state.response.body.isEmpty) {
+                            final query = _searchQuery.trim().toLowerCase();
+                            final filteredList = query.isEmpty
+                                ? state.response.body
+                                : state.response.body.where((p) {
+                                    final nameMatch = p.name
+                                        .toLowerCase()
+                                        .contains(query);
+                                    final barcodeMatch = p.barCode
+                                        .toLowerCase()
+                                        .contains(query);
+                                    return nameMatch || barcodeMatch;
+                                  }).toList();
+                            if (filteredList.isEmpty) {
                               return Container(
                                 padding: const EdgeInsets.all(40),
                                 decoration: BoxDecoration(
@@ -298,7 +427,6 @@ class _BuffetPageState extends State<BuffetPage> {
                                 ),
                               );
                             }
-
                             return Column(
                               children: [
                                 GridView.builder(
@@ -332,45 +460,44 @@ class _BuffetPageState extends State<BuffetPage> {
                                     mainAxisSpacing: 16,
                                     childAspectRatio: 0.75,
                                   ),
-                                  itemCount: state.response.body.length,
+                                  itemCount: filteredList.length,
                                   itemBuilder: (context, index) {
-                                    var product = ProductModel.fromMap(
-                                        state.response.body[index].toMap());
+                                    final item = filteredList[index];
+                                    var product =
+                                        ProductModel.fromMap(item.toMap());
                                     return ProductCardWidget(
                                       product: product,
                                       delete: () {
                                         context.read<DeleteProductBloc>().add(
-                                              DeleteProduct(
-                                                id: state.response.body[index].id,
-                                              ),
+                                              DeleteProduct(id: item.id),
                                             );
                                       },
                                       edit: (p) {
                                         context.read<EditProductBloc>().add(
                                               EditProduct(
                                                 product: p,
-                                                id: state.response.body[index].id,
+                                                id: item.id,
                                               ),
                                             );
                                       },
                                     );
                                   },
                                 ),
-                                const SizedBox(height: 24),
-                                PaginationWidget(
-                                  currentPage: currentPage,
-                                  totalPages: (state.response.pageable.total /
-                                          perPage)
-                                      .ceil(),
-                                  onPageChanged: (page) {
-                                    context.read<GetAllProductsBloc>().add(
-                                        GetAllProducts(
-                                            page: page - 1, size: perPage));
-                                    setState(() {
-                                      currentPage = page;
-                                    });
-                                  },
-                                ),
+                                // const SizedBox(height: 24),
+                                // PaginationWidget(
+                                //   currentPage: currentPage,
+                                //   totalPages: (state.response.pageable.total /
+                                //           perPage)
+                                //       .ceil(),
+                                //   onPageChanged: (page) {
+                                //     context.read<GetAllProductsBloc>().add(
+                                //         GetAllProducts(
+                                //             page: page - 1, size: perPage));
+                                //     setState(() {
+                                //       currentPage = page;
+                                //     });
+                                //   },
+                                // ),
                               ],
                             );
                           } else if (state case LoadingGetProducts()) {
@@ -395,80 +522,10 @@ class _BuffetPageState extends State<BuffetPage> {
                 ),
               ],
             ),
-            floatingActionButton: _buildAddProductButton(context),
           );
         }),
       ),
     );
   }
 
-  Widget _buildAddProductButton(BuildContext context) {
-    final isMobile = Responsive.isMobile(context);
-    final isRtl = context.locale.languageCode == "ar";
-
-    return Container(
-      margin: EdgeInsets.only(
-        bottom: isMobile ? 80 : 40,
-        right: isRtl ? 0 : 20,
-        left: isRtl ? 20 : 0,
-      ),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            orange.withOpacity(0.8),
-            orange.withOpacity(0.6),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(isMobile ? 28 : 16),
-        boxShadow: [
-          BoxShadow(
-            color: orange.withOpacity(0.4),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {
-            addProductDialog(context, (product) {
-              context.read<AddProductBloc>().add(AddProduct(product: product));
-            });
-          },
-          borderRadius: BorderRadius.circular(isMobile ? 28 : 16),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 20 : 24,
-              vertical: isMobile ? 16 : 16,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 24,
-                ),
-                if (!isMobile) ...[
-                  const SizedBox(width: 8),
-                  Text(
-                    "add_product".tr(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }

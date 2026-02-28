@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lighthouse/common/widget/drop_down_button_form_field_widget.dart';
 import 'package:lighthouse/common/widget/my_button.dart';
 import 'package:lighthouse/common/widget/text_field_widget.dart';
 import 'package:lighthouse/features/premium_client/data/models/premium_client_model.dart';
+import 'package:translator/translator.dart';
 
 void AddPremiumClientDialog(BuildContext context, Function(PremiumClient) add) {
   TextEditingController firstName = TextEditingController();
@@ -116,12 +119,17 @@ void AddPremiumClientDialog(BuildContext context, Function(PremiumClient) add) {
               ),
             ),
             actions: [
-              MyButton(onPressed: () {
+              MyButton(onPressed: ()async {
+                final translator = GoogleTranslator();
+      final translation =
+          await translator.translate(firstName.text, from: 'ar', to: 'en');
+          final randomCode = (1000 + Random().nextInt(9000)).toString();
+          final editedEmail = '${translation.text}$randomCode@email.com';
                       add(
                         PremiumClient(
                           firstName: firstName.text,
                           lastName: lastName.text,
-                          email: email.text,
+                          email: email.text.isEmpty ? editedEmail : email.text,
                           password: phoneNumber.text,
                           phoneNumber: phoneNumber.text,
                           gender: selectedRole,

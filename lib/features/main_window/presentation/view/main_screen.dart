@@ -50,7 +50,7 @@ class _MainScreenState extends State<MainScreen> {
   int selectedIndex = 1;
 
   /// على الديسكتوب: هل لوحة الملخص مفتوحة (قابلة للفتح والإغلاق)
-  bool _isSummaryOpen = true;
+  bool _isSummaryOpen = false;
 
   @override
   void initState() {
@@ -373,7 +373,10 @@ class _MainScreenState extends State<MainScreen> {
                               top: 12,
                               end: 12,
                               child: Tooltip(
-                                textStyle: Theme.of(context).textTheme.bodySmall?.copyWith(color: navy),
+                                textStyle: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(color: navy),
                                 decoration: BoxDecoration(
                                   color: lightGrey,
                                   borderRadius: BorderRadius.circular(10),
@@ -383,9 +386,8 @@ class _MainScreenState extends State<MainScreen> {
                                     : "open_summary".tr(),
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                  foregroundColor: lightGrey,
+                                    foregroundColor: lightGrey,
                                     backgroundColor: lightGrey,
-                                    
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),

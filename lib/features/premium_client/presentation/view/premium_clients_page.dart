@@ -3,7 +3,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:lighthouse/core/network/network_connection.dart';
 import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/common/widget/header.dart';
@@ -12,7 +11,6 @@ import 'package:lighthouse/features/home/data/models/finish_premium_session_resp
     as finish_model;
 import 'package:lighthouse/features/home/presentation/widget/end_premium_session_dialog.dart';
 import 'package:lighthouse/features/home/presentation/widget/print_invoice.dart';
-import 'package:lighthouse/features/main_window/presentation/view/main_screen.dart';
 import 'package:lighthouse/features/premium_client/data/models/get_all_premiumClient_response_model.dart';
 import 'package:lighthouse/features/premium_client/data/models/premium_client_model.dart';
 import 'package:lighthouse/features/premium_client/data/repository/add_premium_client_repo.dart';
@@ -98,7 +96,12 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                 networkConnection: NetworkConnection.createDefault(),
               ),
             ),
-          )..add(GetPremiumClients(page: 1, size: 10000)),
+          )..add(
+              GetPremiumClients(
+                page: 1,
+                size: 10000,
+              ),
+            ),
         ),
         BlocProvider(
           create: (context) => StartPremiumSessionBloc(
@@ -144,12 +147,12 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                             ?.copyWith(color: Colors.white)),
                   ),
                 );
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MainScreen(),
-                  ),
-                );
+                // Navigator.pushReplacement(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => const MainScreen(),
+                //   ),
+                // );
               } else if (state is ExceptionStartSession) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -241,11 +244,11 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                   print("✅ Converted Body successfully: $finishBody");
                   // Print first invoice (original)
                   print("🖨️ Starting to print first invoice...");
-                    printDetailedInvoice(
-                              true, printerAddress, printerName, finishBody);
+                  printDetailedInvoice(
+                      true, printerAddress, printerName, finishBody);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      backgroundColor: Colors.green[800],
+                      backgroundColor: Colors.green,
                       content: Text(
                         state.response.message,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -327,7 +330,10 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                 if (Responsive.isDesktop(context))
                   Text(
                     "clients".tr(),
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: navy),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(color: navy),
                   ),
                 if (Responsive.isDesktop(context)) const SizedBox(height: 40),
                 // QR Scanner Field for closing premium sessions
@@ -403,7 +409,8 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        BlocConsumer<AddPremiumClientBloc, AddPremiumClientState>(
+                        BlocConsumer<AddPremiumClientBloc,
+                            AddPremiumClientState>(
                           listener: (context, state) {
                             if (state is ExceptionAddedClient) {
                               print(state.message);
@@ -447,7 +454,8 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const LoginWindows()));
+                                      builder: (context) =>
+                                          const LoginWindows()));
                             } else {
                               print(state.runtimeType);
                             }
@@ -464,22 +472,23 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                               ),
                               onPressed: () {
                                 void client(PremiumClient client) {
-                                    print('client');
-                                    print(client.toMap());
-                                    context
-                                        .read<AddPremiumClientBloc>()
-                                        .add(AddPremiumClient(client: client));
-                                  }
-                                  AddPremiumClientDialog(context, client);
+                                  print('client');
+                                  print(client.toMap());
+                                  context
+                                      .read<AddPremiumClientBloc>()
+                                      .add(AddPremiumClient(client: client));
+                                }
+
+                                AddPremiumClientDialog(context, client);
                               },
                               child: const Padding(
-                                  padding: EdgeInsets.all(14),
-                                  child: Icon(
-                                    Icons.person_add_sharp,
-                                    color: navy,
-                                    size: 24,
-                                  ),
+                                padding: EdgeInsets.all(14),
+                                child: Icon(
+                                  Icons.person_add_sharp,
+                                  color: navy,
+                                  size: 24,
                                 ),
+                              ),
                             );
                           },
                         ),
@@ -489,225 +498,237 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                 ),
                 const SizedBox(height: 20),
                 BlocBuilder<GetPremiumClientsBloc, GetPremiumClientsState>(
-                    builder: (context, state) {
-                      if (state is ExceptionFetchingClients) {
-                        return Center(
-                          child: Text(
-                            state.message,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(color: Colors.white),
-                          ),
-                        );
-                      } else if (state is NoClientsToShow) {
-                        return Center(
-                          child: Text(
-                            state.message,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(color: Colors.white),
-                          ),
-                        );
-                      } else if (state is SuccessFetchingClients) {
-                        final query = searchQuery.trim().toLowerCase();
-                        final filteredList = query.isEmpty
-                            ? state.responseModel.body
-                            : state.responseModel.body.where((c) {
-                                final fullName =
-                                    '${c.firstName} ${c.lastName}'.toLowerCase();
-                                final matchesName = c.firstName
-                                        .toLowerCase()
-                                        .contains(query) ||
-                                    c.lastName.toLowerCase().contains(query) ||
-                                    fullName.contains(query);
-                                final matchesPhone = (c.phoneNumber ?? '')
-                                    .toLowerCase()
-                                    .contains(query);
-                                return matchesName || matchesPhone;
-                              }).toList();
-                        return Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 0),
-                                child: Text(
-                                  query.isEmpty
-                                      ? '${state.responseModel.pageable.total} clients'
-                                      : '${filteredList.length} / ${state.responseModel.pageable.total} clients',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
-                                        color: grey,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                ),
+                  builder: (context, state) {
+                    if (state is ExceptionFetchingClients) {
+                      return Center(
+                        child: Text(
+                          state.message,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.white),
+                        ),
+                      );
+                    } else if (state is NoClientsToShow) {
+                      return Center(
+                        child: Text(
+                          state.message,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.white),
+                        ),
+                      );
+                    } else if (state is SuccessFetchingClients) {
+                      final query = searchQuery.trim().toLowerCase();
+                      final filteredList = query.isEmpty
+                          ? state.responseModel.body
+                          : state.responseModel.body.where((c) {
+                              final fullName =
+                                  '${c.firstName} ${c.lastName}'.toLowerCase();
+                              final matchesName = c.firstName
+                                      .toLowerCase()
+                                      .contains(query) ||
+                                  c.lastName.toLowerCase().contains(query) ||
+                                  fullName.contains(query);
+                              final matchesPhone = (c.phoneNumber ?? '')
+                                  .toLowerCase()
+                                  .contains(query);
+                              return matchesName || matchesPhone;
+                            }).toList();
+                      return Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 0),
+                              child: Text(
+                                query.isEmpty
+                                    ? '${state.responseModel.pageable.total} clients'
+                                    : '${filteredList.length} / ${state.responseModel.pageable.total} clients',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                      color: grey,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                               ),
-                              Expanded(
-                                child: ListView.builder(
+                            ),
+                            Expanded(
+                              child: ListView.builder(
                                   itemCount: filteredList.length,
                                   itemBuilder: (context, index) {
                                     final client = filteredList[index];
                                     return Column(
-                                  children: [
-                                    ListTile(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ClientProfile(
-                                                        client: client)));
-                                      },
-                                      minTileHeight: 56,
-                                      leading: CircleAvatar(
-                                        radius: 25,
-                                        backgroundColor: grey,
-                                        child: client.gender == "MALE"
-                                            ? const Icon(
-                                                Icons.person,
-                                                color: lightGrey,
-                                                size: 35,
-                                              )
-                                            : SvgPicture.asset(
-                                                "assets/svg/woman.svg",
-                                                width: 25,
-                                                color: lightGrey,
-                                              ),
-                                      ),
-                                      title: Text(
-                                        "${client.firstName.replaceFirst(client.firstName[0], client.firstName[0].toUpperCase())} ${client.lastName.replaceFirst(client.lastName[0], client.lastName[0].toUpperCase())}",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelMedium
-                                            ?.copyWith(color: navy),
-                                      ),
-                                      subtitle: Text(
-                                        client.phoneNumber ?? 'N/A',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall
-                                            ?.copyWith(
-                                              color: grey,
-                                            ),
-                                      ),
-                                      trailing: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Tooltip(
-                                            message: 'no_invoice'.tr(),
-                                            decoration: BoxDecoration(
-                                              color: lightGrey,
-                                              borderRadius: BorderRadius.circular(12),
-                                            ),
-                                            child: SizedBox(
-                                              width: 60,
-                                              height: 60,
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  context
-                                                      .read<StartPremiumSessionBloc>()
-                                                      .add(StartPreSession(
-                                                          id: client.uuid));
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  elevation: 0,
-                                                  backgroundColor: lightGrey,
-                                                  foregroundColor: lightGrey,
-                                                  padding: const EdgeInsets.symmetric(
-                                                      horizontal: 12, vertical: 12),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(12),
+                                      children: [
+                                        ListTile(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ClientProfile(
+                                                            client: client)));
+                                          },
+                                          minTileHeight: 56,
+                                          leading: CircleAvatar(
+                                            radius: 25,
+                                            backgroundColor: grey,
+                                            child: client.gender == "MALE"
+                                                ? const Icon(
+                                                    Icons.person,
+                                                    color: lightGrey,
+                                                    size: 35,
+                                                  )
+                                                : SvgPicture.asset(
+                                                    "assets/svg/woman.svg",
+                                                    width: 25,
+                                                    color: lightGrey,
                                                   ),
-                                                ),
-                                                child: Icon(
-                                                  Icons.print_disabled,
-                                                  size: 22,
+                                          ),
+                                          title: Text(
+                                            "${client.firstName.replaceFirst(client.firstName[0], client.firstName[0].toUpperCase())} ${client.lastName.replaceFirst(client.lastName[0], client.lastName[0].toUpperCase())}",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelMedium
+                                                ?.copyWith(color: navy),
+                                          ),
+                                          subtitle: Text(
+                                            client.phoneNumber ?? 'N/A',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.copyWith(
                                                   color: grey,
                                                 ),
+                                          ),
+                                          trailing: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Tooltip(
+                                                message: 'no_invoice'.tr(),
+                                                decoration: BoxDecoration(
+                                                  color: lightGrey,
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                child: SizedBox(
+                                                  width: 60,
+                                                  height: 60,
+                                                  child: ElevatedButton(
+                                                    onPressed: () {
+                                                      context
+                                                          .read<
+                                                              StartPremiumSessionBloc>()
+                                                          .add(StartPreSession(
+                                                              id: client.uuid));
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      elevation: 0,
+                                                      backgroundColor:
+                                                          lightGrey,
+                                                      foregroundColor:
+                                                          lightGrey,
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 12,
+                                                          vertical: 12),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                    ),
+                                                    child: Icon(
+                                                      Icons.print_disabled,
+                                                      size: 22,
+                                                      color: grey,
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
+                                              const SizedBox(width: 8),
+                                              FloatingActionButton.extended(
+                                                heroTag:
+                                                    'fab_add_session_${client.uuid}',
+                                                elevation: 1,
+                                                backgroundColor: Colors.white,
+                                                foregroundColor: lightGrey,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  side: BorderSide(
+                                                      color: yellow, width: 1),
+                                                ),
+                                                icon: const Icon(
+                                                  Icons.login,
+                                                  color: navy,
+                                                ),
+                                                onPressed: () async {
+                                                  context
+                                                      .read<
+                                                          StartPremiumSessionBloc>()
+                                                      .add(StartPreSession(
+                                                          id: client.uuid));
+                                                  try {
+                                                    await printPremiumQr(
+                                                      "USB",
+                                                      printerAddress,
+                                                      printerName,
+                                                      client,
+                                                    );
+                                                  } catch (e) {
+                                                    debugPrint(
+                                                        "Error printing Premium QR: $e");
+                                                  }
+                                                },
+                                                label: Text(
+                                                  "add_session".tr(),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .labelMedium,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          const SizedBox(width: 8),
-                                          FloatingActionButton.extended(
-                                            heroTag:
-                                                'fab_add_session_${client.uuid}',
-                                            elevation: 1,
-                                            backgroundColor: Colors.white,
-                                            foregroundColor: lightGrey,
-
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(12),
-                                              side: BorderSide(color: yellow, width: 1),
-                                            ),
-                                            icon: const Icon(
-                                              Icons.login,
-                                              color: navy,
-                                            ),
-                                            onPressed: () async {
-                                              context
-                                                  .read<StartPremiumSessionBloc>()
-                                                  .add(StartPreSession(
-                                                      id: client.uuid));
-                                              try {
-                                                await printPremiumQr(
-                                                  "USB",
-                                                  printerAddress,
-                                                  printerName,
-                                                  client,
-                                                );
-                                              } catch (e) {
-                                                debugPrint(
-                                                    "Error printing Premium QR: $e");
-                                              }
-                                            },
-                                            label: Text(
-                                              "add_session".tr(),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelMedium,
-                                            ),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 16, vertical: 8),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
                                           ),
-                                        ],
-                                      ),
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 8),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                    ),
-                                    if (index != filteredList.length - 1)
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        child: Divider(
-                                            thickness: 0.1, color: navy),
-                                      ),
-                                  ],
-                                );
-                              }),
-                              ),
-                            ],
-                          ),
-                        );
-                      } else if (state is OfflineFailureState) {
-                        return Center(
-                          child: Text(
-                            state.message,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        );
-                      } else {
-                        return const CircularProgressIndicator();
-                      }
-                    },
-                  ),
+                                        ),
+                                        if (index != filteredList.length - 1)
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: Divider(
+                                                thickness: 0.1, color: navy),
+                                          ),
+                                      ],
+                                    );
+                                  }),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else if (state is OfflineFailureState) {
+                      return Center(
+                        child: Text(
+                          state.message,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      );
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  },
+                ),
               ],
             ),
           );

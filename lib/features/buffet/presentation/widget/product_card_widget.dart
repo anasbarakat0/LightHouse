@@ -152,7 +152,7 @@ class ProductCardWidget extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      '\$${product.costPrice.toStringAsFixed(2)}',
+                                      '\$${product.costPrice.toStringAsFixed(0)}',
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 16,
@@ -175,7 +175,7 @@ class ProductCardWidget extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      '\$${product.consumptionPrice.toStringAsFixed(0)}',
+                                      '\$${product.consumptionPrice.toStringAsFixed(2)}',
                                       style: TextStyle(
                                         color: yellow,
                                         fontSize: 16,
@@ -197,22 +197,19 @@ class ProductCardWidget extends StatelessWidget {
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    (isOutOfStock
-                                            ? Colors.red
-                                            : Colors.green)
+                                    (isOutOfStock ? Colors.red : product.quantity < 5
+                                                ? orange: Colors.green)
                                         .withOpacity(0.2),
-                                    (isOutOfStock
-                                            ? Colors.red
-                                            : Colors.green)
+                                    (isOutOfStock ? Colors.red : product.quantity < 5
+                                                ? orange: Colors.green)
                                         .withOpacity(0.1),
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                  color: (isOutOfStock
-                                          ? Colors.red
-                                          : Colors.green)
-                                      .withOpacity(0.3),
+                                  color:
+                                      (isOutOfStock ? Colors.red : product.quantity < 5 ? orange : Colors.green)
+                                          .withOpacity(0.3),
                                   width: 1,
                                 ),
                               ),
@@ -227,7 +224,9 @@ class ProductCardWidget extends StatelessWidget {
                                     size: 16,
                                     color: isOutOfStock
                                         ? Colors.redAccent[400]
-                                        : Colors.greenAccent[400],
+                                        : product.quantity < 5
+                                            ? orange
+                                            : Colors.greenAccent[400],
                                   ),
                                   const SizedBox(width: 6),
                                   Flexible(
@@ -236,7 +235,9 @@ class ProductCardWidget extends StatelessWidget {
                                       style: TextStyle(
                                         color: isOutOfStock
                                             ? Colors.redAccent[400]
-                                            : Colors.greenAccent[400],
+                                            : product.quantity < 5
+                                                ? orange
+                                                : Colors.greenAccent[400],
                                         fontSize: 14,
                                         fontWeight: FontWeight.w700,
                                       ),
@@ -284,12 +285,13 @@ class ProductCardWidget extends StatelessWidget {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () {
-                                deleteMessage(
-                                    context, delete, "delete_product_message".tr());
+                                deleteMessage(context, delete,
+                                    "delete_product_message".tr());
                               },
                               borderRadius: BorderRadius.circular(12),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     begin: Alignment.topLeft,
@@ -340,7 +342,8 @@ class ProductCardWidget extends StatelessWidget {
                               },
                               borderRadius: BorderRadius.circular(12),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     begin: Alignment.topLeft,
@@ -388,30 +391,32 @@ class ProductCardWidget extends StatelessWidget {
           ),
           if (isOutOfStock)
             Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: Colors.black.withOpacity(0.3),
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        "assets/svg/out_of_stock.svg",
-                        width: 120,
-                        color: Colors.redAccent[700],
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "Out of Stock".tr(),
-                        style: TextStyle(
-                          color: Colors.redAccent[400],
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
+              child: IgnorePointer(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: Colors.black.withOpacity(0.3),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/svg/out_of_stock.svg",
+                          width: 120,
+                          color: Colors.redAccent[700],
                         ),
-                      ),
-                    ],
+                        // const SizedBox(height: 8),
+                        // Text(
+                        //   "Out of Stock".tr(),
+                        //   style: TextStyle(
+                        //     color: Colors.redAccent[400],
+                        //     fontSize: 16,
+                        //     fontWeight: FontWeight.w800,
+                        //   ),
+                        // ),
+                      ],
+                    ),
                   ),
                 ),
               ),
