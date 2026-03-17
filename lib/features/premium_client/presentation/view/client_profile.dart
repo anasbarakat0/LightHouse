@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +79,7 @@ class _ClientProfileState extends State<ClientProfile>
   int totalPages = 1;
 
   int sessionsCurrentPage = 1;
-  int sessionsPerPage = 5;
+  int sessionsPerPage = 10000;
 
   @override
   void initState() {

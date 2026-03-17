@@ -13,7 +13,7 @@ class GetSessionsByUserIdService extends Service {
         "$baseUrl/api/v1/sessions/$userId?page=$page&size=$size&sort=date,desc&sort=startTime,desc",
         options: getOptions(auth: true),
       );
-
+      print("sessions response: ${response.data}");
       return response;
     } on DioException catch (e) {
       if (e.response!.data["status"] == "BAD_REQUEST") {

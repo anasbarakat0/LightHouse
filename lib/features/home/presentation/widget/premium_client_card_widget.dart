@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/features/home/data/models/active_sessions_response_model.dart';
+import 'package:lighthouse/features/home/presentation/widget/session_time_formatter.dart';
 
 // ignore: must_be_immutable
 class PremiumClientCardWidget extends StatelessWidget {
@@ -39,7 +40,7 @@ class PremiumClientCardWidget extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: yellow.withOpacity(0.3),
+                color: yellow.withValues(alpha: 0.3),
                 width: 1.5,
               ),
               // boxShadow: [
@@ -63,13 +64,13 @@ class PremiumClientCardWidget extends StatelessWidget {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            yellow.withOpacity(0.25),
-                            yellow.withOpacity(0.15),
+                            yellow.withValues(alpha: 0.25),
+                            yellow.withValues(alpha: 0.15),
                           ],
                         ),
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                          color: yellow.withOpacity(0.3),
+                          color: yellow.withValues(alpha: 0.3),
                           width: 1,
                         ),
                       ),
@@ -104,7 +105,10 @@ class PremiumClientCardWidget extends StatelessWidget {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                premiumSession.startTime,
+                                formatPremiumSessionTime(
+                                  context,
+                                  premiumSession.startTime,
+                                ),
                                 style: TextStyle(
                                   color: grey,
                                   fontSize: 12,
@@ -162,18 +166,18 @@ class PremiumClientCardWidget extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    orange.withOpacity(0.3),
-                    orange.withOpacity(0.2),
+                    orange.withValues(alpha: 0.3),
+                    orange.withValues(alpha: 0.2),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: orange.withOpacity(0.4),
+                  color: orange.withValues(alpha: 0.4),
                   width: 1.5,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: orange.withOpacity(0.3),
+                    color: orange.withValues(alpha: 0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   ),

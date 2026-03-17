@@ -4,6 +4,8 @@ import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/features/home/data/models/get_premium_session_response.dart';
 import 'package:lighthouse/features/home/presentation/widget/detail_row.dart';
 import 'package:lighthouse/features/home/presentation/widget/product_detail_row.dart';
+import 'package:lighthouse/features/home/presentation/widget/session_duration_formatter.dart';
+import 'package:lighthouse/features/home/presentation/widget/session_time_formatter.dart';
 
 /// [onEndSession] انهاء الجلسة بدون طباعة فاتورة
 /// [onEndSessionWithPrint] انهاء الجلسة مع طباعة فاتورة
@@ -126,7 +128,10 @@ void premiumSessionDialog(
                       ),
                       DetailRow(
                         title: "${"started_at".tr()}: ",
-                        value: sessionData.startTime,
+                        value: formatPremiumSessionTime(
+                          context,
+                          sessionData.startTime,
+                        ),
                       ),
                       DetailRow(
                         title: "${"first_name".tr()}: ",
@@ -143,8 +148,10 @@ void premiumSessionDialog(
                       if (sessionData.sessionInvoice != null) ...[
                         DetailRow(
                           title: "${"num_of_hours".tr()}: ",
-                          value:
-                              "${sessionData.sessionInvoice!.hoursAmount.toStringAsFixed(2)} ${"hrs".tr()}",
+                          value: formatPremiumSessionDuration(
+                            context,
+                            sessionData.sessionInvoice!.hoursAmount,
+                          ),
                         ),
                         DetailRow(
                           title: "${"sessionInvoicePrice".tr()}: ",

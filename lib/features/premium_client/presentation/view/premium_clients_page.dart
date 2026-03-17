@@ -608,7 +608,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Tooltip(
-                                                message: 'no_invoice'.tr(),
+                                                message: 'without_qr_code'.tr(),
                                                 decoration: BoxDecoration(
                                                   color: lightGrey,
                                                   borderRadius:

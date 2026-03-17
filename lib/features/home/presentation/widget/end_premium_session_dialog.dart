@@ -4,33 +4,8 @@ import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/features/home/data/models/finish_premium_session_response_model.dart';
 import 'package:lighthouse/features/home/presentation/widget/detail_row.dart';
 import 'package:lighthouse/features/home/presentation/widget/product_detail_row.dart';
-
-/// Format hours to display with proper precision (removes trailing zeros)
-String _formatHours(double hours) {
-  // Use toStringAsFixed(4) to ensure we capture all decimal places
-  // Then remove trailing zeros properly
-  String formatted = hours.toStringAsFixed(4);
-  
-  // Remove trailing zeros only from the decimal part
-  if (formatted.contains('.')) {
-    // Find the position of the decimal point
-    int dotIndex = formatted.indexOf('.');
-    String integerPart = formatted.substring(0, dotIndex);
-    String decimalPart = formatted.substring(dotIndex + 1);
-    
-    // Remove trailing zeros from decimal part
-    decimalPart = decimalPart.replaceAll(RegExp(r'0+$'), '');
-    
-    // Reconstruct the number
-    if (decimalPart.isEmpty) {
-      formatted = integerPart;
-    } else {
-      formatted = '$integerPart.$decimalPart';
-    }
-  }
-  
-  return "$formatted ${"hrs".tr()}";
-}
+import 'package:lighthouse/features/home/presentation/widget/session_duration_formatter.dart';
+import 'package:lighthouse/features/home/presentation/widget/session_time_formatter.dart';
 
 void endSessionDialog(BuildContext context, Body sessionData) {
   showDialog(
@@ -125,7 +100,8 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close_rounded, color: Colors.white),
+                      icon:
+                          const Icon(Icons.close_rounded, color: Colors.white),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ],
@@ -139,40 +115,46 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-              DetailRow(
-                title: "${"date".tr()}: ",
-                value: sessionData.date,
-              ),
-              DetailRow(
-                title: "${"started_at".tr()}: ",
-                value: sessionData.startTime,
-              ),
-              DetailRow(
-                title: "${"first_name".tr()}: ",
-                value: sessionData.firstName,
-              ),
-              DetailRow(
-                title: "${"last_name".tr()}: ",
-                value: sessionData.lastName,
-              ),
-              // DetailRow(
-              //   title: "${"created_by".tr()}: ",
-              //   value: sessionData.createdBy.firstName,
-              // ),
-              DetailRow(
-                title: "${"num_of_hours".tr()}: ",
-                value: _formatHours(sessionData.sessionInvoice.hoursAmount),
-              ),
-              DetailRow(
-                title: "${"sessionInvoicePrice".tr()}: ",
-                value:  
-                    "${(sessionData.summaryInvoice?.sessionInvoicePrice ?? (sessionData.sessionInvoice.hoursAmount * sessionData.sessionInvoice.hourlyPrice)).toStringAsFixed(2)} ${"s.p".tr()}",
-              ),
-              DetailRow(
-                title: "${"buffetInvoicePrice".tr()}: ",
-                value:  
-                    "${sessionData.buffetInvoicePrice.toString()} ${"s.p".tr()}",
-              ),
+                      DetailRow(
+                        title: "${"date".tr()}: ",
+                        value: sessionData.date,
+                      ),
+                      DetailRow(
+                        title: "${"started_at".tr()}: ",
+                        value: formatPremiumSessionTime(
+                          context,
+                          sessionData.startTime,
+                        ),
+                      ),
+                      DetailRow(
+                        title: "${"first_name".tr()}: ",
+                        value: sessionData.firstName,
+                      ),
+                      DetailRow(
+                        title: "${"last_name".tr()}: ",
+                        value: sessionData.lastName,
+                      ),
+                      // DetailRow(
+                      //   title: "${"created_by".tr()}: ",
+                      //   value: sessionData.createdBy.firstName,
+                      // ),
+                      DetailRow(
+                        title: "${"num_of_hours".tr()}: ",
+                        value: formatPremiumSessionDuration(
+                          context,
+                          sessionData.sessionInvoice.hoursAmount,
+                        ),
+                      ),
+                      DetailRow(
+                        title: "${"sessionInvoicePrice".tr()}: ",
+                        value:
+                            "${(sessionData.summaryInvoice?.sessionInvoicePrice ?? (sessionData.sessionInvoice.hoursAmount * sessionData.sessionInvoice.hourlyPrice)).toStringAsFixed(2)} ${"s.p".tr()}",
+                      ),
+                      DetailRow(
+                        title: "${"buffetInvoicePrice".tr()}: ",
+                        value:
+                            "${sessionData.buffetInvoicePrice.toString()} ${"s.p".tr()}",
+                      ),
                       const SizedBox(height: 16),
                       Divider(
                         thickness: 1,
@@ -243,7 +225,8 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                   ),
                                   const SizedBox(height: 8),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "invoice_price".tr(),
@@ -302,21 +285,31 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                       const SizedBox(height: 24),
                       // Discount Details Section
                       if (sessionData.summaryInvoice != null &&
-                          (sessionData.summaryInvoice!.totalInvoiceBeforeDiscount != null ||
-                          sessionData.summaryInvoice!.discountAmount != null ||
-                          sessionData.summaryInvoice!.manualDiscountAmount != null))
+                          (sessionData.summaryInvoice!
+                                      .totalInvoiceBeforeDiscount !=
+                                  null ||
+                              sessionData.summaryInvoice!.discountAmount !=
+                                  null ||
+                              sessionData
+                                      .summaryInvoice!.manualDiscountAmount !=
+                                  null))
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Text(
                               "Discount Details".tr(),
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
                             ),
                             const SizedBox(height: 12),
-                            if (sessionData.summaryInvoice!.totalInvoiceBeforeDiscount != null)
+                            if (sessionData.summaryInvoice!
+                                    .totalInvoiceBeforeDiscount !=
+                                null)
                               Container(
                                 padding: const EdgeInsets.all(14),
                                 decoration: BoxDecoration(
@@ -328,7 +321,8 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                   ),
                                 ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Total Before Discount".tr(),
@@ -348,7 +342,8 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                   ],
                                 ),
                               ),
-                            if (sessionData.summaryInvoice!.discountAmount != null) ...[
+                            if (sessionData.summaryInvoice!.discountAmount !=
+                                null) ...[
                               const SizedBox(height: 8),
                               Container(
                                 padding: const EdgeInsets.all(14),
@@ -366,7 +361,8 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                   ),
                                 ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
                                       children: [
@@ -398,8 +394,11 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                 ),
                               ),
                             ],
-                            if (sessionData.summaryInvoice!.totalInvoiceAfterDiscount != null &&
-                                sessionData.summaryInvoice!.discountAmount != null) ...[
+                            if (sessionData.summaryInvoice!
+                                        .totalInvoiceAfterDiscount !=
+                                    null &&
+                                sessionData.summaryInvoice!.discountAmount !=
+                                    null) ...[
                               const SizedBox(height: 8),
                               Container(
                                 padding: const EdgeInsets.all(14),
@@ -412,7 +411,8 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                   ),
                                 ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Total After Coupon".tr(),
@@ -433,7 +433,9 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                 ),
                               ),
                             ],
-                            if (sessionData.summaryInvoice!.manualDiscountAmount != null) ...[
+                            if (sessionData
+                                    .summaryInvoice!.manualDiscountAmount !=
+                                null) ...[
                               const SizedBox(height: 8),
                               Container(
                                 padding: const EdgeInsets.all(14),
@@ -454,7 +456,8 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Row(
                                           children: [
@@ -484,17 +487,24 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                         ),
                                       ],
                                     ),
-                                    if (sessionData.summaryInvoice!.manualDiscountNote != null &&
-                                        sessionData.summaryInvoice!.manualDiscountNote!.isNotEmpty) ...[
+                                    if (sessionData.summaryInvoice!
+                                                .manualDiscountNote !=
+                                            null &&
+                                        sessionData
+                                            .summaryInvoice!
+                                            .manualDiscountNote!
+                                            .isNotEmpty) ...[
                                       const SizedBox(height: 8),
                                       Container(
                                         padding: const EdgeInsets.all(10),
                                         decoration: BoxDecoration(
                                           color: Colors.white.withOpacity(0.05),
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                         ),
                                         child: Text(
-                                          sessionData.summaryInvoice!.manualDiscountNote!,
+                                          sessionData.summaryInvoice!
+                                              .manualDiscountNote!,
                                           style: TextStyle(
                                             color: Colors.blue.shade200,
                                             fontSize: 12,

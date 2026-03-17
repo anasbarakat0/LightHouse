@@ -65,6 +65,7 @@
     "updatedAt": "تاريخ التعديل",
     "add_session": "بدأ جلسة",
     "no_invoice": "لا يوجد فاتورة",
+    "without_qr_code": "لا يوجد رمز QR",
     "S.P": "ل.س",
     "hrs": "ساعة",
     "Hours": "الساعات",

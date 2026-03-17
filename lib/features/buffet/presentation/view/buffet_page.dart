@@ -128,9 +128,8 @@ class _BuffetPageState extends State<BuffetPage> {
             listener: (context, state) {
               switch (state) {
                 case ProductEdited():
-                  context
-                      .read<GetAllProductsBloc>()
-                      .add(GetAllProducts(page: currentPage - 1, size: perPage));
+                  context.read<GetAllProductsBloc>().add(
+                      GetAllProducts(page: currentPage - 1, size: perPage));
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       backgroundColor: Colors.green,
@@ -285,31 +284,27 @@ class _BuffetPageState extends State<BuffetPage> {
                                     filled: true,
                                     fillColor: darkNavy,
                                     border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(14),
+                                      borderRadius: BorderRadius.circular(14),
                                       borderSide: BorderSide(
                                         color: orange,
                                         width: 1,
                                       ),
                                     ),
                                     enabledBorder: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(14),
+                                      borderRadius: BorderRadius.circular(14),
                                       borderSide: BorderSide(
                                         color: Colors.white.withOpacity(0.15),
                                         width: 1,
                                       ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(14),
+                                      borderRadius: BorderRadius.circular(14),
                                       borderSide: const BorderSide(
                                         color: orange,
                                         width: 1,
                                       ),
                                     ),
-                                    contentPadding:
-                                        const EdgeInsets.symmetric(
+                                    contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 18,
                                       vertical: 16,
                                     ),
@@ -328,14 +323,14 @@ class _BuffetPageState extends State<BuffetPage> {
                                   foregroundColor: orange,
                                   backgroundColor: yellow,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(14),
+                                    borderRadius: BorderRadius.circular(14),
                                   ),
                                 ),
                                 onPressed: () {
                                   addProductDialog(context, (product) {
-                                    context.read<AddProductBloc>().add(
-                                        AddProduct(product: product));
+                                    context
+                                        .read<AddProductBloc>()
+                                        .add(AddProduct(product: product));
                                   });
                                 },
                                 child: Padding(
@@ -373,12 +368,10 @@ class _BuffetPageState extends State<BuffetPage> {
                             final filteredList = query.isEmpty
                                 ? state.response.body
                                 : state.response.body.where((p) {
-                                    final nameMatch = p.name
-                                        .toLowerCase()
-                                        .contains(query);
-                                    final barcodeMatch = p.barCode
-                                        .toLowerCase()
-                                        .contains(query);
+                                    final nameMatch =
+                                        p.name.toLowerCase().contains(query);
+                                    final barcodeMatch =
+                                        p.barCode.toLowerCase().contains(query);
                                     return nameMatch || barcodeMatch;
                                   }).toList();
                             if (filteredList.isEmpty) {
@@ -417,7 +410,8 @@ class _BuffetPageState extends State<BuffetPage> {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      "Add your first product to get started".tr(),
+                                      "Add your first product to get started"
+                                          .tr(),
                                       style: TextStyle(
                                         color: Colors.white.withOpacity(0.5),
                                         fontSize: 14,
@@ -434,11 +428,14 @@ class _BuffetPageState extends State<BuffetPage> {
                                   physics: const NeverScrollableScrollPhysics(),
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: Responsive.isDesktop(context)
+                                    crossAxisCount: Responsive.isDesktop(
+                                            context)
                                         ? (MediaQuery.of(context).size.width >
                                                 1630
                                             ? 4
-                                            : MediaQuery.of(context).size.width >
+                                            : MediaQuery.of(context)
+                                                        .size
+                                                        .width >
                                                     1250
                                                 ? 3
                                                 : 2)
@@ -458,7 +455,10 @@ class _BuffetPageState extends State<BuffetPage> {
                                                     : 1),
                                     crossAxisSpacing: 16,
                                     mainAxisSpacing: 16,
-                                    childAspectRatio: 0.75,
+                                    // Product cards contain multiple stacked sections,
+                                    // so they need a stable height instead of square cells.
+                                    // mainAxisExtent: 380,
+                                    mainAxisExtent: 342,
                                   ),
                                   itemCount: filteredList.length,
                                   itemBuilder: (context, index) {
@@ -527,5 +527,4 @@ class _BuffetPageState extends State<BuffetPage> {
       ),
     );
   }
-
 }
