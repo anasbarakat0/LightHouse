@@ -322,20 +322,53 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
         ],
         child: Builder(builder: (context) {
           return Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: EdgeInsets.all(Responsive.isMobile(context) ? 16 : 24),
             child: Column(
               children: [
-                HeaderWidget(title: "clients".tr()),
-                const SizedBox(height: 25),
                 if (Responsive.isDesktop(context))
-                  Text(
-                    "clients".tr(),
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(color: navy),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 32),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                orange.withValues(alpha: 0.25),
+                                orange.withValues(alpha: 0.15),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: orange.withValues(alpha: 0.3),
+                              width: 1,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.groups_rounded,
+                            color: orange,
+                            size: 32,
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Text(
+                          "clients".tr(),
+                          style: const TextStyle(
+                            color: navy,
+                            fontSize: 32,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                if (Responsive.isDesktop(context)) const SizedBox(height: 40),
+                if (Responsive.isMobile(context))
+                  HeaderWidget(title: "clients".tr()),
+                if (Responsive.isMobile(context)) const SizedBox(height: 24),
                 // QR Scanner Field for closing premium sessions
                 // SizedBox(
                 //   height: 65,
@@ -403,9 +436,9 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                             controller: search,
                             focusNode: searchFocusNode,
                             onChanged: (value) =>
-                                setState(() => searchQuery = value),
+                                setState(() => searchQuery = value.trim()),
                             onSubmitted: (value) =>
-                                setState(() => searchQuery = value),
+                                setState(() => searchQuery = value.trim()),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -561,156 +594,11 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                                   itemCount: filteredList.length,
                                   itemBuilder: (context, index) {
                                     final client = filteredList[index];
-                                    return Column(
-                                      children: [
-                                        ListTile(
-                                          onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ClientProfile(
-                                                            client: client)));
-                                          },
-                                          minTileHeight: 56,
-                                          leading: CircleAvatar(
-                                            radius: 25,
-                                            backgroundColor: grey,
-                                            child: client.gender == "MALE"
-                                                ? const Icon(
-                                                    Icons.person,
-                                                    color: lightGrey,
-                                                    size: 35,
-                                                  )
-                                                : SvgPicture.asset(
-                                                    "assets/svg/woman.svg",
-                                                    width: 25,
-                                                    color: lightGrey,
-                                                  ),
-                                          ),
-                                          title: Text(
-                                            "${client.firstName.replaceFirst(client.firstName[0], client.firstName[0].toUpperCase())} ${client.lastName.replaceFirst(client.lastName[0], client.lastName[0].toUpperCase())}",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium
-                                                ?.copyWith(color: navy),
-                                          ),
-                                          subtitle: Text(
-                                            client.phoneNumber ?? 'N/A',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall
-                                                ?.copyWith(
-                                                  color: grey,
-                                                ),
-                                          ),
-                                          trailing: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Tooltip(
-                                                message: 'without_qr_code'.tr(),
-                                                decoration: BoxDecoration(
-                                                  color: lightGrey,
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                ),
-                                                child: SizedBox(
-                                                  width: 60,
-                                                  height: 60,
-                                                  child: ElevatedButton(
-                                                    onPressed: () {
-                                                      context
-                                                          .read<
-                                                              StartPremiumSessionBloc>()
-                                                          .add(StartPreSession(
-                                                              id: client.uuid));
-                                                    },
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      elevation: 0,
-                                                      backgroundColor:
-                                                          lightGrey,
-                                                      foregroundColor:
-                                                          lightGrey,
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 12,
-                                                          vertical: 12),
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                      ),
-                                                    ),
-                                                    child: Icon(
-                                                      Icons.print_disabled,
-                                                      size: 22,
-                                                      color: grey,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 8),
-                                              FloatingActionButton.extended(
-                                                heroTag:
-                                                    'fab_add_session_${client.uuid}',
-                                                elevation: 1,
-                                                backgroundColor: Colors.white,
-                                                foregroundColor: lightGrey,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  side: BorderSide(
-                                                      color: yellow, width: 1),
-                                                ),
-                                                icon: const Icon(
-                                                  Icons.login,
-                                                  color: navy,
-                                                ),
-                                                onPressed: () async {
-                                                  context
-                                                      .read<
-                                                          StartPremiumSessionBloc>()
-                                                      .add(StartPreSession(
-                                                          id: client.uuid));
-                                                  try {
-                                                    await printPremiumQr(
-                                                      "USB",
-                                                      printerAddress,
-                                                      printerName,
-                                                      client,
-                                                    );
-                                                  } catch (e) {
-                                                    debugPrint(
-                                                        "Error printing Premium QR: $e");
-                                                  }
-                                                },
-                                                label: Text(
-                                                  "add_session".tr(),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .labelMedium,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 16, vertical: 8),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                          ),
-                                        ),
-                                        if (index != filteredList.length - 1)
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10),
-                                            child: Divider(
-                                                thickness: 0.1, color: navy),
-                                          ),
-                                      ],
+                                    return _buildClientListItem(
+                                      context,
+                                      client,
+                                      showDivider:
+                                          index != filteredList.length - 1,
                                     );
                                   }),
                             ),
@@ -733,6 +621,274 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
             ),
           );
         }),
+      ),
+    );
+  }
+
+  void _startSession(BuildContext context, Body client) {
+    context.read<StartPremiumSessionBloc>().add(
+          StartPreSession(id: client.uuid),
+        );
+  }
+
+  Future<void> _printClientQr(BuildContext context, Body client) async {
+    try {
+      await printPremiumQr(
+        "USB",
+        printerAddress,
+        printerName,
+        client,
+      );
+    } catch (e) {
+      debugPrint("Error printing Premium QR: $e");
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.redAccent[700],
+          content: Text(
+            'print_qr_error'.tr(),
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: Colors.white),
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> _startSessionAndPrintQr(
+      BuildContext context, Body client) async {
+    _startSession(context, client);
+    await _printClientQr(context, client);
+  }
+
+  Widget _buildClientListItem(
+    BuildContext context,
+    Body client, {
+    required bool showDivider,
+  }) {
+    final isMobile = Responsive.isMobile(context);
+
+    return Column(
+      children: [
+        Container(
+          // decoration: BoxDecoration(
+          //   color: Colors.white,
+          //   borderRadius: BorderRadius.circular(22),
+          //   border: Border.all(
+          //     color: Colors.white.withValues(alpha: 0.7),
+          //     width: 1,
+          //   ),
+          //   boxShadow: [
+          //     BoxShadow(
+          //       color: Colors.black.withValues(alpha: 0.04),
+          //       blurRadius: 16,
+          //       offset: const Offset(0, 6),
+          //     ),
+          //     BoxShadow(
+          //       color: orange.withValues(alpha: 0.06),
+          //       blurRadius: 18,
+          //       offset: const Offset(0, 4),
+          //     ),
+          //   ],
+          // ),
+          child: isMobile
+              ? Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildClientInfoSection(context, client),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                        child: _buildClientActions(context, client),
+                      ),
+                    ],
+                  ),
+                )
+              : Row(
+                  children: [
+                    Expanded(
+                      child: _buildClientInfoSection(context, client),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
+                      ),
+                      child: _buildClientActions(context, client),
+                    ),
+                  ],
+                ),
+        ),
+        if (showDivider)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            child: Divider(thickness: 0.1, color: navy),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildClientInfoSection(BuildContext context, Body client) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ClientProfile(client: client),
+            ),
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 25,
+                backgroundColor: grey,
+                child: client.gender == "MALE"
+                    ? const Icon(
+                        Icons.person,
+                        color: lightGrey,
+                        size: 35,
+                      )
+                    : SvgPicture.asset(
+                        "assets/svg/woman.svg",
+                        width: 25,
+                        colorFilter: const ColorFilter.mode(
+                          lightGrey,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${client.firstName.replaceFirst(client.firstName[0], client.firstName[0].toUpperCase())} ${client.lastName.replaceFirst(client.lastName[0], client.lastName[0].toUpperCase())}",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            color: navy,
+                            fontWeight: FontWeight.w700,
+                          ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      client.phoneNumber ?? 'N/A',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: grey,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildClientActions(BuildContext context, Body client) {
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      children: [
+        _buildClientActionButton(
+          context: context,
+          tooltip: 'print_qr_only'.tr(),
+          icon: Icons.print_rounded,
+          onTap: () => _printClientQr(context, client),
+          foregroundColor: orange,
+          backgroundColor: lightGrey,
+          borderColor: orange.withValues(alpha: 0.24),
+        ),
+        _buildClientActionButton(
+          context: context,
+          tooltip: 'start_and_print_qr'.tr(),
+          icon: Icons.qr_code_2_rounded,
+          onTap: () => _startSessionAndPrintQr(context, client),
+          foregroundColor: navy,
+          borderColor: yellow.withValues(alpha: 0.5),
+          backgroundColor: lightGrey,
+          // gradient: LinearGradient(
+          //   begin: Alignment.topLeft,
+          //   end: Alignment.bottomRight,
+          //   colors: [
+          //     lightGrey,
+          //     Colors.white,
+          //   ],
+          // ),
+        ),
+        _buildClientActionButton(
+          context: context,
+          tooltip: 'start_only'.tr(),
+          icon: Icons.play_circle_outline_rounded,
+          onTap: () => _startSession(context, client),
+          foregroundColor: navy,
+          backgroundColor: Colors.white,
+          borderColor: yellow,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildClientActionButton({
+    required BuildContext context,
+    required String tooltip,
+    required IconData icon,
+    required VoidCallback onTap,
+    required Color foregroundColor,
+    Color? backgroundColor,
+    Color? borderColor,
+    Gradient? gradient,
+  }) {
+    return Tooltip(
+      message: tooltip,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: gradient == null ? (backgroundColor ?? Colors.white) : null,
+          gradient: gradient,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: borderColor ?? Colors.transparent,
+            width: 2,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: foregroundColor.withValues(alpha: 0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(14),
+            onTap: onTap,
+            child: SizedBox.square(
+              dimension: 46,
+              child: Center(
+                child: Icon(
+                  icon,
+                  size: 20,
+                  color: foregroundColor,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

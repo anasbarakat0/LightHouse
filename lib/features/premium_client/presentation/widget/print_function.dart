@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:image/image.dart' as img;
 import 'package:lighthouse/core/utils/printing_commands.dart';
-import 'package:translator/translator.dart';
 import 'package:lighthouse/core/utils/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/utils/platform_service/platform_service.dart';
@@ -22,11 +21,9 @@ Future<void> printPremiumQr(String? value, String printerAddress,
   debugPrint("🖨️ Client: ${client.firstName} ${client.lastName}");
   debugPrint("🖨️ QR Code: ${client.qrCode?.qrCode ?? 'NULL'}");
 
-  final translator = GoogleTranslator();
-  var name = await translator.translate(
-      "${client.firstName} ${client.lastName}",
-      from: 'ar',
-      to: 'en');
+  final name = _transliterateArabicName(
+    "${client.firstName} ${client.lastName}",
+  );
   PrintMode mode = value == "USB" ? PrintMode.USB : PrintMode.NETWORK;
 
   try {
@@ -58,7 +55,7 @@ Future<void> printPremiumQr(String? value, String printerAddress,
         styles: PosStyles(bold: false),
       ),
       PosColumn(
-        text: name.text,
+        text: name,
         width: 9,
         styles: PosStyles(bold: true),
       ),
@@ -71,7 +68,7 @@ Future<void> printPremiumQr(String? value, String printerAddress,
       ),
       PosColumn(
         text: client.generatedPassword,
-        width: 9  ,
+        width: 9,
         styles: PosStyles(bold: true),
       ),
     ]);
@@ -99,4 +96,76 @@ Future<void> printPremiumQr(String? value, String printerAddress,
     debugPrint("Error stack trace: ${StackTrace.current}");
     rethrow; // Re-throw to allow caller to handle
   }
+}
+
+const Map<String, String> _arabicToLatinMap = {
+  'ا': 'a',
+  'أ': 'a',
+  'إ': 'i',
+  'آ': 'aa',
+  'ب': 'b',
+  'ت': 't',
+  'ث': 'th',
+  'ج': 'j',
+  'ح': 'h',
+  'خ': 'kh',
+  'د': 'd',
+  'ذ': 'dh',
+  'ر': 'r',
+  'ز': 'z',
+  'س': 's',
+  'ش': 'sh',
+  'ص': 's',
+  'ض': 'd',
+  'ط': 't',
+  'ظ': 'z',
+  'ع': 'a',
+  'غ': 'gh',
+  'ف': 'f',
+  'ق': 'q',
+  'ك': 'k',
+  'ل': 'l',
+  'م': 'm',
+  'ن': 'n',
+  'ه': 'h',
+  'ة': 'a',
+  'و': 'w',
+  'ؤ': 'w',
+  'ي': 'y',
+  'ى': 'a',
+  'ئ': 'y',
+  'ء': 'a',
+  'َ': 'a',
+  'ُ': 'u',
+  'ِ': 'i',
+  'ً': 'an',
+  'ٌ': 'un',
+  'ٍ': 'in',
+  'ْ': '',
+  'ّ': '',
+};
+
+// Convert Arabic names to a literal Latin transliteration instead of
+// translating their meaning.
+String _transliterateArabicName(String text) {
+  final normalized =
+      text.replaceAll('لا', 'la').replaceAll(RegExp(r'\s+'), ' ').trim();
+  final buffer = StringBuffer();
+
+  for (final rune in normalized.runes) {
+    final char = String.fromCharCode(rune);
+    buffer.write(_arabicToLatinMap[char] ?? char);
+  }
+
+  return buffer
+      .toString()
+      .split(' ')
+      .where((part) => part.isNotEmpty)
+      .map(_capitalizeWord)
+      .join(' ');
+}
+
+String _capitalizeWord(String word) {
+  if (word.isEmpty) return word;
+  return word[0].toUpperCase() + word.substring(1);
 }

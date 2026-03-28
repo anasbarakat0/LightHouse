@@ -7,6 +7,7 @@ import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/features/admin_management/presentation/widget/delete_dialog.dart';
 import 'package:lighthouse/features/buffet/data/models/product_model.dart';
 import 'package:lighthouse/features/buffet/presentation/widget/edit_product_dialog.dart';
+import 'package:lighthouse/features/buffet/presentation/widget/print_product_sticker.dart';
 
 // ignore: must_be_immutable
 class ProductCardWidget extends StatelessWidget {
@@ -19,6 +20,39 @@ class ProductCardWidget extends StatelessWidget {
     required this.delete,
     required this.edit,
   });
+
+  Future<void> _handlePrintSticker(BuildContext context) async {
+    try {
+      await printProductSticker(product);
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(
+            'print_sticker_success'.tr(),
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: Colors.white),
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.redAccent[700],
+          content: Text(
+            'print_sticker_error'.tr(),
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: Colors.white),
+          ),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -271,15 +305,85 @@ class ProductCardWidget extends StatelessWidget {
                           width: 1,
                         ),
                       ),
-                      child: BarcodeWidget(
-                        height: 52,
-                        data: product.barCode,
-                        barcode: Barcode.ean13(drawEndChar: true),
-                        drawText: true,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
-                          fontSize: 12,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "barcode".tr(),
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.65),
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.4,
+                                ),
+                              ),
+                              const Spacer(),
+                              Tooltip(
+                                message: 'print_sticker'.tr(),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () => _handlePrintSticker(context),
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                            orange.withValues(alpha: 0.22),
+                                            yellow.withValues(alpha: 0.12),
+                                          ],
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color: orange.withValues(alpha: 0.3),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Icon(
+                                            Icons.print_outlined,
+                                            color: orange,
+                                            size: 15,
+                                          ),
+                                          const SizedBox(width: 6),
+                                          Text(
+                                            'print_sticker'.tr(),
+                                            style: const TextStyle(
+                                              color: orange,
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          BarcodeWidget(
+                            height: 52,
+                            data: product.barCode,
+                            barcode: Barcode.ean13(drawEndChar: true),
+                            drawText: true,
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.7),
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 6),

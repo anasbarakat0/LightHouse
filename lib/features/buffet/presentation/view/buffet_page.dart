@@ -374,6 +374,10 @@ class _BuffetPageState extends State<BuffetPage> {
                                         p.barCode.toLowerCase().contains(query);
                                     return nameMatch || barcodeMatch;
                                   }).toList();
+                            final sortedProducts = [
+                              ...filteredList.where((p) => p.quantity == 0),
+                              ...filteredList.where((p) => p.quantity != 0),
+                            ];
                             if (filteredList.isEmpty) {
                               return Container(
                                 padding: const EdgeInsets.all(40),
@@ -458,11 +462,11 @@ class _BuffetPageState extends State<BuffetPage> {
                                     // Product cards contain multiple stacked sections,
                                     // so they need a stable height instead of square cells.
                                     // mainAxisExtent: 380,
-                                    mainAxisExtent: 342,
+                                    mainAxisExtent: 384,
                                   ),
-                                  itemCount: filteredList.length,
+                                  itemCount: sortedProducts.length,
                                   itemBuilder: (context, index) {
-                                    final item = filteredList[index];
+                                    final item = sortedProducts[index];
                                     var product =
                                         ProductModel.fromMap(item.toMap());
                                     return ProductCardWidget(
