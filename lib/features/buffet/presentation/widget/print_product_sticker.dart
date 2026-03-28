@@ -25,7 +25,6 @@ Future<void> printProductSticker(ProductModel product) async {
   var bytes = <int>[];
 
   // Compact 80x40mm-style label: product name on top, barcode beneath it.
-  bytes += generator.feed(1);
   bytes += generator.text(
     labelName,
     styles: PosStyles(
