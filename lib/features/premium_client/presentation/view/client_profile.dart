@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -299,7 +297,7 @@ class _ClientProfileState extends State<ClientProfile>
                   study: state.response.body.study,
                   birthDate:
                       state.response.body.birthDate ?? widget.client.birthDate,
-                      generatedPassword: widget.client.generatedPassword,
+                  generatedPassword: widget.client.generatedPassword,
                 );
 
                 // Navigate back and then forward with updated data
@@ -412,7 +410,7 @@ class _ClientProfileState extends State<ClientProfile>
                         ),
                       ],
                     ),
-                  ),  
+                  ),
                 );
               } else if (state is OfflineFailureDeletePremiumClient) {
                 ScaffoldMessenger.of(context).showSnackBar(
