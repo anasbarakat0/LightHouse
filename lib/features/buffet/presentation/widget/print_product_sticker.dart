@@ -48,7 +48,10 @@ Future<void> printProductSticker(ProductModel product) async {
   bytes += generator.feed(1);
   bytes += generator.cut(mode: PosCutMode.full);
 
-  await printerService.sendToPrinter(bytes);
+  final sent = await printerService.sendToPrinter(bytes);
+  if (!sent) {
+    throw Exception('Failed to send sticker to printer');
+  }
 }
 
 Future<String> _resolveEnglishProductName(String name) async {
