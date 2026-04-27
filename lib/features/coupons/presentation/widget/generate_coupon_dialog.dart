@@ -439,7 +439,7 @@ class _GenerateCouponDialogContentState
                                     ],
                                   ),
                                   child: DropdownButtonFormField<AppliesTo>(
-                                    value: _appliesTo,
+                                    initialValue: _appliesTo,
                                     decoration: InputDecoration(
                                       prefixIcon: Container(
                                         margin: const EdgeInsets.all(8),
@@ -783,10 +783,10 @@ class _GenerateCouponDialogContentState
                                                             _minBaseAmountController
                                                                 .text),
                                                 validFrom: _validFrom != null
-                                                    ? "${_validFrom!.toIso8601String().substring(0, 19)}"
+                                                    ? _validFrom!.toIso8601String().substring(0, 19)
                                                     : null,
                                                 validTo: _validTo != null
-                                                    ? "${_validTo!.toIso8601String().substring(0, 19)}"
+                                                    ? _validTo!.toIso8601String().substring(0, 19)
                                                     : null,
                                                 appliesTo: _appliesTo,
                                                 notes: _notesController

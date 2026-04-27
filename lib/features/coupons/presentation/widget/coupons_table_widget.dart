@@ -35,7 +35,7 @@ class CouponsTableWidget extends StatelessWidget {
             ],
           ),
           child: DataTable(
-            headingRowColor: MaterialStateProperty.all(
+            headingRowColor: WidgetStateProperty.all(
               navy.withOpacity(0.1),
             ),
             headingTextStyle: TextStyle(

@@ -1207,7 +1207,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
           builder: (context, state) {
             if (state is SuccessGetStatisticsBuffet) {
               final buffet = state.response.body;
-              if (isMobile)
+              if (isMobile) {
                 return Column(
                   children: [
                     StatisticsCardWidget(
@@ -1241,6 +1241,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                     ],
                   ],
                 );
+              }
               return Column(
                 children: [
                   Row(
@@ -1294,7 +1295,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
           builder: (context, state) {
             if (state is SuccessGetStatisticsPackages) {
               final packages = state.response.body;
-              if (isMobile)
+              if (isMobile) {
                 return Column(
                   children: [
                     StatisticsCardWidget(
@@ -1379,6 +1380,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                     ],
                   ],
                 );
+              }
               return Column(
                 children: [
                   Row(
@@ -1498,7 +1500,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
           builder: (context, state) {
             if (state is SuccessGetStatisticsCoupons) {
               final coupons = state.response.body;
-              if (isMobile)
+              if (isMobile) {
                 return Column(
                   children: [
                     StatisticsCardWidget(
@@ -1565,6 +1567,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                     ],
                   ],
                 );
+              }
               return Column(
                 children: [
                   Row(

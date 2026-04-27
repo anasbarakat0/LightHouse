@@ -533,7 +533,7 @@ class _ClientProfileState extends State<ClientProfile>
           isMobile: isMobile,
         ),
         const SizedBox(height: 16),
-        Container(
+        SizedBox(
           height: 290,
           child:
               BlocBuilder<GetAllActivePackagesBloc, GetAllActivePackagesState>(
@@ -557,7 +557,7 @@ class _ClientProfileState extends State<ClientProfile>
                     itemCount: packages.length,
                     separatorBuilder: (_, __) => const SizedBox(width: 16),
                     itemBuilder: (context, index) {
-                      return Container(
+                      return SizedBox(
                         width: 300,
                         child: PackageCardWidget(
                           packageData: packages[index],
@@ -598,7 +598,7 @@ class _ClientProfileState extends State<ClientProfile>
           isMobile: isMobile,
         ),
         const SizedBox(height: 16),
-        Container(
+        SizedBox(
           height: 360,
           child: BlocBuilder<GetAllPackagesByUserIdBloc,
               GetAllPackagesByUserIdState>(
@@ -643,7 +643,7 @@ class _ClientProfileState extends State<ClientProfile>
                           separatorBuilder: (_, __) =>
                               const SizedBox(width: 16),
                           itemBuilder: (context, index) {
-                            return Container(
+                            return SizedBox(
                               width: 300,
                               child: UserPackageCard(
                                 packageData: packages[index],
@@ -707,12 +707,12 @@ class _ClientProfileState extends State<ClientProfile>
         BlocBuilder<GetSessionsByUserIdBloc, GetSessionsByUserIdState>(
           builder: (context, state) {
             if (state is LoadingFetchingSessions) {
-              return Container(
+              return SizedBox(
                 height: 400,
                 child: const LoadingStateWidget(),
               );
             } else if (state is NoSessions) {
-              return Container(
+              return SizedBox(
                 height: 300,
                 child: Column(
                   children: [
@@ -761,7 +761,7 @@ class _ClientProfileState extends State<ClientProfile>
                             );
                           },
                         )
-                      : Container(
+                      : SizedBox(
                           height: 420,
                           child: ScrollConfiguration(
                             behavior: MyCustomScrollBehavior(),
@@ -823,7 +823,7 @@ class _ClientProfileState extends State<ClientProfile>
               final message = state is ExceptionFetchingSessions
                   ? state.message
                   : (state as OfflineFailureSessionsState).message;
-              return Container(
+              return SizedBox(
                 height: 300,
                 child: ErrorStateWidget(message: message),
               );

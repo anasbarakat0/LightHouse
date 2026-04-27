@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:lighthouse/common/widget/drop_down_button_form_field_widget.dart';
 import 'package:lighthouse/common/widget/my_button.dart';
 import 'package:lighthouse/common/widget/text_field_widget.dart';

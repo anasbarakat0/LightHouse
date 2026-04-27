@@ -184,8 +184,8 @@ class Body {
         : null,
     buffetInvoicePrice: (map['buffetInvoicePrice'] is double)
         ? map['buffetInvoicePrice']
-        : (map['buffetInvoicePrice'] as num?)?.toInt() ?? 0,
-    buffetInvoices: (map['buffetInvoices'] as List<dynamic>)
+        : (map['buffetInvoicePrice'] as num?)?.toDouble() ?? 0.0,
+    buffetInvoices: ((map['buffetInvoices'] as List<dynamic>?) ?? [])
         .map((invoice) => BuffetInvoice.fromMap(invoice as Map<String, dynamic>))
         .toList(),
     totalPrice: (map['totalPrice'] is int)
@@ -301,8 +301,8 @@ class BuffetInvoice {
     id: map['id'] as String? ?? '',
     invoiceDate: map['invoiceDate'] as String? ?? '',
     invoiceTime: map['invoiceTime'] as String? ?? '',
-    sessionId: map['sessionId'] as String? ?? '',
-    orders: (map['orders'] as List<dynamic>)
+    sessionId: (map['sessionId'] ?? map['session_id'] ?? '').toString(),
+    orders: ((map['orders'] as List<dynamic>?) ?? [])
         .map((order) => Order.fromMap(order as Map<String, dynamic>))
         .toList(),
     totalPrice: (map['totalPrice'] is double)

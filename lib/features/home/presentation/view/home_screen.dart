@@ -13,15 +13,19 @@ import 'package:lighthouse/features/home/data/repository/finish_premium_session_
 import 'package:lighthouse/features/home/data/repository/get_all_active_sessions_repo.dart';
 import 'package:lighthouse/features/home/data/repository/get_premium_session_by_id_repo.dart';
 import 'package:lighthouse/features/home/data/repository/get_premium_session_by_qr_code_repo.dart';
+import 'package:lighthouse/features/home/data/repository/premium_buffet_repo.dart';
 import 'package:lighthouse/features/home/data/source/remote/get_premium_session_by_qr_code_service.dart';
 import 'package:lighthouse/features/home/data/source/remote/finish_premium_session_service.dart';
 import 'package:lighthouse/features/home/data/source/remote/get_all_active_sessions_service.dart';
 import 'package:lighthouse/features/home/data/source/remote/get_premium_session_by_id_service.dart';
+import 'package:lighthouse/features/home/data/source/remote/premium_buffet_service.dart';
 import 'package:lighthouse/features/home/domain/usecase/finish_premium_session_usecase.dart';
 import 'package:lighthouse/features/home/domain/usecase/get_all_active_sessions_usecase.dart';
+import 'package:lighthouse/features/home/domain/usecase/premium_buffet_usecase.dart';
 import 'package:lighthouse/features/home/presentation/bloc/finish_premium_session_bloc.dart';
 import 'package:lighthouse/features/home/presentation/bloc/get_all_active_sessions_bloc.dart';
 import 'package:lighthouse/features/home/presentation/bloc/get_premium_session_bloc.dart';
+import 'package:lighthouse/features/home/presentation/bloc/premium_buffet_bloc.dart';
 import 'package:lighthouse/features/home/presentation/bloc/verify_qr_code_bloc.dart';
 import 'package:lighthouse/features/home/data/repository/verify_qr_code_repo.dart';
 import 'package:lighthouse/features/home/data/source/remote/verify_qr_code_service.dart';
@@ -206,6 +210,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           ),
         ),
         BlocProvider(
+          create: (context) => PremiumBuffetBloc(
+            PremiumBuffetUsecase(
+              premiumBuffetRepo: PremiumBuffetRepo(
+                premiumBuffetService: PremiumBuffetService(dio: Dio()),
+                networkConnection: NetworkConnection.createDefault(),
+              ),
+            ),
+          ),
+        ),
+        BlocProvider(
           create: (context) => ClosePremiumSessionByQrCodeBloc(
             ClosePremiumSessionByQrCodeRepo(
               closePremiumSessionByQrCodeService:
@@ -329,6 +343,31 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                       },
                     );
                   },
+                  onAddBuffetOrders: (orders) {
+                    context.read<PremiumBuffetBloc>().add(
+                          AddBuffetOrdersToPremiumSession(
+                            sessionId: state.response.body.id,
+                            orders: orders,
+                          ),
+                        );
+                  },
+                  onUpdateBuffetOrder: (orderId, quantity) {
+                    context.read<PremiumBuffetBloc>().add(
+                          UpdateBuffetOrderQuantity(
+                            sessionId: state.response.body.id,
+                            orderId: orderId,
+                            quantity: quantity,
+                          ),
+                        );
+                  },
+                  onDeleteBuffetOrder: (orderId) {
+                    context.read<PremiumBuffetBloc>().add(
+                          DeleteBuffetOrder(
+                            sessionId: state.response.body.id,
+                            orderId: orderId,
+                          ),
+                        );
+                  },
                 );
               } else if (state is ExceptionGettingSessionById) {
                 print("if (state is ExceptionGettingSessionById) {");
@@ -352,6 +391,69 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                             .textTheme
                             .bodySmall
                             ?.copyWith(color: Colors.white)),
+                  ),
+                );
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginWindows(),
+                  ),
+                );
+              }
+            },
+          ),
+          BlocListener<PremiumBuffetBloc, PremiumBuffetState>(
+            listener: (context, state) {
+              if (state is PremiumBuffetActionSuccess) {
+                final message = state.response.message.isNotEmpty
+                    ? state.response.message
+                    : "buffet_order_updated".tr();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.green[800],
+                    content: Text(
+                      message,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: Colors.white),
+                    ),
+                  ),
+                );
+
+                context
+                    .read<GetAllActiveSessionsBloc>()
+                    .add(GetActiveSessions());
+                final sessionId = state.sessionId;
+                if (sessionId != null && sessionId.isNotEmpty) {
+                  context.read<GetPremiumSessionBloc>().add(
+                        GetPremiumSession(id: sessionId),
+                      );
+                }
+              } else if (state is PremiumBuffetException) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.redAccent[700],
+                    content: Text(
+                      state.message,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: Colors.white),
+                    ),
+                  ),
+                );
+              } else if (state is PremiumBuffetForbidden) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.redAccent[700],
+                    content: Text(
+                      state.message,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: Colors.white),
+                    ),
                   ),
                 );
                 Navigator.pushReplacement(

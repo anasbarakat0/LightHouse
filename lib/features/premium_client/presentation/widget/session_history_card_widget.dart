@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/features/premium_client/data/models/get_sessions_by_user_id_response_model.dart';
 

@@ -124,7 +124,7 @@ class _SpeedDialFabState extends State<SpeedDialFab>
               ),
             ),
           );
-        }).toList(),
+        }),
         // Main button
         FloatingActionButton.extended(
           heroTag: 'speed_dial_main',

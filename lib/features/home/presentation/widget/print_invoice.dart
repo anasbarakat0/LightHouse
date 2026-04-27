@@ -59,7 +59,7 @@ Future<void> printDetailedInvoice(bool isPremium, String printerAddress,
   PrintMode mode = PrintMode.USB;
 /// Helper function to format hours (decimal) to hours:minutes format
 /// Example: 1.283333 -> "1:17", 0.083333 -> "0:05"
-String _formatHoursToMinutes(double hours) {
+String formatHoursToMinutes(double hours) {
   try {
     final totalMinutes = (hours * 60).round();
     final hoursPart = totalMinutes ~/ 60;
@@ -179,7 +179,7 @@ bytes += generator.text('=' * 64, styles: PosStyles(align: PosAlign.center));
     // Hours and Price - تكبير الخط
     bytes += generator.row([
       PosColumn(
-          text: 'Hours: ${_formatHoursToMinutes(invoice.sessionInvoice.hoursAmount)}',
+          text: 'Hours: ${formatHoursToMinutes(invoice.sessionInvoice.hoursAmount)}',
           width: 6,
           styles: PosStyles(
               bold: true, height: PosTextSize.size1, width: PosTextSize.size1)),

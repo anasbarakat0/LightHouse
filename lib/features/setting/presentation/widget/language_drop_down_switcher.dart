@@ -23,7 +23,7 @@ class LanguageDropdownSwitcher extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: DropdownButtonFormField<Locale>(
         borderRadius: BorderRadius.circular(12),
-        value: currentLocale,
+        initialValue: currentLocale,
         icon: const Padding(
           padding: EdgeInsetsDirectional.only(end: 8),
           child: Icon(

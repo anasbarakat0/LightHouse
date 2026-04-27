@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:lighthouse/core/constants/messages.dart';
 import 'package:lighthouse/core/error/failure.dart';
-import 'package:lighthouse/features/statistics/data/models/occupancy_response_model.dart';
 import 'package:lighthouse/features/statistics/domain/usecase/get_occupancy_usecase.dart';
 import 'package:meta/meta.dart';
 

@@ -217,7 +217,7 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                                       quantity: order.quantity,
                                       price: order.price,
                                     );
-                                  }).toList(),
+                                  }),
                                   const SizedBox(height: 12),
                                   Divider(
                                     thickness: 1,
@@ -250,7 +250,7 @@ void endSessionDialog(BuildContext context, Body sessionData) {
                               ),
                             ),
                           );
-                        }).toList()
+                        })
                       else
                         Container(
                           padding: const EdgeInsets.all(20),

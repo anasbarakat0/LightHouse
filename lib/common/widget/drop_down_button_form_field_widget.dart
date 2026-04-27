@@ -30,7 +30,7 @@ class MyDropdownButtonFormField extends StatelessWidget {
       padding:
           const EdgeInsets.only(bottom: 16.0), // Add spacing between fields
       child: DropdownButtonFormField<String>(
-        value: selectedValue,
+        initialValue: selectedValue,
         
         decoration: InputDecoration(
           labelText: labelText,

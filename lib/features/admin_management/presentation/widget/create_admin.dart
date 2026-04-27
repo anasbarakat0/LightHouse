@@ -479,7 +479,7 @@ Widget _buildRoleDropdown(
           ),
         ),
         child: DropdownButtonFormField<String>(
-          value: selectedRole,
+          initialValue: selectedRole,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,

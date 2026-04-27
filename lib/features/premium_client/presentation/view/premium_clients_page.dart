@@ -45,6 +45,9 @@ class PremiumClientsPage extends StatefulWidget {
 }
 
 class _PremiumClientsPageState extends State<PremiumClientsPage> {
+  static const int _clientsPage = 1;
+  static const int _clientsPageSize = 10000;
+
   TextEditingController search = TextEditingController();
   TextEditingController qrScannerController = TextEditingController();
   final FocusNode searchFocusNode = FocusNode();
@@ -60,6 +63,19 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
         searchFocusNode.requestFocus();
       }
     });
+  }
+
+  void _refreshClients(BuildContext context, {bool clearSearch = false}) {
+    if (clearSearch) {
+      search.clear();
+      setState(() => searchQuery = '');
+    }
+    context.read<GetPremiumClientsBloc>().add(
+          GetPremiumClients(
+            page: _clientsPage,
+            size: _clientsPageSize,
+          ),
+        );
   }
 
   @override
@@ -98,8 +114,8 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
             ),
           )..add(
               GetPremiumClients(
-                page: 1,
-                size: 10000,
+                page: _clientsPage,
+                size: _clientsPageSize,
               ),
             ),
         ),
@@ -469,9 +485,7 @@ class _PremiumClientsPageState extends State<PremiumClientsPage> {
                                           ?.copyWith(color: Colors.white)),
                                 ),
                               );
-                              context
-                                  .read<GetPremiumClientsBloc>()
-                                  .add(GetPremiumClients(page: 1, size: 20));
+                              _refreshClients(context, clearSearch: true);
                             } else if (state is ForbiddenAdded) {
                               print(state.message);
                               ScaffoldMessenger.of(context).showSnackBar(
