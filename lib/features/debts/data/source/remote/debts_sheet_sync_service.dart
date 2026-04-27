@@ -16,6 +16,7 @@ class DebtsSheetSnapshot {
 
 class DebtsSheetSyncService {
   final Dio dio;
+  static const _locationHeader = 'location';
 
   const DebtsSheetSyncService({
     required this.dio,
@@ -57,7 +58,7 @@ class DebtsSheetSyncService {
       action: 'getAll',
       payload: const {},
     );
-    final data = _responseMap(response.data);
+    final data = _responseMap(response);
 
     if (data['ok'] == false) {
       throw DioException(
@@ -92,21 +93,18 @@ class DebtsSheetSyncService {
     required String action,
     required Map<String, dynamic> payload,
   }) async {
-    final response = await dio.post(
-      sheetUrl,
-      data: {
-        'action': action,
-        'token': sheetToken,
-        'payload': payload,
-      },
-      options: Options(
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
+    final response = await _resolveRedirect(
+      await dio.post(
+        sheetUrl,
+        data: {
+          'action': action,
+          'token': sheetToken,
+          'payload': payload,
         },
+        options: _jsonOptions(followRedirects: false),
       ),
     );
-    final data = _responseMap(response.data);
+    final data = _responseMap(response);
 
     if (data['ok'] == false) {
       throw DioException(
@@ -118,15 +116,68 @@ class DebtsSheetSyncService {
     return response;
   }
 
-  Map<String, dynamic> _responseMap(dynamic data) {
+  Future<Response> _resolveRedirect(Response response) async {
+    final statusCode = response.statusCode ?? 0;
+    if (statusCode < 300 || statusCode >= 400) {
+      return response;
+    }
+
+    final location = response.headers.value(_locationHeader);
+    if (location == null || location.trim().isEmpty) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        message:
+            'Apps Script redirected without a target URL. Check the Web App deployment link.',
+      );
+    }
+
+    final redirectUrl = response.realUri.resolve(location).toString();
+
+    return dio.get(
+      redirectUrl,
+      options: _jsonOptions(),
+    );
+  }
+
+  Options _jsonOptions({bool followRedirects = true}) {
+    return Options(
+      followRedirects: followRedirects,
+      maxRedirects: 5,
+      validateStatus: (status) =>
+          status != null && status >= 200 && status < 400,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    );
+  }
+
+  Map<String, dynamic> _responseMap(Response response) {
+    final data = response.data;
+
     if (data is Map) {
       return Map<String, dynamic>.from(data);
     }
 
     if (data is String && data.trim().isNotEmpty) {
-      return Map<String, dynamic>.from(json.decode(data) as Map);
+      try {
+        final decoded = json.decode(data);
+        if (decoded is Map) {
+          return Map<String, dynamic>.from(decoded);
+        }
+      } catch (_) {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          message:
+              'Sheet did not return JSON. Check the Apps Script URL, deployment access, and token.',
+        );
+      }
     }
 
-    return const {};
+    throw DioException(
+      requestOptions: response.requestOptions,
+      message:
+          'Sheet returned an empty response. Check the Apps Script Web App deployment.',
+    );
   }
 }
