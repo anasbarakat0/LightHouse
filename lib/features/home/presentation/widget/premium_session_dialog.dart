@@ -10,11 +10,17 @@ import 'package:lighthouse/features/buffet/data/repository/get_all_products_repo
 import 'package:lighthouse/features/buffet/data/source/remote/get_all_products_service.dart';
 import 'package:lighthouse/features/buffet/domain/usecase/get_all_products_usecase.dart';
 import 'package:lighthouse/features/buffet/presentation/bloc/get_all_products_bloc.dart';
+import 'package:lighthouse/core/utils/shared_preferences.dart';
+import 'package:lighthouse/features/debts/data/models/debt_account_model.dart';
+import 'package:lighthouse/features/debts/data/models/debt_transaction_model.dart';
+import 'package:lighthouse/features/debts/data/source/local/debts_local_source.dart';
+import 'package:lighthouse/features/debts/data/source/remote/debts_sheet_sync_service.dart';
 import 'package:lighthouse/features/home/data/models/buffet_order_request_model.dart';
 import 'package:lighthouse/features/home/data/models/get_premium_session_response.dart';
 import 'package:lighthouse/features/home/presentation/widget/detail_row.dart';
 import 'package:lighthouse/features/home/presentation/widget/session_duration_formatter.dart';
 import 'package:lighthouse/features/home/presentation/widget/session_time_formatter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// [onEndSession] انهاء الجلسة بدون طباعة فاتورة
 /// [onEndSessionWithPrint] انهاء الجلسة مع طباعة فاتورة
@@ -71,6 +77,8 @@ void premiumSessionDialog(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       _SessionSummary(sessionData: sessionData),
+                      const SizedBox(height: 14),
+                      _SessionDebtStatus(sessionData: sessionData),
                       const SizedBox(height: 16),
                       Divider(
                         thickness: 1,
@@ -233,6 +241,295 @@ class _SessionSummary extends StatelessWidget {
               "${_formatPrice(sessionData.buffetInvoicePrice)} ${"s.p".tr()}",
         ),
       ],
+    );
+  }
+}
+
+class _SessionDebtStatus extends StatefulWidget {
+  final Body sessionData;
+
+  const _SessionDebtStatus({
+    required this.sessionData,
+  });
+
+  @override
+  State<_SessionDebtStatus> createState() => _SessionDebtStatusState();
+}
+
+class _SessionDebtStatusState extends State<_SessionDebtStatus> {
+  late final DebtsLocalSource _localSource;
+  late final DebtsSheetSyncService _syncService;
+  List<DebtAccount> _accounts = [];
+  List<DebtTransaction> _transactions = [];
+  bool _isSavingPayment = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _localSource = DebtsLocalSource(
+      preferences: memory.get<SharedPreferences>(),
+    );
+    _syncService = DebtsSheetSyncService(dio: Dio());
+    _loadDebts();
+  }
+
+  void _loadDebts() {
+    _accounts = _localSource.getAccounts();
+    _transactions = _localSource.getTransactions();
+  }
+
+  DebtAccount? get _account {
+    for (final account in _accounts) {
+      if (!account.archived && account.clientId == widget.sessionData.userId) {
+        return account;
+      }
+    }
+    return null;
+  }
+
+  double get _balance {
+    final account = _account;
+    if (account == null) {
+      return 0;
+    }
+
+    return _transactions
+        .where((transaction) => transaction.accountId == account.id)
+        .fold<double>(
+            0, (total, transaction) => total + transaction.signedAmount);
+  }
+
+  String _currentUserId() {
+    final prefs = memory.get<SharedPreferences>();
+    return prefs.getString('userId') ??
+        prefs.getString('userEmail') ??
+        'local_user';
+  }
+
+  String _newTransactionId() {
+    return 'debt_transaction_${DateTime.now().microsecondsSinceEpoch}';
+  }
+
+  Future<void> _markDebtAsPaid() async {
+    final account = _account;
+    final balance = _balance;
+
+    if (account == null || balance <= 0 || _isSavingPayment) {
+      return;
+    }
+
+    final confirmed = await _showConfirmPaymentDialog(balance);
+    if (!mounted || !confirmed) {
+      return;
+    }
+
+    setState(() => _isSavingPayment = true);
+
+    final transaction = DebtTransaction(
+      id: _newTransactionId(),
+      accountId: account.id,
+      type: DebtTransactionType.payment,
+      amount: balance,
+      note: '${'premium_session_debt_payment'.tr()} ${widget.sessionData.id}',
+      createdAt: DateTime.now(),
+      createdBy: _currentUserId(),
+    );
+
+    final updatedTransactions = List<DebtTransaction>.from(_transactions)
+      ..add(transaction);
+
+    await _localSource.saveTransactions(updatedTransactions);
+
+    var finalTransaction = transaction;
+    final sheetUrl = _localSource.getSheetUrl().trim();
+    if (sheetUrl.isNotEmpty) {
+      try {
+        if (account.syncedAt == null) {
+          await _syncService.syncAccount(
+            sheetUrl: sheetUrl,
+            sheetToken: _localSource.getSheetToken(),
+            account: account,
+          );
+          final accountIndex = _accounts.indexWhere(
+            (item) => item.id == account.id,
+          );
+          if (accountIndex != -1) {
+            _accounts[accountIndex] = account.copyWith(
+              syncedAt: DateTime.now(),
+            );
+            await _localSource.saveAccounts(_accounts);
+          }
+        }
+        await _syncService.syncTransaction(
+          sheetUrl: sheetUrl,
+          sheetToken: _localSource.getSheetToken(),
+          transaction: transaction,
+        );
+        finalTransaction = transaction.copyWith(syncedAt: DateTime.now());
+        final index = updatedTransactions.indexWhere(
+          (item) => item.id == transaction.id,
+        );
+        if (index != -1) {
+          updatedTransactions[index] = finalTransaction;
+          await _localSource.saveTransactions(updatedTransactions);
+        }
+      } catch (_) {
+        // Keep the payment locally; the Debts page can sync it later.
+      }
+    }
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _transactions = updatedTransactions;
+      _isSavingPayment = false;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.green,
+        content: Text(
+          'debt_paid_success'.tr(),
+          style: const TextStyle(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Future<bool> _showConfirmPaymentDialog(double balance) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+          title: Text('confirm_debt_payment_title'.tr()),
+          content: Text(
+            'confirm_debt_payment_message'.tr(
+              args: [_formatPrice(balance), 's.p'.tr()],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text('Cancel'.tr()),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+              ),
+              child: Text('confirm'.tr()),
+            ),
+          ],
+        );
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final balance = _balance;
+    final hasDebt = balance > 0;
+    final accentColor = hasDebt ? Colors.redAccent : Colors.greenAccent;
+    final icon =
+        hasDebt ? Icons.warning_amber_rounded : Icons.verified_outlined;
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: accentColor.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: accentColor.withValues(alpha: 0.28),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: accentColor.withValues(alpha: 0.14),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              icon,
+              color: accentColor,
+              size: 22,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  hasDebt ? 'client_has_debt'.tr() : 'client_has_no_debt'.tr(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  hasDebt
+                      ? '${'balance'.tr()}: ${_formatPrice(balance)} ${'s.p'.tr()}'
+                      : 'debt_status_clear'.tr(),
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.68),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (hasDebt) ...[
+            const SizedBox(width: 10),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (_isSavingPayment)
+                  const SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.4,
+                      valueColor: AlwaysStoppedAnimation<Color>(orange),
+                    ),
+                  )
+                else
+                  Checkbox(
+                    value: false,
+                    onChanged: (_) => _markDebtAsPaid(),
+                    activeColor: Colors.green,
+                    checkColor: Colors.white,
+                    side: BorderSide(
+                      color: Colors.white.withValues(alpha: 0.72),
+                      width: 1.6,
+                    ),
+                  ),
+                Text(
+                  'mark_as_paid'.tr(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lighthouse/core/resources/colors.dart';
+import 'package:lighthouse/features/home/presentation/widget/session_time_formatter.dart';
 import 'package:lighthouse/features/premium_client/data/models/get_sessions_by_user_id_response_model.dart';
 
 class SessionHistoryCardWidget extends StatelessWidget {
@@ -18,28 +19,31 @@ class SessionHistoryCardWidget extends StatelessWidget {
     final bool isActive = session.active;
     final String fullName = session.fullName ??
         '${session.firstName ?? ''} ${session.lastName ?? ''}'.trim();
-    
-    // Parse times
-    String? formattedStartTime;
-    String? formattedEndTime;
+
+    String? rawStartTime;
+    String? rawEndTime;
+    String? displayStartTime;
+    String? displayEndTime;
     String? duration;
-    
+
     try {
       if (session.startTime.isNotEmpty) {
         final startParts = session.startTime.split('.');
-        formattedStartTime = startParts[0];
+        rawStartTime = startParts[0];
+        displayStartTime = formatPremiumSessionTime(context, session.startTime);
       }
       if (session.endTime != null) {
         final endTimeStr = session.endTime.toString();
         if (endTimeStr.isNotEmpty) {
           final endParts = endTimeStr.split('.');
-          formattedEndTime = endParts[0];
-          
+          rawEndTime = endParts[0];
+          displayEndTime = formatPremiumSessionTime(context, endTimeStr);
+
           // Calculate duration if both times exist
-          if (formattedStartTime != null) {
+          if (rawStartTime != null) {
             try {
-              final start = DateFormat('HH:mm:ss').parse(formattedStartTime);
-              final end = DateFormat('HH:mm:ss').parse(formattedEndTime);
+              final start = DateFormat('HH:mm:ss').parse(rawStartTime);
+              final end = DateFormat('HH:mm:ss').parse(rawEndTime);
               final diff = end.difference(start);
               final hours = diff.inHours;
               final minutes = diff.inMinutes.remainder(60);
@@ -117,7 +121,8 @@ class SessionHistoryCardWidget extends StatelessWidget {
               top: 16,
               right: 16,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: isActive
@@ -173,7 +178,10 @@ class SessionHistoryCardWidget extends StatelessWidget {
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [orange.withOpacity(0.2), orange.withOpacity(0.1)],
+                            colors: [
+                              orange.withOpacity(0.2),
+                              orange.withOpacity(0.1)
+                            ],
                           ),
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -222,7 +230,8 @@ class SessionHistoryCardWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: lightGrey.withOpacity(0.5),
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: grey.withOpacity(0.2), width: 1),
+                      border:
+                          Border.all(color: grey.withOpacity(0.2), width: 1),
                     ),
                     child: Column(
                       children: [
@@ -239,18 +248,18 @@ class SessionHistoryCardWidget extends StatelessWidget {
                               child: _buildInfoRow(
                                 icon: Icons.play_arrow_rounded,
                                 label: "Start".tr(),
-                                value: formattedStartTime ?? session.startTime,
+                                value: displayStartTime ?? session.startTime,
                                 iconColor: Colors.green,
                                 compact: true,
                               ),
                             ),
-                            if (formattedEndTime != null) ...[
+                            if (displayEndTime != null) ...[
                               const SizedBox(width: 12),
                               Expanded(
                                 child: _buildInfoRow(
                                   icon: Icons.stop_rounded,
                                   label: "End".tr(),
-                                  value: formattedEndTime,
+                                  value: displayEndTime,
                                   iconColor: Colors.red,
                                   compact: true,
                                 ),
@@ -274,11 +283,13 @@ class SessionHistoryCardWidget extends StatelessWidget {
                   const SizedBox(height: 16),
 
                   // Additional Info
-                  if (session.buffetInvoicePrice > 0 || 
-                      (session.sessionInvoice != null && 
-                       session.sessionInvoice is Map &&
-                       (session.sessionInvoice as Map)['hoursAmount'] != null &&
-                       (session.sessionInvoice as Map)['hourlyPrice'] != null))
+                  if (session.buffetInvoicePrice > 0 ||
+                      (session.sessionInvoice != null &&
+                          session.sessionInvoice is Map &&
+                          (session.sessionInvoice as Map)['hoursAmount'] !=
+                              null &&
+                          (session.sessionInvoice as Map)['hourlyPrice'] !=
+                              null))
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
@@ -289,7 +300,8 @@ class SessionHistoryCardWidget extends StatelessWidget {
                           ],
                         ),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: orange.withOpacity(0.2), width: 1),
+                        border: Border.all(
+                            color: orange.withOpacity(0.2), width: 1),
                       ),
                       child: Row(
                         children: [
@@ -313,13 +325,7 @@ class SessionHistoryCardWidget extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  "${(session.buffetInvoicePrice + 
-                                    ((session.sessionInvoice is Map && 
-                                      (session.sessionInvoice as Map)['hoursAmount'] != null &&
-                                      (session.sessionInvoice as Map)['hourlyPrice'] != null)
-                                        ? (((session.sessionInvoice as Map)['hoursAmount'] as num).toDouble() *
-                                           ((session.sessionInvoice as Map)['hourlyPrice'] as num).toDouble())
-                                        : 0.0)).toStringAsFixed(0)} ${"SAR".tr()}",
+                                  "${(session.buffetInvoicePrice + ((session.sessionInvoice is Map && (session.sessionInvoice as Map)['hoursAmount'] != null && (session.sessionInvoice as Map)['hourlyPrice'] != null) ? (((session.sessionInvoice as Map)['hoursAmount'] as num).toDouble() * ((session.sessionInvoice as Map)['hourlyPrice'] as num).toDouble()) : 0.0)).toStringAsFixed(0)} ${"SAR".tr()}",
                                   style: TextStyle(
                                     color: navy,
                                     fontSize: 15,
@@ -394,4 +400,3 @@ class SessionHistoryCardWidget extends StatelessWidget {
     );
   }
 }
-

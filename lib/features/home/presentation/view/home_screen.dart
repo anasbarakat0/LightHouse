@@ -36,16 +36,13 @@ import 'package:lighthouse/features/home/data/models/finish_premium_session_resp
 import 'package:lighthouse/features/home/presentation/widget/premium_client_card_widget.dart';
 import 'package:lighthouse/features/home/presentation/widget/premium_session_dialog.dart';
 import 'package:lighthouse/features/home/presentation/widget/print_invoice.dart';
-import 'package:lighthouse/features/home/presentation/widget/qr_scanner_dialog.dart';
 import 'package:lighthouse/features/login/presentation/view/login.dart';
 import 'package:lighthouse/features/main_window/presentation/view/main_screen.dart';
-import 'package:lighthouse/common/widget/speed_dial_fab.dart';
 import 'package:lighthouse/features/premium_client/data/repository/close_premium_session_by_qr_code_repo.dart';
 import 'package:lighthouse/features/premium_client/data/source/remote/close_premium_session_by_qr_code_service.dart';
 import 'package:lighthouse/features/premium_client/presentation/bloc/close_premium_session_by_qr_code_bloc.dart';
 import 'package:lighthouse/core/utils/app_shortcuts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:ui' as ui;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -1084,41 +1081,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                 },
                               ),
                             )
-                          ],
-                        ),
-                      ),
-                      Positioned.directional(
-                        textDirection: context.locale.countryCode == 'en'
-                            ? ui.TextDirection.ltr
-                            : ui.TextDirection.rtl,
-                        bottom: 30,
-                        start: context.locale.languageCode == 'en' ? 30 : null,
-                        end: context.locale.languageCode == 'en' ? null : 30,
-                        child: SpeedDialFab(
-                          icon: Icons.more_vert,
-                          backgroundColor: lightGrey,
-                          iconColor: orange,
-                          tooltip: 'quick'.tr(),
-                          children: [
-                            SpeedDialChild(
-                              icon: Icons.qr_code,
-                              label: 'get_premium_session_by_qr'.tr(),
-                              backgroundColor: orange,
-                              iconColor: Colors.white,
-                              onPressed: () {
-                                showQrScannerDialog(
-                                  context,
-                                  'get_premium_session'.tr(),
-                                  'scan_qr_code_to_get_premium_session_details'
-                                      .tr(),
-                                  (qrCode) {
-                                    context.read<GetPremiumSessionBloc>().add(
-                                        GetPremiumSessionByQrCode(
-                                            qrCode: qrCode));
-                                  },
-                                );
-                              },
-                            ),
                           ],
                         ),
                       ),

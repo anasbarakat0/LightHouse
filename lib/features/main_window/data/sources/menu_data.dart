@@ -21,6 +21,10 @@ class SideMenuData {
       title: 'clients'.tr(),
     ),
     MenuModel(
+      icon: Icons.account_balance_wallet_outlined,
+      title: 'debts'.tr(),
+    ),
+    MenuModel(
       icon: Icons.discount,
       title: 'Packages'.tr(),
     ),

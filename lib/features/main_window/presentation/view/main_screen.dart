@@ -10,6 +10,7 @@ import 'package:lighthouse/core/utils/shared_preferences.dart';
 import 'package:lighthouse/core/utils/app_shortcuts.dart';
 import 'package:lighthouse/features/buffet/presentation/view/buffet_page.dart';
 import 'package:lighthouse/features/coupons/presentation/view/coupons_page.dart';
+import 'package:lighthouse/features/debts/presentation/view/debts_page.dart';
 import 'package:lighthouse/features/home/presentation/view/home_screen.dart';
 import 'package:lighthouse/features/login/data/models/login_model.dart';
 import 'package:lighthouse/features/login/data/repository/login_repo.dart';
@@ -40,7 +41,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  static const Set<int> _passwordProtectedPages = {0, 2, 4, 5, 6, 8, 9};
+  static const Set<int> _passwordProtectedPages = {0, 2, 4, 5, 6, 7, 9, 10};
 
   // GlobalKey to access HomeScreen's context
   final GlobalKey homeScreenKey = GlobalKey();
@@ -52,6 +53,7 @@ class _MainScreenState extends State<MainScreen> {
         HomeScreen(key: homeScreenKey),
         const StatisticsPage(),
         PremiumClientsPage(key: premiumClientsPageKey),
+        const DebtsPage(),
         const PackagesPage(),
         const CouponsPage(),
         const BuffetPage(),
@@ -64,6 +66,8 @@ class _MainScreenState extends State<MainScreen> {
 
   /// على الديسكتوب: هل لوحة الملخص مفتوحة (قابلة للفتح والإغلاق)
   bool _isSummaryOpen = false;
+  bool _areProtectedPagesUnlocked = false;
+  bool _isLockButtonHovered = false;
 
   @override
   void initState() {
@@ -88,9 +92,9 @@ class _MainScreenState extends State<MainScreen> {
     final restrictedPages = [
       0,
       2,
-      4,
       5,
-      8
+      6,
+      9
     ]; // Dashboard, Statistics, Packages, Coupons, Admin Management
 
     if (restrictedPages.contains(index)) {
@@ -198,7 +202,10 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  Future<bool> _showPasswordVerificationDialog(int index) async {
+  Future<bool> _showPasswordVerificationDialog(
+    int index, {
+    String? title,
+  }) async {
     final currentEmail = await _resolveCurrentUserEmail();
     if (!mounted) {
       return false;
@@ -213,7 +220,7 @@ class _MainScreenState extends State<MainScreen> {
     String? errorMessage;
     bool obscurePassword = true;
     bool isSubmitting = false;
-    final pageTitle = SideMenuData().menu[index].title;
+    final pageTitle = title ?? SideMenuData().menu[index].title;
 
     final result = await showDialog<bool>(
       context: context,
@@ -258,221 +265,391 @@ class _MainScreenState extends State<MainScreen> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+              backgroundColor: Colors.transparent,
+              insetPadding: const EdgeInsets.symmetric(
+                horizontal: 24,
+                vertical: 24,
               ),
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 460),
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500),
+                child: Material(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [navy, darkNavy],
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Icon(
-                              Icons.lock_outline_rounded,
-                              color: Colors.white,
-                              size: 24,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "verify_access".tr(),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  pageTitle,
-                                  style: const TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close_rounded,
-                                color: Colors.white),
-                            onPressed: isSubmitting
-                                ? null
-                                : () => Navigator.of(dialogContext).pop(false),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      "enter_password_for_current_account".tr(),
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: darkNavy,
-                            fontSize: 15,
-                            height: 1.5,
-                          ),
-                    ),
-                    const SizedBox(height: 16),
-                    Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: lightGrey,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.grey.shade300),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "current_account".tr(),
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelMedium
-                                ?.copyWith(
-                                  color: grey,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            currentEmail,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
-                                  color: darkNavy,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    TextField(
-                      controller: passwordController,
-                      obscureText: obscurePassword,
-                      enabled: !isSubmitting,
-                      autofocus: true,
-                      textInputAction: TextInputAction.done,
-                      onSubmitted: (_) {
-                        if (!isSubmitting) {
-                          submit(setDialogState);
-                        }
-                      },
-                      decoration: InputDecoration(
-                        labelText: "password".tr(),
-                        hintText: "password".tr(),
-                        prefixIcon: const Icon(Icons.lock_outline_rounded),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            obscurePassword
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined,
-                          ),
-                          onPressed: isSubmitting
-                              ? null
-                              : () {
-                                  setDialogState(() {
-                                    obscurePassword = !obscurePassword;
-                                  });
-                                },
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                      ),
-                    ),
-                    if (errorMessage != null) ...[
-                      const SizedBox(height: 12),
-                      Text(
-                        errorMessage!,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.red.shade700,
-                              fontWeight: FontWeight.w600,
-                            ),
-                      ),
-                    ],
-                    const SizedBox(height: 24),
-                    Row(
+                  elevation: 22,
+                  shadowColor: Colors.black.withValues(alpha: 0.22),
+                  borderRadius: BorderRadius.circular(24),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: isSubmitting
-                                ? null
-                                : () => Navigator.of(dialogContext).pop(false),
-                            style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(24, 22, 16, 22),
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [darkNavy, navy],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                             ),
-                            child: Text("Cancel".tr()),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: isSubmitting
-                                ? null
-                                : () => submit(setDialogState),
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              backgroundColor: orange,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 48,
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.18),
+                                  ),
+                                ),
+                                child: const Icon(
+                                  Icons.admin_panel_settings_outlined,
+                                  color: Colors.white,
+                                  size: 26,
+                                ),
                               ),
-                            ),
-                            child: isSubmitting
-                                ? const SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2.4,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white,
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "verify_access".tr(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 21,
+                                        fontWeight: FontWeight.w800,
                                       ),
                                     ),
-                                  )
-                                : Text("verify_and_open".tr()),
+                                    const SizedBox(height: 8),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            Colors.white.withValues(alpha: 0.1),
+                                        borderRadius:
+                                            BorderRadius.circular(999),
+                                      ),
+                                      child: Text(
+                                        pageTitle,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              IconButton(
+                                tooltip: "Cancel".tr(),
+                                icon: const Icon(
+                                  Icons.close_rounded,
+                                  color: Colors.white70,
+                                ),
+                                onPressed: isSubmitting
+                                    ? null
+                                    : () =>
+                                        Navigator.of(dialogContext).pop(false),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                "enter_password_for_current_account".tr(),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: darkNavy.withValues(alpha: 0.82),
+                                      fontSize: 14.5,
+                                      height: 1.55,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                              ),
+                              const SizedBox(height: 16),
+                              Container(
+                                padding: const EdgeInsets.all(14),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF7F9FC),
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: Colors.black.withValues(alpha: 0.06),
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: orange.withValues(alpha: 0.12),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: const Icon(
+                                        Icons.person_outline_rounded,
+                                        color: orange,
+                                        size: 22,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "current_account".tr(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelMedium
+                                                ?.copyWith(
+                                                  color: grey,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            currentEmail,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                  color: darkNavy,
+                                                  fontWeight: FontWeight.w800,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 18),
+                              TextField(
+                                controller: passwordController,
+                                obscureText: obscurePassword,
+                                enabled: !isSubmitting,
+                                autofocus: true,
+                                textInputAction: TextInputAction.done,
+                                onSubmitted: (_) {
+                                  if (!isSubmitting) {
+                                    submit(setDialogState);
+                                  }
+                                },
+                                decoration: InputDecoration(
+                                  labelText: "password".tr(),
+                                  hintText: "password".tr(),
+                                  filled: true,
+                                  fillColor: const Color(0xFFF7F9FC),
+                                  prefixIcon: const Icon(
+                                    Icons.lock_outline_rounded,
+                                  ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      obscurePassword
+                                          ? Icons.visibility_outlined
+                                          : Icons.visibility_off_outlined,
+                                    ),
+                                    onPressed: isSubmitting
+                                        ? null
+                                        : () {
+                                            setDialogState(() {
+                                              obscurePassword =
+                                                  !obscurePassword;
+                                            });
+                                          },
+                                  ),
+                                  labelStyle: TextStyle(
+                                    color: darkNavy.withValues(alpha: 0.62),
+                                  ),
+                                  hintStyle: TextStyle(
+                                    color: grey.withValues(alpha: 0.58),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                      color:
+                                          Colors.black.withValues(alpha: 0.08),
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: const BorderSide(
+                                      color: orange,
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  disabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                      color:
+                                          Colors.black.withValues(alpha: 0.06),
+                                    ),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 16,
+                                  ),
+                                ),
+                              ),
+                              AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 180),
+                                child: errorMessage == null
+                                    ? const SizedBox(height: 16)
+                                    : Padding(
+                                        key: ValueKey(errorMessage),
+                                        padding: const EdgeInsets.only(
+                                          top: 12,
+                                          bottom: 4,
+                                        ),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            color: Colors.red
+                                                .withValues(alpha: 0.08),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                              color: Colors.red
+                                                  .withValues(alpha: 0.18),
+                                            ),
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Icon(
+                                                Icons.error_outline_rounded,
+                                                color: Colors.red.shade700,
+                                                size: 18,
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: Text(
+                                                  errorMessage!,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                        color:
+                                                            Colors.red.shade700,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                      ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      onPressed: isSubmitting
+                                          ? null
+                                          : () => Navigator.of(dialogContext)
+                                              .pop(false),
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: darkNavy,
+                                        side: BorderSide(
+                                          color:
+                                              darkNavy.withValues(alpha: 0.14),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 16,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(14),
+                                        ),
+                                      ),
+                                      child: Text("Cancel".tr()),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: isSubmitting
+                                          ? null
+                                          : () => submit(setDialogState),
+                                      style: ElevatedButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 16,
+                                        ),
+                                        backgroundColor: orange,
+                                        foregroundColor: Colors.white,
+                                        disabledBackgroundColor:
+                                            orange.withValues(alpha: 0.62),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(14),
+                                        ),
+                                        elevation: 0,
+                                      ),
+                                      child: isSubmitting
+                                          ? const SizedBox(
+                                              width: 20,
+                                              height: 20,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2.4,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(
+                                                  Colors.white,
+                                                ),
+                                              ),
+                                            )
+                                          : Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                const Icon(
+                                                  Icons.lock_open_rounded,
+                                                  size: 18,
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Flexible(
+                                                  child: Text(
+                                                    "verify_and_open".tr(),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             );
@@ -481,7 +658,10 @@ class _MainScreenState extends State<MainScreen> {
       },
     );
 
-    passwordController.dispose();
+    Future<void>.delayed(
+      const Duration(milliseconds: 300),
+      passwordController.dispose,
+    );
     return result ?? false;
   }
 
@@ -492,8 +672,39 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  Future<void> _toggleProtectedPagesLock() async {
+    if (_areProtectedPagesUnlocked) {
+      setState(() => _areProtectedPagesUnlocked = false);
+      _showErrorSnackBar("protected_pages_locked".tr());
+      return;
+    }
+
+    final isVerified = await _showPasswordVerificationDialog(
+      selectedIndex,
+      title: "unlock_protected_pages".tr(),
+    );
+
+    if (!isVerified || !mounted) {
+      return;
+    }
+
+    setState(() => _areProtectedPagesUnlocked = true);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.green,
+        content: Text(
+          "protected_pages_unlocked".tr(),
+          style: Theme.of(context)
+              .textTheme
+              .bodySmall
+              ?.copyWith(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
   void onMenuItemSelected(int index) async {
-    if (index == 10) {
+    if (index == 11) {
       // Show confirmation dialog before signing out
       _showSignOutConfirmationDialog();
       return;
@@ -505,7 +716,7 @@ class _MainScreenState extends State<MainScreen> {
 
     if (!_hasAccessToPage(index)) {
       String message;
-      if ([0, 2, 4, 5, 8].contains(index)) {
+      if ([0, 2, 5, 6, 9].contains(index)) {
         message = "Only SuperAdmin and Manager Allowed";
       } else {
         message = "Only SuperAdmin, Manager, and Admin Allowed";
@@ -515,7 +726,7 @@ class _MainScreenState extends State<MainScreen> {
       return;
     }
 
-    if (_isPasswordProtectedPage(index)) {
+    if (!_areProtectedPagesUnlocked && _isPasswordProtectedPage(index)) {
       final isVerified = await _showPasswordVerificationDialog(index);
       if (!isVerified || !mounted) {
         return;
@@ -777,66 +988,13 @@ class _MainScreenState extends State<MainScreen> {
                             PositionedDirectional(
                               top: 12,
                               end: 12,
-                              child: Tooltip(
-                                textStyle: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(color: navy),
-                                decoration: BoxDecoration(
-                                  color: lightGrey,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                message: _isSummaryOpen
-                                    ? "close_summary".tr()
-                                    : "open_summary".tr(),
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    foregroundColor: lightGrey,
-                                    backgroundColor: lightGrey,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    elevation: 0,
-                                  ),
-                                  onPressed: () {
-                                    setState(
-                                        () => _isSummaryOpen = !_isSummaryOpen);
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Icon(
-                                      _isSummaryOpen
-                                          ? Icons.chevron_right
-                                          : Icons.chevron_left,
-                                      color: navy,
-                                      size: 24,
-                                    ),
-                                  ),
-                                ),
-                                // Material(
-                                //   color: Colors.white,
-                                //   borderRadius: BorderRadius.circular(10),
-                                //   elevation: 2,
-                                //   child: InkWell(
-                                //     onTap: () {
-                                //       setState(() =>
-                                //           _isSummaryOpen = !_isSummaryOpen);
-                                //     },
-                                //     borderRadius: BorderRadius.circular(10),
-                                //     child: Padding(
-                                //       padding: const EdgeInsets.all(10),
-                                //       child: Icon(
-                                //         _isSummaryOpen
-                                //             ? Icons.chevron_right
-                                //             : Icons.chevron_left,
-                                //         color: navy,
-                                //         size: 24,
-                                //       ),
-                                //     ),
-                                //   ),
-                                // ),
-                              ),
+                              child: _buildSummaryToggleButton(),
                             ),
+                          PositionedDirectional(
+                            bottom: 30,
+                            end: 30,
+                            child: _buildProtectedPagesLockButton(),
+                          ),
                         ],
                       ),
                     ),
@@ -853,5 +1011,78 @@ class _MainScreenState extends State<MainScreen> {
         ),
       );
     });
+  }
+
+  Widget _buildProtectedPagesLockButton() {
+    final isUnlocked = _areProtectedPagesUnlocked;
+    final iconColor = isUnlocked ? Colors.green.shade600 : grey;
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _isLockButtonHovered = true),
+      onExit: (_) => setState(() => _isLockButtonHovered = false),
+      child: Tooltip(
+        textStyle: Theme.of(context).textTheme.bodySmall?.copyWith(color: navy),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        message: isUnlocked
+            ? "lock_protected_pages".tr()
+            : "unlock_protected_pages".tr(),
+        child: Material(
+          color: lightGrey,
+          elevation: _isLockButtonHovered ? 3 : 0,
+          shadowColor: Colors.black.withValues(alpha: 0.35),
+          borderRadius: BorderRadius.circular(12),
+          child: InkWell(
+            onTap: _toggleProtectedPagesLock,
+            borderRadius: BorderRadius.circular(12),
+            child: SizedBox(
+              width: 56,
+              height: 56,
+              child: Icon(
+                isUnlocked
+                    ? Icons.lock_open_rounded
+                    : Icons.lock_outline_rounded,
+                color: iconColor,
+                size: 28,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSummaryToggleButton() {
+    return Tooltip(
+      textStyle: Theme.of(context).textTheme.bodySmall?.copyWith(color: navy),
+      decoration: BoxDecoration(
+        color: lightGrey,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      message: _isSummaryOpen ? "close_summary".tr() : "open_summary".tr(),
+      child: Material(
+        color: lightGrey,
+        elevation: 2,
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          onTap: () {
+            setState(() => _isSummaryOpen = !_isSummaryOpen);
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: SizedBox(
+            width: 48,
+            height: 48,
+            child: Icon(
+              _isSummaryOpen ? Icons.chevron_right : Icons.chevron_left,
+              color: navy,
+              size: 24,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
