@@ -484,5 +484,15 @@
     "confirm_debt_payment_message": "Register a payment of {} {} for this client?",
     "confirm": "Confirm",
     "debt_paid_success": "Debt payment saved",
-    "premium_session_debt_payment": "Premium session debt payment"
+    "premium_session_debt_payment": "Premium session debt payment",
+    "Customer Reports": "Customer Reports",
+    "Export Contacts": "Export Contacts",
+    "Export By Last Visit": "Export By Last Visit",
+    "Include never visited": "Include never visited",
+    "Birthday Reminders": "Birthday Reminders",
+    "No birthday reminders": "No birthday reminders",
+    "daysBefore": "Days before birthday",
+    "CSV download started": "CSV download started",
+    "CSV saved to": "CSV saved to",
+    "CSV download failed": "CSV download failed"
 }

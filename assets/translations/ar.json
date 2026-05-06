@@ -484,5 +484,15 @@
     "confirm_debt_payment_message": "تسجيل دفعة بقيمة {} {} لهذا الزبون؟",
     "confirm": "تأكيد",
     "debt_paid_success": "تم حفظ دفعة الدين",
-    "premium_session_debt_payment": "دفعة دين من جلسة بريميوم"
+    "premium_session_debt_payment": "دفعة دين من جلسة بريميوم",
+    "Customer Reports": "تقارير الزبائن",
+    "Export Contacts": "تصدير جهات الاتصال",
+    "Export By Last Visit": "تصدير حسب آخر زيارة",
+    "Include never visited": "تضمين الزبائن بدون زيارات",
+    "Birthday Reminders": "تذكيرات أعياد الميلاد",
+    "No birthday reminders": "لا توجد تذكيرات أعياد ميلاد",
+    "daysBefore": "عدد الأيام قبل عيد الميلاد",
+    "CSV download started": "بدأ تنزيل ملف CSV",
+    "CSV saved to": "تم حفظ ملف CSV في",
+    "CSV download failed": "فشل تنزيل ملف CSV"
 }
