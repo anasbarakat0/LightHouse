@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class NetworkConnection {
-  final InternetConnectionChecker internetConnectionChecker;
+  final InternetConnectionChecker? internetConnectionChecker;
 
   // Cache للنتيجة لتقليل الـ checks المتكررة
   bool? _cachedResult;
@@ -24,6 +24,10 @@ class NetworkConnection {
     Duration? timeout,
     List<AddressCheckOption>? customAddresses,
   }) {
+    if (kIsWeb) {
+      return NetworkConnection(internetConnectionChecker: null);
+    }
+
     final defaultTimeout = timeout ?? const Duration(seconds: 5);
 
     final addresses = customAddresses ??
@@ -90,7 +94,7 @@ class NetworkConnection {
         );
 
         // محاولة الاتصال مع timeout
-        final result = await internetConnectionChecker.hasConnection
+        final result = await internetConnectionChecker!.hasConnection
             .timeout(timeout, onTimeout: () => false);
 
         if (result) {
@@ -144,7 +148,7 @@ class NetworkConnection {
   /// Stream للاستماع لتغييرات الاتصال
   Stream<bool> get connectionStream {
     if (kIsWeb) return Stream.value(true).asBroadcastStream();
-    return internetConnectionChecker.onStatusChange.map(
+    return internetConnectionChecker!.onStatusChange.map(
       (status) => status == InternetConnectionStatus.connected,
     );
   }

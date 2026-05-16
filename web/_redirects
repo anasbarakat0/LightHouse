@@ -1,1 +1,2 @@
+/api-proxy/* http://api.lighthouse-hub.com:3010/:splat 200!
 /* /index.html 200
