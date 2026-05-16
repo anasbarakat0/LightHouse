@@ -3,6 +3,12 @@
   publish = "build/web"
 
 [[redirects]]
+  from = "/api-proxy/*"
+  to = "http://api.lighthouse-hub.com:3010/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
