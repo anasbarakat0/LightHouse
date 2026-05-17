@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:lighthouse/common/widget/header.dart';
 import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/core/utils/shared_preferences.dart';
 import 'package:lighthouse/core/utils/responsive.dart';
@@ -166,8 +167,10 @@ class _ToDoTasksState extends State<ToDoTasks>
     setState(() {});
   }
 
-  int get _pendingTasksCount => tasks.where((task) => !task['completed']).length;
-  int get _completedTasksCount => tasks.where((task) => task['completed']).length;
+  int get _pendingTasksCount =>
+      tasks.where((task) => !task['completed']).length;
+  int get _completedTasksCount =>
+      tasks.where((task) => task['completed']).length;
 
   @override
   Widget build(BuildContext context) {
@@ -224,7 +227,11 @@ class _ToDoTasksState extends State<ToDoTasks>
                       ],
                     ),
                   ),
-                const SizedBox(height: 16),
+                if (isMobile) HeaderWidget(title: "to_do_task".tr()),
+                if (isMobile)
+                  const SizedBox(height: 24)
+                else
+                  const SizedBox(height: 16),
 
                 // Stats Cards
                 if (tasks.isNotEmpty)
