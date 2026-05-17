@@ -227,7 +227,11 @@ class _ToDoTasksState extends State<ToDoTasks>
                       ],
                     ),
                   ),
-                if (isMobile) HeaderWidget(title: "to_do_task".tr()),
+                if (isMobile)
+                  HeaderWidget(
+                    title: "to_do_task".tr(),
+                    foregroundColor: Colors.white,
+                  ),
                 if (isMobile)
                   const SizedBox(height: 24)
                 else

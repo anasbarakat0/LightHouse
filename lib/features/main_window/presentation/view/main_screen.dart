@@ -5,6 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:lighthouse/core/error/failure.dart';
 import 'package:lighthouse/core/network/network_connection.dart';
 import 'package:lighthouse/core/resources/colors.dart';
+import 'package:lighthouse/core/utils/main_scaffold_key.dart';
 import 'package:lighthouse/core/utils/responsive.dart';
 import 'package:lighthouse/core/utils/shared_preferences.dart';
 import 'package:lighthouse/core/utils/app_shortcuts.dart';
@@ -954,6 +955,7 @@ class _MainScreenState extends State<MainScreen> {
           child: Focus(
             autofocus: true,
             child: Scaffold(
+              key: mainScaffoldKey,
               backgroundColor: lightGrey,
               drawer: !isDesktop
                   ? SizedBox(

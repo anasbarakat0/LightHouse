@@ -349,7 +349,11 @@ class _SettingsPageState extends State<SettingsPage> {
                             ],
                           ),
                         ),
-                      if (isMobile) HeaderWidget(title: "settings".tr()),
+                      if (isMobile)
+                        HeaderWidget(
+                          title: "settings".tr(),
+                          foregroundColor: Colors.white,
+                        ),
                       if (isMobile)
                         const SizedBox(height: 24)
                       else

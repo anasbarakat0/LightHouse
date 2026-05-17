@@ -240,7 +240,11 @@ class _BuffetPageState extends State<BuffetPage> {
                             ],
                           ),
                         ),
-                      if (isMobile) HeaderWidget(title: "buffet".tr()),
+                      if (isMobile)
+                        HeaderWidget(
+                          title: "buffet".tr(),
+                          foregroundColor: Colors.white,
+                        ),
                       if (isMobile)
                         const SizedBox(height: 24)
                       else
