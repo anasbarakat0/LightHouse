@@ -248,7 +248,11 @@ class _DashboardPageState extends State<DashboardPage> {
                             ),
                           ),
                         if (!Responsive.isDesktop(context)) ...[
-                          if (isMobile) HeaderWidget(title: "Dashboard".tr()),
+                          if (isMobile)
+                            HeaderWidget(
+                              title: "Dashboard".tr(),
+                              foregroundColor: Colors.white,
+                            ),
                           if (isMobile) const SizedBox(height: 24),
                           // Mobile View Toggle
                           Padding(

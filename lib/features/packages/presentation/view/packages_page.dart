@@ -240,7 +240,10 @@ class _PackagesPageState extends State<PackagesPage> {
                           ),
                         ),
                       if (isMobile)
-                        HeaderWidget(title: "package_management".tr()),
+                        HeaderWidget(
+                          title: "package_management".tr(),
+                          foregroundColor: Colors.white,
+                        ),
                       if (isMobile)
                         const SizedBox(height: 24)
                       else

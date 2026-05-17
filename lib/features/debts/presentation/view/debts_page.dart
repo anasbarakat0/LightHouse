@@ -579,7 +579,11 @@ class _DebtsPageState extends State<DebtsPage> {
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
                         if (Responsive.isDesktop(context)) _buildDesktopTitle(),
-                        if (isMobile) HeaderWidget(title: 'debts'.tr()),
+                        if (isMobile)
+                          HeaderWidget(
+                            title: 'debts'.tr(),
+                            foregroundColor: Colors.white,
+                          ),
                         if (isMobile) const SizedBox(height: 24),
                         _buildSummaryCards(),
                         const SizedBox(height: 16),

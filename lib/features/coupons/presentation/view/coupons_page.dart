@@ -248,7 +248,10 @@ class _CouponsPageState extends State<CouponsPage> {
                       child: Column(
                         children: [
                           if (Responsive.isMobile(context))
-                            HeaderWidget(title: "Coupons".tr()),
+                            HeaderWidget(
+                              title: "Coupons".tr(),
+                              foregroundColor: Colors.white,
+                            ),
                           if (Responsive.isMobile(context))
                             const SizedBox(height: 24),
                           if (Responsive.isDesktop(context))

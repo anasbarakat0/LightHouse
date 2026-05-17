@@ -244,7 +244,11 @@ class _StatisticsPageState extends State<StatisticsPage> {
                             ],
                           ),
                         ),
-                      if (isMobile) HeaderWidget(title: "Statistics".tr()),
+                      if (isMobile)
+                        HeaderWidget(
+                          title: "Statistics".tr(),
+                          foregroundColor: Colors.white,
+                        ),
                       if (isMobile) const SizedBox(height: 24),
                       // Date Range Picker
                       _buildDateRangePicker(builderContext, context, isMobile),

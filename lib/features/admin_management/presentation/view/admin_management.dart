@@ -159,7 +159,10 @@ class AdminManagement extends StatelessWidget {
                           ),
                         ),
                       if (isMobile)
-                        HeaderWidget(title: "admin_management".tr()),
+                        HeaderWidget(
+                          title: "admin_management".tr(),
+                          foregroundColor: Colors.white,
+                        ),
                       if (isMobile)
                         const SizedBox(height: 24)
                       else
