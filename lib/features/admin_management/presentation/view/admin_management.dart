@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lighthouse/common/widget/header.dart';
 import 'package:lighthouse/core/network/network_connection.dart';
 import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/core/utils/responsive.dart';
@@ -105,7 +106,7 @@ class AdminManagement extends StatelessWidget {
         ],
         child: Builder(builder: (context) {
           final isMobile = Responsive.isMobile(context);
-          
+
           return Scaffold(
             backgroundColor: darkNavy,
             body: CustomScrollView(
@@ -157,13 +158,19 @@ class AdminManagement extends StatelessWidget {
                             ],
                           ),
                         ),
-                      const SizedBox(height: 16),
-                      
+                      if (isMobile)
+                        HeaderWidget(title: "admin_management".tr()),
+                      if (isMobile)
+                        const SizedBox(height: 24)
+                      else
+                        const SizedBox(height: 16),
+
                       // Create Admin Button
                       BlocListener<AddNewAdminBloc, AddNewAdminState>(
                         listener: (context, state) {
                           if (state is ErrorCreatingAdmin) {
-                            return errorMessage(context, "error".tr(), state.messages);
+                            return errorMessage(
+                                context, "error".tr(), state.messages);
                           }
                           if (state is AdminCreated) {
                             context
@@ -190,16 +197,18 @@ class AdminManagement extends StatelessWidget {
                                 .read<AddNewAdminBloc>()
                                 .add(AddAdmin(admin: admin));
                           }
+
                           createAdmin(context, data);
                         }),
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Admins List
                       BlocConsumer<AllAdminInfoBloc, AllAdminInfoState>(
                         listener: (context, state) {
                           if (state is ForbiddenFetching) {
-                            errorMessage(context, "unauthorized".tr(), [state.message]);
+                            errorMessage(
+                                context, "unauthorized".tr(), [state.message]);
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
@@ -215,7 +224,8 @@ class AdminManagement extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: Colors.red.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: Colors.red.withOpacity(0.3)),
+                                border: Border.all(
+                                    color: Colors.red.withOpacity(0.3)),
                               ),
                               child: Text(
                                 state.message,
@@ -229,7 +239,8 @@ class AdminManagement extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: Colors.red.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: Colors.red.withOpacity(0.3)),
+                                border: Border.all(
+                                    color: Colors.red.withOpacity(0.3)),
                               ),
                               child: Text(
                                 state.message,
@@ -276,18 +287,21 @@ class AdminManagement extends StatelessWidget {
                                 ),
                               );
                             }
-                            
+
                             return Builder(builder: (context) {
-                              final deleteAdminBloc = context.read<DeleteAdminBloc>();
+                              final deleteAdminBloc =
+                                  context.read<DeleteAdminBloc>();
                               return Column(
                                 children: List.generate(
                                   state.allAdminInfoResponse.body.length,
                                   (index) {
                                     final admin = AdminInfoModel.fromMap(
-                                      state.allAdminInfoResponse.body[index].toMap(),
+                                      state.allAdminInfoResponse.body[index]
+                                          .toMap(),
                                     );
                                     return Padding(
-                                      padding: const EdgeInsets.only(bottom: 12),
+                                      padding:
+                                          const EdgeInsets.only(bottom: 12),
                                       child: !Responsive.isDesktop(context)
                                           ? AdminCard(
                                               adminInfoModel: admin,
@@ -295,8 +309,10 @@ class AdminManagement extends StatelessWidget {
                                                 deleteMessage(context, () {
                                                   deleteAdminBloc.add(
                                                     DeleteAdmin(
-                                                      id: state.allAdminInfoResponse
-                                                          .body[index].id,
+                                                      id: state
+                                                          .allAdminInfoResponse
+                                                          .body[index]
+                                                          .id,
                                                     ),
                                                   );
                                                 },
@@ -309,10 +325,14 @@ class AdminManagement extends StatelessWidget {
                                               adminInfoModel: admin,
                                               onPressedDelete: () {
                                                 deleteMessage(context, () {
-                                                  context.read<DeleteAdminBloc>().add(
+                                                  context
+                                                      .read<DeleteAdminBloc>()
+                                                      .add(
                                                         DeleteAdmin(
-                                                          id: state.allAdminInfoResponse
-                                                              .body[index].id,
+                                                          id: state
+                                                              .allAdminInfoResponse
+                                                              .body[index]
+                                                              .id,
                                                         ),
                                                       );
                                                 },

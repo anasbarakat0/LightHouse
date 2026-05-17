@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lighthouse/common/widget/header.dart';
 import 'package:lighthouse/core/network/network_connection.dart';
 import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/core/utils/responsive.dart';
@@ -222,7 +223,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 // تحديث text field بالقيمة من API
                 capacity.text = state.capacity.toString();
                 // حفظ في SharedPreferences
-                memory.get<SharedPreferences>().setInt("capacity", state.capacity);
+                memory
+                    .get<SharedPreferences>()
+                    .setInt("capacity", state.capacity);
                 capacityNotifier.value = state.capacity;
               }
             },
@@ -231,12 +234,14 @@ class _SettingsPageState extends State<SettingsPage> {
             listener: (BuildContext context, state) {
               if (state is SuccessCapacity) {
                 // حفظ في SharedPreferences
-                memory.get<SharedPreferences>().setInt("capacity", state.capacity);
+                memory
+                    .get<SharedPreferences>()
+                    .setInt("capacity", state.capacity);
                 capacityNotifier.value = state.capacity;
-                
+
                 // إعادة جلب البيانات المحدثة
                 context.read<GetOccupancyBloc>().add(GetOccupancy());
-                
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     backgroundColor: Colors.green[800],
@@ -344,7 +349,11 @@ class _SettingsPageState extends State<SettingsPage> {
                             ],
                           ),
                         ),
-                      const SizedBox(height: 16),
+                      if (isMobile) HeaderWidget(title: "settings".tr()),
+                      if (isMobile)
+                        const SizedBox(height: 24)
+                      else
+                        const SizedBox(height: 16),
 
                       // Settings Cards
                       _buildSettingsCard(
@@ -422,7 +431,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               );
                               return;
                             }
-                            
+
                             submitEditingDialog(
                               context,
                               () {
@@ -432,7 +441,9 @@ class _SettingsPageState extends State<SettingsPage> {
                               },
                               () {
                                 // إعادة جلب القيمة الحالية من API
-                                context.read<GetOccupancyBloc>().add(GetOccupancy());
+                                context
+                                    .read<GetOccupancyBloc>()
+                                    .add(GetOccupancy());
                               },
                             );
                           },
@@ -543,9 +554,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget _buildPrinterSettingsCard(BuildContext context, bool isMobile) {
     final prefs = memory.get<SharedPreferences>();
-    final selectedPrinter = prefs.getString('selected_printer') ?? 'XP-80C (copy 1)';
+    final selectedPrinter =
+        prefs.getString('selected_printer') ?? 'XP-80C (copy 1)';
     final service = PlatformService();
-    
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -626,7 +638,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 );
               }
 
-              if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
+              if (snapshot.hasError ||
+                  !snapshot.hasData ||
+                  snapshot.data!.isEmpty) {
                 return Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -661,7 +675,8 @@ class _SettingsPageState extends State<SettingsPage> {
               final selectedIndex = currentIndex >= 0 ? currentIndex : 0;
 
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(12),
@@ -670,7 +685,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 child: DropdownButton<String>(
-                  value: selectedIndex < printers.length ? printers[selectedIndex] : printers.first,
+                  value: selectedIndex < printers.length
+                      ? printers[selectedIndex]
+                      : printers.first,
                   isExpanded: true,
                   dropdownColor: const Color(0xFF1A2F4A),
                   style: TextStyle(

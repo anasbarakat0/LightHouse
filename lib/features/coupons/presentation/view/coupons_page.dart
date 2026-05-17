@@ -247,10 +247,10 @@ class _CouponsPageState extends State<CouponsPage> {
                     SliverToBoxAdapter(
                       child: Column(
                         children: [
-                          HeaderWidget(
-                            title: "Coupons".tr(),
-                          ),
-                          const SizedBox(height: 25),
+                          if (Responsive.isMobile(context))
+                            HeaderWidget(title: "Coupons".tr()),
+                          if (Responsive.isMobile(context))
+                            const SizedBox(height: 24),
                           if (Responsive.isDesktop(context))
                             Text(
                               "Coupons".tr(),

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lighthouse/common/widget/header.dart';
 import 'package:lighthouse/core/utils/file_download/file_download_saver.dart';
 import 'package:lighthouse/core/network/network_connection.dart';
 import 'package:lighthouse/core/resources/colors.dart';
@@ -247,6 +248,8 @@ class _DashboardPageState extends State<DashboardPage> {
                             ),
                           ),
                         if (!Responsive.isDesktop(context)) ...[
+                          if (isMobile) HeaderWidget(title: "Dashboard".tr()),
+                          if (isMobile) const SizedBox(height: 24),
                           // Mobile View Toggle
                           Padding(
                             padding: const EdgeInsets.only(bottom: 16),

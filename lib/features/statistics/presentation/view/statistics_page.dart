@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:lighthouse/common/widget/header.dart';
 import 'package:lighthouse/core/network/network_connection.dart';
 import 'package:lighthouse/core/resources/colors.dart';
 import 'package:lighthouse/core/utils/responsive.dart';
@@ -243,6 +244,8 @@ class _StatisticsPageState extends State<StatisticsPage> {
                             ],
                           ),
                         ),
+                      if (isMobile) HeaderWidget(title: "Statistics".tr()),
+                      if (isMobile) const SizedBox(height: 24),
                       // Date Range Picker
                       _buildDateRangePicker(builderContext, context, isMobile),
                       const SizedBox(height: 24),
